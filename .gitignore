@@ -5,5 +5,4 @@ dist-ssr
 .idea
 *.local
 auto-imports.d.ts
-.env.development
 dronesv2
