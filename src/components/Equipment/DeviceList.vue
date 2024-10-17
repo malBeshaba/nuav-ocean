@@ -383,8 +383,8 @@ html {
   top: 0;
   left: 20px;
 
-  margin-top: $NavigationHeight;
-  height: calc(100% - $NavigationHeight - 20px);
+  margin-top: $NavigationHeight + 20px;
+  height: calc(100% - $NavigationHeight - 40px);
   width: $LeftWidth;
   background: $ComponentBackground;
   z-index: 2;

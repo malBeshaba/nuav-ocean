@@ -26,7 +26,7 @@ if (login_info[0]) {
     workspace_id: login_info[1] as string
   }));
   removeTokenFromUrl();
-  router.push('/default/home');
+  router.push('/default/task');
 }
 </script>
 

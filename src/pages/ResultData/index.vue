@@ -27,8 +27,8 @@ html {
   box-sizing: border-box;
   overflow: hidden;
   position: fixed;
-  top: 0;
-  height: calc(100% - $NavigationHeight - 20px);
+  top: 20px;
+  height: calc(100% - $NavigationHeight - 40px);
   left: 20px;
   width: $LeftWidth;
   display: flex;

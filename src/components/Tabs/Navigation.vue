@@ -4,27 +4,19 @@
 <!--&lt;!&ndash;          <el-avatar shape="square" :size="60" :src="logoPng" />&ndash;&gt;-->
 <!--          <img :src="logoPng" alt="" class="logo_img" >-->
 <!--      </div>-->
-    <div class="Title" @click="clickTab('home')">
+      <Navigation></Navigation>
+      <div class="tabs">
+        <TabSelector :ssr="planIMG" :src="planIMG" name="任务部署" :selected="activeName==='plan'" @click="clickTab('plan')"></TabSelector>
+        <TabSelector :ssr="resouceIMG" :src="resouceIMG" name="资源管理" :selected="activeName==='resource'" style="margin-left: 30px" @click="clickTab('resource')"></TabSelector>
+        <TabSelector :ssr="dataIMG" :src="dataIMG" name="成果数据" :selected="activeName==='data'" style="margin-left: 30px" @click="clickTab('data')"></TabSelector>
+      </div>
+    <!-- <div class="Title" @click="clickTab('home')">
       <div class="title-zh">广东省海城海岛视频监控监测平台</div>
-<!--      <div class="title-en">Low-altitude UAV Remote Sensing Platform</div>-->
     </div>
-    <div class="tabs">
-<!--      <TabSelector :ssr="controlimg" :src="controlIMG" name="控制中台" :selected="activeName==='control'" @click="clickTab('control')"></TabSelector>-->
-      <TabSelector :ssr="planIMG" :src="planIMG" name="任务部署" :selected="activeName==='plan'" style="margin-left: 30px" @click="clickTab('plan')"></TabSelector>
-      <TabSelector :ssr="resouceIMG" :src="resouceIMG" name="资源管理" :selected="activeName==='resource'" style="margin-left: 30px" @click="clickTab('resource')"></TabSelector>
-      <TabSelector :ssr="dataIMG" :src="dataIMG" name="成果数据" :selected="activeName==='data'" style="margin-left: 30px" @click="clickTab('data')"></TabSelector>
-    </div>
+    
     <div class="master">
       <el-button type="primary" @click="handleLayout">退出</el-button>
-<!--      <el-dropdown trigger="click" @command="handleCommand">-->
-<!--        <el-image :src="masterIMG" style=""></el-image>-->
-<!--        <template #dropdown>-->
-<!--          <el-dropdown-menu>-->
-<!--            <el-dropdown-item command="log-out">退出登录</el-dropdown-item>-->
-<!--          </el-dropdown-menu>-->
-<!--        </template>-->
-<!--      </el-dropdown>-->
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -32,6 +24,7 @@
 import {reactive, ref, watch} from 'vue'
 import type { TabsPaneContext } from 'element-plus'
 import TabSelector from "@/components/Tabs/TabSelector.vue";
+import Navigation from "@/components/Navigation/Navigation.vue";
 import controlIMG from "@/assets/Tabs/control-s.png"
 import controlimg from "@/assets/Tabs/control.png"
 import planIMG from "@/assets/Tabs/plan.png"
@@ -137,9 +130,10 @@ watch(store?.state?.navigationType, (value) => {
 .navigation {
   width: 100%;
   height: $NavigationHeight;
-  background: -webkit-linear-gradient(top, rgb(16, 53, 69) 0%, rgba(16, 53, 69, 0.6) 60%, rgba(16, 53, 69, 0) 99%);
   position: relative;
   display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .logo {
   display: flex;
@@ -173,8 +167,10 @@ watch(store?.state?.navigationType, (value) => {
 }
 .tabs {
   display: flex;
-  margin-top: 20px;
-  margin-left: 650px;
+  margin-top: 10px;
+  background-color: rgba(22, 44, 75, 0.7);
+  border: 1px solid rgba(65, 127, 214, 0.7);
+  border-radius: 5px;
 }
 .master {
   margin-top: 30px;
