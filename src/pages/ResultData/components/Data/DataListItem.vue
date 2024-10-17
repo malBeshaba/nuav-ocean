@@ -115,7 +115,7 @@ const dataType = computed(() => {
 }
 
 .header .header_title {
-  color: $TouchColor;
+  color: $LightColor;
   letter-spacing: 1.2px;
   font-size: $SecondLevelTitleFontSize;
   font-weight: $SecondLevelTitleFontWeight;

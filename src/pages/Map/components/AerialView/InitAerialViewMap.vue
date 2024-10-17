@@ -44,11 +44,11 @@ const mapMove = () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 @import "//at.alicdn.com/t/c/font_3880304_vpf4pcfgb3l.css";
 .aerial_view {
   position: relative;
-	border: 2px solid #ae7202;
+	border: 2px solid $LightColor;
 	border-radius: 5px;
 }
 

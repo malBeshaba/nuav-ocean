@@ -748,7 +748,7 @@ const label4 = ref('自动返航')
   </el-scrollbar>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .el-scrollbar{
   width: 400px;
 }
@@ -761,7 +761,7 @@ ul{
 
 .item {
   padding: 18px 16px;
-  background-color: #272b34;
+  background-color: rgba(39, 73, 85, 0.5);
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
@@ -790,7 +790,7 @@ ul{
 .box-card {
   margin-top: 45px;
   width: 400px;
-  background-color: black;
+  background-color: $ComponentBackground;
   height: 420px;
   padding: 20px;
 }

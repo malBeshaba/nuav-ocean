@@ -421,7 +421,7 @@ export default {
   display: flex;
   flex-direction: column;
   box-shadow: 8px 0px 4px 0px rgba(255, 120, 0, 1);
-  background-color: rgba(10, 11, 14, 0.85);
+  background-color: $ComponentBackground;
   position: fixed;
   width: $RightWidth;
   top: 15px;
@@ -466,7 +466,7 @@ export default {
   align-items: center;
   /* 上方部分的样式设置 */
   align-content: center;
-  border-bottom: 1px solid #F9A100;
+  border-bottom: 1px solid $LightColor;
 }
 .NewWayPointActionList{
   margin-left:80px ;
@@ -487,7 +487,7 @@ export default {
   background-color: #fff;
   border: 1px solid #ccc;
   /* 其他样式设置 */
-  background-color: rgba(10, 11, 14, 0.85);
+  background-color: $ComponentBackground;
   color: white;
   z-index: 10;
 }

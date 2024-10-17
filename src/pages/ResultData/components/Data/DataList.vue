@@ -445,12 +445,12 @@ html {
 .orange-dot {
   width: 6px;
   height: 6px;
-  background: $TouchColor;
+  background: $LightColor;
   margin-right: 6px;
 }
 
 .selected {
-  border: 1px solid $TouchColor;
+  border: 1px solid $LightColor;
 }
 
 // 标签页
@@ -459,7 +459,7 @@ html {
 }
 
 :deep(.el-tabs__active-bar) {
-  background: $TouchColor;
+  background: $LightColor;
   height: 50px !important;
 }
 
@@ -470,11 +470,11 @@ html {
 }
 
 :deep(.el-tabs__item:hover) {
-  color: $TouchColor;
+  color: $LightColor;
 }
 
 :deep(.el-tabs__item.is-active) {
-  color: $TouchColor;
+  color: $LightColor;
 }
 
 .list-main-import {

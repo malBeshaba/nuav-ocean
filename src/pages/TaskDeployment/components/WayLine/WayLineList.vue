@@ -9,11 +9,7 @@
     </div>
     <hr class="solid-line">
     <div class="SearchBox">
-        <input class="InputBox" type="text" placeholder="请输入航线名称">
-      <img class="SearchIcon"
-           referrerpolicy="no-referrer"
-           src="https://lanhu.oss-cn-beijing.aliyuncs.com/psolv5o89x7hh14gxdngiqkvt8r76rk6so5f48becd-c29a-45c4-8f70-50f90ad28f3a"
-      >
+      <el-input placeholder="请输入搜索内容" :suffix-icon="Search" size="default"/>
     </div>
     <div class="WaylineList" @click="handleClick">
       <div class="WayLineListItem" v-for="(item, index) in listItems" :key="index" :class="{ 'selected': SelectedList[index].isSelected }" @click="ItemClick(item)">
@@ -263,9 +259,9 @@ const exportWayLine = (item: any) => {
   width: 0 !important;height: 0;
 }
 .wayline-list{
-  border-left: 1px solid #F9A100;;
-  box-shadow: 8px 0px 4px 0px rgba(255, 120, 0, 1);
-  background-color: rgba(10, 11, 14, 0.85);
+  border-left: 1px solid $LightColor;;
+  box-shadow: 8px 0px 4px 0px $LightColor;
+  background-color: $ComponentBackground;
   width: 100%;
   height: 100%;
   overflow: scroll;
@@ -313,7 +309,7 @@ const exportWayLine = (item: any) => {
   display: flex;
   width: 85px;
   height: 20px;
-  background: #f9a100;
+  background: $LightColor;
   border-radius: 4px;
 }
 .NewWayLineBtn:hover{
@@ -327,7 +323,7 @@ const exportWayLine = (item: any) => {
 }
 .solid-line {
   border: none;
-  border-top: 1px solid #F9A100;
+  border-top: 1px solid $LightColor;
 }
 .SearchBox{
   display: flex;
@@ -366,7 +362,8 @@ const exportWayLine = (item: any) => {
   height: 125px;
   border-radius: 4px;
 	cursor: pointer;
-  background: black;
+  background: rgba(39, 73, 85, 0.5);
+  //border: 1px solid $TouchColor;
 }
 .WaylineInfo{
   //height: 100%;
@@ -382,7 +379,7 @@ const exportWayLine = (item: any) => {
   display: flex;
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
-  background: #996300;
+  background: $TouchColor;
 }
 .EditIcon{
   right: 10px;
@@ -422,7 +419,7 @@ const exportWayLine = (item: any) => {
 .orange-dot {
   width: 5px;
   height: 5px;
-  background: #f9a100;
+  background: $LightColor;
   border-radius: 50%;
   margin-left: 12px;
 }
@@ -445,13 +442,14 @@ const exportWayLine = (item: any) => {
   font-size: 12px;
   height: 18%;
   width: 100%;
-  color: #f9a100;
+  color: $LightColor;
 }
 .DeviceInfo{
   color: white;
   margin-left: 38px;
 }
 .WayLineListItem.selected {
-  border: 1px dashed #f9a100; /* 设置加粗虚线边框样式 */
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 </style>

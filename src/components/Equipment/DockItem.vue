@@ -139,7 +139,7 @@ const EDockModeCode = computed(() => {
 
 <style scoped lang="scss">
 .dock_item {
-  background-color: #000;
+  background-color: rgba(39, 73, 85, 0.5);
   display: flex;
   align-items: center;
   padding: 14px 0px;
@@ -149,7 +149,7 @@ const EDockModeCode = computed(() => {
 }
 
 .dock_item--active {
-  background-color: #212a33;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
   border: 1px solid $TouchColor;
 }
 
@@ -174,7 +174,7 @@ const EDockModeCode = computed(() => {
 }
 
 .header .header_title {
-  color: $SecondTouchColor;
+  color: $LightColor;
   font-size: $SecondLevelTitleFontSize;
   font-family: $SecondLevelTitleFontFamily;
   font-weight: $SecondLevelTitleFontSize;
@@ -201,7 +201,7 @@ const EDockModeCode = computed(() => {
 }
 
 .introduction .attr {
-  color: $InforColor;
+  color: white;
   font-size: $InforFontSize;
   font-family: $InforFontFamily;
   font-weight: $InforFontWeight;

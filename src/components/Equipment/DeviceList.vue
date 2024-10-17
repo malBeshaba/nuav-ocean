@@ -1,6 +1,7 @@
 <template>
   <div class="device-list">
     <list-head title="设备列表" style="width: 100%;"></list-head>
+<!--    <panel-head>设备列表</panel-head>-->
     <!-- <div class="list-title">
       设备列表（共计
       <span style="color: orange; ">
@@ -25,24 +26,24 @@
     </div>
     <div class="list-main">
       <el-collapse v-model="activeName" @change="handleChange">
-        <el-collapse-item name="drone" >
-          <template #title>
-            <div class="collapse-title" >
-              <div class="orange-dot"></div>
-              <div class="collapse-title-left">无人机</div>
-              <div class="collapse-title-main"> </div>
-              <div class="collapse-title-right">收起({{ droneTotal }})</div>
-            </div>
-          </template>
-          <div v-if="droneInfo.length > 0">
-            <div v-for="item in droneInfo" :key="item.device_sn">
-              <DroneItem :droneInfo="item" @click="getDroneDetail(item.device_sn)"></DroneItem>
-            </div>
-          </div>
-          <div v-else>
-            无设备！
-          </div>
-        </el-collapse-item>
+<!--        <el-collapse-item name="drone" >-->
+<!--          <template #title>-->
+<!--            <div class="collapse-title" >-->
+<!--              <div class="orange-dot"></div>-->
+<!--              <div class="collapse-title-left">无人机</div>-->
+<!--              <div class="collapse-title-main"> </div>-->
+<!--              <div class="collapse-title-right">收起({{ droneTotal }})</div>-->
+<!--            </div>-->
+<!--          </template>-->
+<!--          <div v-if="droneInfo.length > 0">-->
+<!--            <div v-for="item in droneInfo" :key="item.device_sn">-->
+<!--              <DroneItem :droneInfo="item" @click="getDroneDetail(item.device_sn)"></DroneItem>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div v-else>-->
+<!--            无设备！-->
+<!--          </div>-->
+<!--        </el-collapse-item>-->
 
         <el-collapse-item name="dock" >
           <template #title>
@@ -61,30 +62,31 @@
 <!--          </div>-->
         </el-collapse-item>
 
-        <el-collapse-item name="user"  v-if="route.path.split('/')[2] == 'resource'">
-          <template #title>
-            <div class="collapse-title">
-                <div class="orange-dot"></div>
-              <div class="collapse-title-left">地勤人员</div>
-              <div class="collapse-title-main"> </div>
-              <div class="collapse-title-right">收起({{ userTotal }})</div>
-            </div>
-          </template>
-            <el-scrollbar height="450px" >
-                <div class="emptyTask" id="emptyTask">
-                    <div class="addButton" id="addButton" @click="createUser">
-                        <div class="block" id="block">+</div>
-                        <div class="block_tail" id="block_tail">点击添加人员</div>
-                    </div>
-                </div>
-              <div v-for="item in userInfos" :key="item.user_id">
-                  <UserItem :userInfo="item" @delete-user="handleUserDelete"></UserItem>
-              </div>
-            </el-scrollbar>
+<!--        <el-collapse-item name="user"  v-if="route.path.split('/')[2] == 'resource'">-->
+<!--          <template #title>-->
+<!--            <div class="collapse-title">-->
+<!--                <div class="orange-dot"></div>-->
+<!--              <div class="collapse-title-left">地勤人员</div>-->
+<!--              <div class="collapse-title-main"> </div>-->
+<!--              <div class="collapse-title-right">收起({{ userTotal }})</div>-->
+<!--            </div>-->
+<!--          </template>-->
+<!--            <el-scrollbar height="450px" >-->
+<!--                <div class="emptyTask" id="emptyTask">-->
+<!--                    <div class="addButton" id="addButton" @click="createUser">-->
+<!--                        <div class="block" id="block">+</div>-->
+<!--                        <div class="block_tail" id="block_tail">点击添加人员</div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--              <div v-for="item in userInfos" :key="item.user_id">-->
+<!--                  <UserItem :userInfo="item" @delete-user="handleUserDelete"></UserItem>-->
+<!--              </div>-->
+<!--            </el-scrollbar>-->
 
-        </el-collapse-item>
+<!--        </el-collapse-item>-->
       </el-collapse>
     </div>
+    <img class="panbottom" :src="Light1IMG"  alt=""/>
   </div>
 </template>
 
@@ -105,6 +107,7 @@ import {getUsers,selectPage} from "@/api/adminUser";
 import dockImage from '@/assets/map/dock.png'
 // import { getHomepageSiteList } from '@/api/jiexiang/site'
 import * as Cesium from 'cesium'
+import Light1IMG from '@/assets/images/light1.png';
 const store = useMyStore()
 
 onMounted(() => {
@@ -329,7 +332,7 @@ const selectChange = (val: string) => {
 // 搜索框
 const input = ref('');
 // 折叠面板
-const activeName = ref(['drone']);
+const activeName = ref(['dock']);
 const handleChange = (val: string[]) =>{
   // console.log('val', val);
 };
@@ -377,12 +380,22 @@ html {
 
 .device-list {
   position: fixed;
-  top: 0px;
+  top: 0;
+  left: 20px;
+
   margin-top: $NavigationHeight;
-  height: calc(100% - $NavigationHeight);
+  height: calc(100% - $NavigationHeight - 20px);
   width: $LeftWidth;
   background: $ComponentBackground;
   z-index: 2;
+}
+
+.panbottom {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
 }
 
 // 旧版本

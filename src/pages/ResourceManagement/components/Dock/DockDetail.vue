@@ -18,7 +18,7 @@ import DockDetailControl from "@/pages/ResourceManagement/components/Dock/DockDe
 import { Close } from '@element-plus/icons-vue'
 import { ref, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-const route = useRoute(); 
+const route = useRoute();
 const router = useRouter();
 import type { TabsPaneContext } from 'element-plus'
 
@@ -61,7 +61,7 @@ html {
 }
 
 :deep(.el-tabs__content) {
-  height: 100%; 
+  height: 100%;
 }
 
 :deep(.el-tabs__nav) {
@@ -78,16 +78,16 @@ html {
 }
 
 :deep(.el-tabs__item.is-active) {
-  color: $TouchColor;
+  color: $LightColor;
 }
 
 :deep(.el-tabs__item:hover) {
-  color: $TouchColor;
+  color: $LightColor;
 }
 
 :deep(.el-tabs__active-bar) {
   height: 1px;
-  background-color: $TouchColor;
+  background-color: $LightColor;
 }
 
 // 返回按钮

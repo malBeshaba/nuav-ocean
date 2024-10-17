@@ -440,7 +440,7 @@ div {
 }
 
 .info-center__title {
-  color: $TouchColor;
+  color: $LightColor;
   padding-bottom: 8px;
 }
 

@@ -357,7 +357,7 @@ onBeforeUnmount(() => {
   left: 0;
   top: 500px;
   bottom: 0;
-  background: rgb(0, 0, 0);
+  background: $ComponentBackground;
   width: 440px;
   height: 50%;
 }
@@ -367,7 +367,7 @@ onBeforeUnmount(() => {
   width: 60px;
   height: 15px;
   overflow-wrap: break-word;
-  color: rgba(196, 91, 45, 1);
+  color: $LightColor;
   font-size: 20px;
   text-align: left;
   white-space: nowrap;

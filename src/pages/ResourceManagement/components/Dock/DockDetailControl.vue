@@ -486,17 +486,17 @@ div {
 
 .dock-setting-button {
   background-color: $TouchColor2;
-  color: $TouchColor;
+  color: $LightColor;
   border: none;
   //鼠标悬浮
   &:hover {
     background: $TouchColor2;
-    color: $TouchColor;
+    color: $LightColor;
     border: none;
   }
   &:focus {
     background: $TouchColor2;
-    color: $TouchColor;
+    color: $LightColor;
     border: none;
   }
 }
@@ -504,20 +504,20 @@ div {
 // 这个是打开调试的状态
 .dock-setting-button-bg {
   background: transparent;
-  color: $TouchColor;
-  border: 1px solid $TouchColor;
+  color: $LightColor;
+  border: 1px solid $LightColor;
   //鼠标悬浮
   &:hover {
     background: $TouchColor2;
-    border: 1px solid $TouchColor;
+    border: 1px solid $LightColor;
   }
   &:active {
     background: $TouchColor2;
-    border: 1px solid $TouchColor;
+    border: 1px solid $LightColor;
   }
   &:focus {
     background: $TouchColor2;
-    border: 1px solid $TouchColor;
+    border: 1px solid $LightColor;
   }
 }
 

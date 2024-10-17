@@ -3,7 +3,7 @@
     <div class="list-header">
       <div class="title">任务列表</div>
       <div class="title-function">
-        <el-button type="primary" size="small" @click="createTask()"><el-icon><Plus /></el-icon>新建任务</el-button>
+        <el-button type="primary" size="small" @click="createTask()" style="color: white;"><el-icon><Plus /></el-icon>新建任务</el-button>
         <el-icon class="button-backward" :size="16" @click="backToEquipmentList()"><Back /></el-icon>
       </div>
     </div>
@@ -23,7 +23,7 @@
       </div>
     </div>
     <div v-if="planInfo.length > 0" class="list-main">
-      <el-row :gutter="20" style="width: 100%;">
+      <el-row :gutter="2" style="width: 100%;">
         <el-col
           v-for="item in planInfo"
           :key="item.flightPlanId"

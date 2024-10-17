@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="buttonarea">
-      <el-button type="warning" style="width: 80px" @click="create">确定</el-button>
+      <el-button type="primary" style="width: 80px" @click="create">确定</el-button>
       <el-button type="info" style="width: 80px" @click="cancel">取消</el-button>
     </div>
 </div>

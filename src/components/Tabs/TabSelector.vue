@@ -20,8 +20,8 @@ const Props = defineProps<{
   display: flex;
   height: 44px;
   width: 138px;
-  border: 1px solid #06e9f9;
-  background: linear-gradient(90deg, rgba(52, 100, 162, 1) 0%, rgba(52, 100, 162, 0) 100%);
+  border: 1px solid $TouchColor;
+  background: linear-gradient(90deg, $TouchColor 0%, rgba(249,161,0,0) 100%);
   text-align: center;
   align-items: center;
   cursor: pointer;
@@ -33,11 +33,9 @@ const Props = defineProps<{
   text-align: center;
   align-items: center;
   cursor: pointer;
-
 }
 .icon {
   margin-left: 15px;
-
   /*display: inline-block;*/
 }
 .name {

@@ -5,12 +5,12 @@
 <!--          <img :src="logoPng" alt="" class="logo_img" >-->
 <!--      </div>-->
     <div class="Title" @click="clickTab('home')">
-      <div class="title-zh">低空无人机遥感平台</div>
-      <div class="title-en">Low-altitude UAV Remote Sensing Platform</div>
+      <div class="title-zh">广东省海城海岛视频监控监测平台</div>
+<!--      <div class="title-en">Low-altitude UAV Remote Sensing Platform</div>-->
     </div>
     <div class="tabs">
-      <TabSelector :ssr="controlimg" :src="controlIMG" name="控制中台" :selected="activeName==='control'" @click="clickTab('control')"></TabSelector>
-      <TabSelector :ssr="planIMG" :src="planimg" name="任务部署" :selected="activeName==='plan'" style="margin-left: 30px" @click="clickTab('plan')"></TabSelector>
+<!--      <TabSelector :ssr="controlimg" :src="controlIMG" name="控制中台" :selected="activeName==='control'" @click="clickTab('control')"></TabSelector>-->
+      <TabSelector :ssr="planIMG" :src="planIMG" name="任务部署" :selected="activeName==='plan'" style="margin-left: 30px" @click="clickTab('plan')"></TabSelector>
       <TabSelector :ssr="resouceIMG" :src="resouceIMG" name="资源管理" :selected="activeName==='resource'" style="margin-left: 30px" @click="clickTab('resource')"></TabSelector>
       <TabSelector :ssr="dataIMG" :src="dataIMG" name="成果数据" :selected="activeName==='data'" style="margin-left: 30px" @click="clickTab('data')"></TabSelector>
     </div>
@@ -132,7 +132,7 @@ watch(store?.state?.navigationType, (value) => {
 .navigation {
   width: 100%;
   height: $NavigationHeight;
-  background: -webkit-linear-gradient(top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0) 99%);
+  background: -webkit-linear-gradient(top, rgb(16, 53, 69) 0%, rgba(16, 53, 69, 0.6) 60%, rgba(16, 53, 69, 0) 99%);
   position: relative;
   display: flex;
 }
@@ -152,7 +152,7 @@ watch(store?.state?.navigationType, (value) => {
 .Title {
 	cursor: pointer;
   margin-left: 20px;
-  padding-top: 10px;
+  padding-top: 20px;
 }
 .title-zh {
   font-family: $PlatformNameFontFamily-zh;
@@ -168,7 +168,7 @@ watch(store?.state?.navigationType, (value) => {
 }
 .tabs {
   display: flex;
-  margin-top: 15px;
+  margin-top: 20px;
   margin-left: 650px;
 }
 .master {

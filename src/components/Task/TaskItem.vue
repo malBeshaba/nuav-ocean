@@ -1,8 +1,8 @@
 <template>
-  
+
   <div class="task-list-item" :class="activeClass"
        @mouseover="bgHightlight=true" @mouseleave="bgHightlight=false">
-    
+
       <div class="item-header">
         <div class="orange-dot"></div>
         <div class="item-header__left">
@@ -19,7 +19,7 @@
       <div class="item-main">
         <div>
           <span class="item-main__header">任务创建时间</span>
-          <span class="item-main__content item-main__time">{{ Props.planInfo.createTime }}</span>
+          <span class="item-main__content">{{ Props.planInfo.createTime }}</span>
         </div>
         <div>
           <span class="item-main__header">任务策略</span>
@@ -77,7 +77,7 @@ const taskStateIcon = [Histogram, Clock, Finished, Tickets]
 const TaskStateName = computed(() => {
   switch (Props.planInfo.planStatus) {
     case 1:
-      return '待执行' 
+      return '待执行'
     case 2:
       return '执行中'
     case 3:
@@ -115,7 +115,7 @@ const WaylineName = computed(() => {
 const activeClass = computed(() => {
   if (bgHightlight.value) {
     return 'task-list-item__active__' + Props.planInfo.planStatus
-  } 
+  }
   if (isActive.value) {
     return 'task-list-item__active__' + Props.planInfo.planStatus
   }
@@ -165,53 +165,53 @@ const getWaylineInfo = async () => {
 }
 
 .task-list-item__active__1 {
-  border: 1px dashed $TaskTypeColor1;
-  box-shadow: 0 0 5px $TaskTypeColor1;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 
 .task-list-item__active__2 {
-  border: 1px dashed $TaskTypeColor2;
-  box-shadow: 0 0 5px $TaskTypeColor2;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 
 .task-list-item__active__3 {
-  border: 1px dashed $TaskTypeColor3;
-  box-shadow: 0 0 5px $TaskTypeColor3;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 
 .task-list-item__active__4 {
-  border: 1px dashed $TaskTypeColor4;
-  box-shadow: 0 0 5px $TaskTypeColor4;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 
 .task-list-item__active__5 {
-  border: 1px dashed $TaskTypeColor5;
-  box-shadow: 0 0 5px $TaskTypeColor5;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 
 .task-list-item__1 {
-  border: 1px dashed $TaskTypeColor1;
-  box-shadow: 0 0 5px $TaskTypeColor1;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 
 .task-list-item__2 {
-  border: 1px dashed $TaskTypeColor2;
-  box-shadow: 0 0 5px $TaskTypeColor2;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 
 .task-list-item__3 {
-  border: 1px dashed $TaskTypeColor3;
-  box-shadow: 0 0 5px $TaskTypeColor3;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 
 .task-list-item__4 {
-  border: 1px dashed $TaskTypeColor4;
-  box-shadow: 0 0 5px $TaskTypeColor4;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 
 .task-list-item__5 {
-  border: 1px dashed $TaskTypeColor5;
-  box-shadow: 0 0 5px $TaskTypeColor5;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 
 .orange-dot {
@@ -261,7 +261,7 @@ const getWaylineInfo = async () => {
 
 .item-main__header {
   width: 95px;
-  color: $SecondTouchColor;
+  color: var(--el-color-primary-light);
   display: inline-block;
 }
 

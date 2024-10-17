@@ -138,9 +138,9 @@ const EModeCode = computed(() => {
 </script>
 
 
-<style scoped>
+<style scoped lang="scss">
 .drone_item {
-  background-color: #000;
+  background-color: rgba(39, 73, 85, 0.5);
   display: flex;
   align-items: center;
   padding: 14px 0px;
@@ -150,13 +150,13 @@ const EModeCode = computed(() => {
 }
 
 .drone_item--active {
-  background-color: #212a33;
-  border: 1px solid orange;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid #06e9f9;
 }
 
 .grey {
   filter: grayscale(1);
-  background-color: #333333 !important;
+  background-color: rgba(51, 51, 51, 0.7) !important;
 }
 
 .item_left {
@@ -180,7 +180,7 @@ const EModeCode = computed(() => {
 }
 
 .header .header_title {
-  color: #E1B46D;
+  color: $LightColor;
   letter-spacing: 1.2px;
   font-size: 14px;
 }
@@ -200,7 +200,7 @@ const EModeCode = computed(() => {
 }
 
 .introduction .attr {
-  color: #D7D0B2;
+  color: white;
   margin-right: 5px;
 }
 

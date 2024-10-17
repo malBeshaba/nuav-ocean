@@ -17,7 +17,7 @@
     <div class="item-main">
       <div>
         <span class="item-main__header">任务创建时间</span>
-        <span class="item-main__content item-main__time">{{ Props.planInfo.createTime }}</span>
+        <span class="item-main__content">{{ Props.planInfo.createTime }}</span>
       </div>
       <div>
         <span class="item-main__header">任务策略</span>
@@ -127,34 +127,33 @@ const getWaylineInfo = async () => {
 }
 
 .task-list-item__active {
-  background: #111;
-  border: 1px dashed #5b897c;
-  box-shadow: 0 0 5px #5b897c;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 
 .task-list-item__active__1 {
-  border: 1px dashed $TaskTypeColor1;
-  box-shadow: 0 0 5px $TaskTypeColor1;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 
 .task-list-item__active__2 {
-  border: 1px dashed $TaskTypeColor2;
-  box-shadow: 0 0 5px $TaskTypeColor2;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 
 .task-list-item__active__3 {
-  border: 1px dashed $TaskTypeColor3;
-  box-shadow: 0 0 5px $TaskTypeColor3;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 
 .task-list-item__active__4 {
-  border: 1px dashed $TaskTypeColor4;
-  box-shadow: 0 0 5px $TaskTypeColor4;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 
 .task-list-item__active__5 {
-  border: 1px dashed $TaskTypeColor5;
-  box-shadow: 0 0 5px $TaskTypeColor5;
+  background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;
 }
 .orange-dot {
   width: 6px;

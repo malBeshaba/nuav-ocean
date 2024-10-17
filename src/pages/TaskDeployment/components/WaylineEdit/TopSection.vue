@@ -393,12 +393,13 @@ const ShowConfirmPanel=()=>{
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .NavigationArea{
   width: 100%;
-  height: 100px;
-  background: #232323;
-	background: -webkit-linear-gradient(top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0) 99%);
+  height: 60px;
+  /*background: #232323;   background: linear-gradient(rgba(39, 73, 85, 0.5) 20%, rgba(34,153,211,0.6) 100%);
+  border: 1px solid $TouchColor;*/
+	background: -webkit-linear-gradient(top, rgba(39, 73, 85, 1) 0%, rgba(39, 73, 85,0.6) 60%, rgba(39, 73, 85, 0) 99%);
   position: absolute;
   top:0;
 }
@@ -432,7 +433,8 @@ const ShowConfirmPanel=()=>{
   top:5px;
   width: 340px;
   height: 35px;
-  background: #3c3c3c;
+  color: white;
+  background: $ComponentBackground;
   display: flex;
   align-items: center;
   border-radius: 3px;

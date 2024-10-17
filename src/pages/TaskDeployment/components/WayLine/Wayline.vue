@@ -27,7 +27,7 @@ onMounted(() => {
   // box-sizing: border-box;
   overflow: hidden;
   position: fixed;
-  top: 0px;
+  top: 0;
   height: calc(100% - $NavigationHeight);
   left: $LeftWidth;
   width: $LeftWidth;
