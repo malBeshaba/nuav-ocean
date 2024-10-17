@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true, // js/ts 混用时设为false
+    "moduleResolution": "node",
+    "baseUrl": "./",	// 解析非相对模块的基地址，默认是当前目录
+    "paths": {"@/*": ["src/*"]}	// 路径映射，相对于baseUrl
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": ["src", "env.d.ts", "auto-imports.d.ts", "images.d.ts"]
+}

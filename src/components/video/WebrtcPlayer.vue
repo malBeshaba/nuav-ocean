@@ -1,0 +1,109 @@
+<template>
+  <video
+    ref="jswebrtc"
+    controls
+    disablePictureInPicture
+    style="width: 100%;height: 100%;object-fit: fill;"
+  >
+  </video>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
+import {PlanePhotos} from "@/utils/location/Location_Node";
+const PP = new PlanePhotos()
+const Props = defineProps<{
+	videoSrc: string
+}>()
+const isFull = computed(()=>window.document.fullscreenEnabled)
+onMounted(() => {
+  watch(() => Props.videoSrc, (newData, oldData) => {
+    // console.log('播放视频路径：', newData)
+    if (Props.videoSrc) {
+      initVideo(Props.videoSrc)
+    }
+  }, { immediate: true })
+});
+
+onBeforeUnmount(() => {
+  // 播放器存在清除播放器
+  if (player) {
+    player.destroy()
+  }
+});
+let isFullScreen = false
+function checkIsFullScreen() {
+  return document.fullscreenElement !== null
+}
+document.addEventListener('fullscreenchange', () => {
+  isFullScreen = checkIsFullScreen()
+  console.log(isFullScreen)
+})
+const videos = document.querySelectorAll("video");
+videos.forEach(video => {
+  // 阻止单击暂停
+  video.addEventListener("click", (event) => {
+    console.log(event.x, event.y)
+    PP.click2loc([event.x, event.y])
+    PP.click2loc([event.x, event.y])
+    console.log(PP.loc)
+    event.preventDefault();
+  });
+})
+// function clickPlayer(e:any) {
+//   e.stopPropagation()
+//   console.log(e.x, e.y)
+// }
+/**
+ * 初始化播放器并播放
+ * 两种调用方式
+ *  一种通过 watch监听 props 传过来的 src 进行播放
+ *  一种通过 引用组件上的 ref 直接调用 initVideo 如 this.$refs.webrtc.initVideo('src')
+ * */
+
+let player: any = null
+let jswebrtc = ref(null)
+const initVideo = (url: string) => {
+  // 播放器存在 清空重置
+  if (player) {
+    player.destroy()
+    player = null
+  }
+  // let videoDom = document.getElementById('jswebrtc')		// 初始化播放器
+  let videoDom = jswebrtc.value as any
+  player = new JSWebrtc.Player(url, {
+    video: videoDom,
+    autoplay: true,
+    onPlay: (obj: any) => {
+      // 监听video元素状态，可播放时进行播放 。 某些情况下  autoplay 会失效
+      // mdn https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLMediaElement/canplay_event
+      // 菜鸟 https://www.runoob.com/tags/av-event-canplay.html
+      videoDom.addEventListener('canplay', function () {
+        videoDom.play()
+      })
+    }
+  })
+}
+</script>
+
+<style scoped>
+video::-webkit-media-controls-current-time-display{
+  display: none;
+}
+video::-webkit-media-controls-timeline {
+  display: none;
+}
+video::-webkit-media-controls-mute-button {
+  display: none;
+}
+video::-webkit-media-controls-timeline {
+  display: none;
+}
+
+video::-webkit-media-controls-volume-control-container {
+  display: none;
+}
+video::-webkit-media-controls-play-button {
+  display: none;
+}
+</style>

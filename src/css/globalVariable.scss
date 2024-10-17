@@ -1,0 +1,75 @@
+$TouchColor: #F9A100;
+$TouchColor2: rgba(249, 161, 0, 0.2); //主题色透明度为2时
+$TouchColorBackground: rgba(249, 161, 0, 0.14); //主题色透明度为0.14时
+$SecondTouchColor: #F9B73E;
+
+$NavigationHeight: 137px;
+$LeftWidth: 400px;
+$RightWidth: 400px;
+$CenterBottomHeight: 287px;  // 控制中台底部高度
+
+$ComponentBackground: rgba(10, 11, 14, 0.85); // 组件背景颜色
+$ComponenHeadHeight: 60px; // 组件标题高度
+$ComponentHeadBackground: rgba(74, 67, 51, 0.36); // 组件标题背景色
+$ComponentHeaderBorder: 1px solid #F9A100;
+$ComponentGap: 20px; // 组件间距
+
+$IconSize: 16px;
+$IconColor: #FFFFFF;
+$IconBorder: 1px dashed #F9A100;
+
+$UsualColor: #999;
+$UsualBorder: 1px solid #999; // 小组件的边框
+
+$DockControlSettingBorder: 1px solid #666;
+
+// 字体
+$PlatformNameFontFamily-zh: Microsoft Yahei;
+$PlatformNameFontSize-zh: 40px;
+$PlatformNameFontWeight-zh: 400;
+$PlatformNameColor-zh: #FFFFFF;
+
+$PlatformNameFontFamily-en: Source Han Sans CN;
+$PlatformNameFontSize-en: 24px;
+$PlatformNameFontWeight-en: 300;
+$PlatformNameColor-en: #F9A100;
+
+$FirstLevelTitleFontFamily: Microsoft YaHei;
+$FirstLevelTitleFontSize: 16px;
+$FirstLevelTitleFontWeight: 400;
+$FirstLevelTitleColor: #FFFFFF;
+
+$SecondLevelTitleFontFamily: Microsoft YaHei;
+$SecondLevelTitleFontSize: 14px;
+$SecondLevelTitleFontWeight: 400;
+$SecondLevelTitleColor: #FFFFFF;
+
+$ContentFontFamily: Microsoft YaHei;
+$ContentFontSize: 12px;
+$ContentFontWeight: 400;
+$ContentColor: #FFFFFF;
+
+$AnnotateFontFamily: Microsoft YaHei;
+$AnnotateFontSize: 12px;
+$AnnotateFontWeight: 100;
+$AnnotateColor: #DDDDDD;
+
+$InforFontFamily: Microsoft YaHei;
+$InforFontSize: 12px;
+$InforFontWeight: 400;
+$InforColor: #D7D0B2;
+
+// 浏览条
+$ScrollbarWidth: 2px;
+$ScrollbarHeight: 3px;
+$ScrollbarBorderRadius: 10px;
+$ScrollbarColor: $TouchColor;
+$ScrollbarBackgroundColor: rgba(249, 161, 0, 0.2);
+$ScrollbarBoxShadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+
+// 任务状态颜色
+$TaskTypeColor1: #FFBB40;
+$TaskTypeColor2: #65DDBC;
+$TaskTypeColor3: #F9E6C4;
+$TaskTypeColor4: #EA5B51;
+$TaskTypeColor5: #EA5B51;

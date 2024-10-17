@@ -1,0 +1,12 @@
+html.dark {
+    /* 自定义深色背景颜色 */
+    /* --el-bg-color: #626aef; */
+    --el-color-primary: rgba(52, 100, 162, 1);
+    --el-color-primary-light-3: rgba(52, 100, 162, 0.8);
+    --el-color-primary-light-5: rgba(52, 100, 162, 0.6);
+    --el-color-primary-light-7: rgba(52, 100, 162, 0.5);
+    --el-color-primary-light-8: rgba(52, 100, 162, 0.3);
+    --el-color-primary-light-9: rgba(52, 100, 162, 0.1);
+    --el-color-white: #333;
+    --el-color-primary-dark-2: rgba(52, 100, 162, 1);
+ }

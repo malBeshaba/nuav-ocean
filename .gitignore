@@ -1,0 +1,9 @@
+node_modules
+.DS_Store
+dist
+dist-ssr
+.idea
+*.local
+auto-imports.d.ts
+.env.development
+dronesv2
