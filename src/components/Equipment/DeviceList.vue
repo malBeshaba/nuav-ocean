@@ -26,24 +26,24 @@
     </div>
     <div class="list-main">
       <el-collapse v-model="activeName" @change="handleChange">
-<!--        <el-collapse-item name="drone" >-->
-<!--          <template #title>-->
-<!--            <div class="collapse-title" >-->
-<!--              <div class="orange-dot"></div>-->
-<!--              <div class="collapse-title-left">无人机</div>-->
-<!--              <div class="collapse-title-main"> </div>-->
-<!--              <div class="collapse-title-right">收起({{ droneTotal }})</div>-->
-<!--            </div>-->
-<!--          </template>-->
-<!--          <div v-if="droneInfo.length > 0">-->
-<!--            <div v-for="item in droneInfo" :key="item.device_sn">-->
-<!--              <DroneItem :droneInfo="item" @click="getDroneDetail(item.device_sn)"></DroneItem>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div v-else>-->
-<!--            无设备！-->
-<!--          </div>-->
-<!--        </el-collapse-item>-->
+        <el-collapse-item name="drone" v-if="route.path.split('/')[2] === 'resource'">
+          <template #title>
+            <div class="collapse-title" >
+              <div class="orange-dot"></div>
+              <div class="collapse-title-left">无人机</div>
+              <div class="collapse-title-main"> </div>
+              <div class="collapse-title-right">收起({{ droneTotal }})</div>
+            </div>
+          </template>
+          <div v-if="droneInfo.length > 0">
+            <div v-for="item in droneInfo" :key="item.device_sn">
+              <DroneItem :droneInfo="item" @click="getDroneDetail(item.device_sn)"></DroneItem>
+            </div>
+          </div>
+          <div v-else>
+            无设备！
+          </div>
+        </el-collapse-item>
 
         <el-collapse-item name="dock" >
           <template #title>
