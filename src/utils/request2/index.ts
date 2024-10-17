@@ -23,7 +23,7 @@ instance.interceptors.request.use(
         if (getAuthToken()) {
             config.headers[ELocalStorageKey.Authorization] = getAuthToken()
         } else {
-            router.push({path: '/login'}).catch(() => {})
+            // router.push({path: '/login'}).catch(() => {})
         }
         // config.headers[REQUEST_ID] = uuidv4()
         config.baseURL = CURRENT_CONFIG.baseURL2
