@@ -15,14 +15,15 @@
       <TabSelector :ssr="dataIMG" :src="dataIMG" name="成果数据" :selected="activeName==='data'" style="margin-left: 30px" @click="clickTab('data')"></TabSelector>
     </div>
     <div class="master">
-      <el-dropdown trigger="click" @command="handleCommand">
-        <el-image :src="masterIMG" style=""></el-image>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item command="log-out">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      <el-button type="primary" @click="handleLayout">退出</el-button>
+<!--      <el-dropdown trigger="click" @command="handleCommand">-->
+<!--        <el-image :src="masterIMG" style=""></el-image>-->
+<!--        <template #dropdown>-->
+<!--          <el-dropdown-menu>-->
+<!--            <el-dropdown-item command="log-out">退出登录</el-dropdown-item>-->
+<!--          </el-dropdown-menu>-->
+<!--        </template>-->
+<!--      </el-dropdown>-->
     </div>
   </div>
 </template>
@@ -84,6 +85,10 @@ const clickTab = (tab: string) => {
     default:
       break
   }
+}
+
+const handleLayout = () => {
+  location.href = import.meta.env.VITE_OCEAN_URL;
 }
 watch(() => router.currentRoute.value.path, (newValue, oldValue) => {
   // console.log('path', newValue, oldValue)
