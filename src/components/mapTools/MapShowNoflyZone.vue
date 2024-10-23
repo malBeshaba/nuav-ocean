@@ -51,7 +51,6 @@ watch(showProhibitArea,(val)=>{
 </script>
 
 <style scoped lang="scss">
-@import "@/css/globalVariable.scss";
 .MapShowNoflyZone {
   width: 40px;
   height: 30px;

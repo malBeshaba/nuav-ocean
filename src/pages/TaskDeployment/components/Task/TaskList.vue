@@ -29,7 +29,11 @@
           :key="item.flightPlanId"
           :span="24"
         >
-          <TaskItem :planInfo="item" @click="getTaskInformation(item.flightPlanId, item.planStatus, item.waylineId)"></TaskItem>
+          <TaskItem 
+            :planInfo="item" 
+            @click="getTaskInformation(item.flightPlanId, item.planStatus, item.waylineId)"
+            @refresh="getTaskInfo"
+          ></TaskItem>
         </el-col>
       </el-row>
     </div>

@@ -56,7 +56,6 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-@import "@/css/globalVariable.scss";
 .SwitchTwoThreeDimensional {
   width: 40px;
   height: 30px;

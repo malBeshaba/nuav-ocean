@@ -1,4 +1,4 @@
-/<template>
+<template>
   <div class="panel">
     <div class="top-section">
       <div class="BtnTrunLeft" @click="decrement"></div>

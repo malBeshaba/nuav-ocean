@@ -1,7 +1,6 @@
 <template>
 	<div class="aerial_view" id="aerial_view">
-<!--		<img class="move_aerial_map" :src="moveMapAerialImage" alt="" @click="mapMove" />-->
-<!--		<hand-off-map-aerial class="hand_off_map_aerial"></hand-off-map-aerial>-->
+
 	</div>
 </template>
 
@@ -9,9 +8,6 @@
 import { onMounted, } from 'vue'
 import { initAerialView } from '@/components/AerialViewTools/InitAerialViewMap'
 import { switchTianDiTuMap } from "@/components/mapTools/SwitchMapServices";
-import HandOffMapAerial from '@/components/AerialViewTools/HandOffMapAerial.vue'
-import moveMapAerialImage from '@/assets/map/aerialviewmove.png'
-import {CesiumFlyTo} from '@/components/mapTools/BaseMapTools'
 import * as Cesium from 'cesium'
 import {TilesetData} from '@/components/mapTools/class/Map3DtilesetClass'
 
@@ -45,27 +41,10 @@ const mapMove = () => {
 </script>
 
 <style scoped lang="scss">
-@import "//at.alicdn.com/t/c/font_3880304_vpf4pcfgb3l.css";
 .aerial_view {
-  position: relative;
-	border: 2px solid $LightColor;
+  	position: relative;
+	border: 2px solid #06e9f9;
 	border-radius: 5px;
 }
 
-.aerial_view .hand_off_map_aerial {
-  position: absolute;
-  width: 30px;
-  height: 20px;
-  left: 50px;
-  top: 10px;
-  z-index: 1;
-}
-.move_aerial_map {
-	position: absolute;
-  width: 30px;
-  height: 20px;
-  left: 10px;
-  top: 10px;
-  z-index: 1;
-}
 </style>
