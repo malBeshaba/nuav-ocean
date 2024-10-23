@@ -380,4 +380,6 @@ const Cancel = async () => {
     border: 1px solid $TouchColor;
   }
 }
+
+
 </style>

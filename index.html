@@ -8,6 +8,18 @@
   <script type="text/javascript" src="/jswebrtc.min.js"></script>
   <link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.11.0/skins/default/aliplayer-min.css" />
   <script type="text/javascript" charset="utf-8" src="https://g.alicdn.com/de/prismplayer/2.11.0/aliplayer-min.js"></script>
+    <style>
+        #app::-webkit-scrollbar {
+            display: none; /* Chrome Safari */
+        }
+
+        #app {
+            scrollbar-width: none; /* firefox */
+            -ms-overflow-style: none; /* IE 10+ */
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
   <div id="app"></div>

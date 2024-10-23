@@ -8,6 +8,13 @@ import {WayLineV2} from "@/store/types/WayLineV2";
 import {WayPointActionList} from "@/store/types/WayPoint";
 import store from "@/store/index";
 const mutations: MutationTree<RootStateType> = {
+    SET_IFRAME_DOCK_SN(state, sn) {
+        state.iframeDockSn = sn
+    },
+    SET_IFRAME_DRONE_SN(state, sn) {
+        state.iframeDroneSn = sn
+    },
+
     SET_DOCK_INFO(state: RootStateType, data: any) {
         if (Object.keys(data.host).length === 0) {
             return

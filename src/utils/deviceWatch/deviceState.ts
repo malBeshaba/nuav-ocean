@@ -28,7 +28,7 @@ export function deviceState () {
         let modelHeading = 360 - (( Number(value[key].attitude_head) + 360 ) % 360)
         let isExist = false
         if (flyList.length === 0) {
-          console.log('首次接入无人机')
+          // console.log('首次接入无人机')
           // ElNotification({
           //   title: '无人机上线',
           //   message: `${key}上线`,

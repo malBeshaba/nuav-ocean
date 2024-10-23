@@ -7,24 +7,19 @@
 </template>
 
 <script setup lang="ts">
-import {
-  useConnectWebSocket,
-  messageHandler,
-} from "@/utils/websocket/use-connect-websocket";
-
 // import {
-//   jxUseConnectWebsocket,
-//   jxMessageHandler,
-// } from "@/utils/jx-websocket/jx-use-connect-websocket";
+//   useConnectWebSocket,
+//   messageHandler,
+// } from "@/utils/websocket/use-connect-websocket";
 
-import { dockState } from '@/utils/deviceWatch/dockState'
-import { deviceState } from '@/utils/deviceWatch/deviceState'
+
+// import { dockState } from '@/utils/deviceWatch/dockState'
+// import { deviceState } from '@/utils/deviceWatch/deviceState'
 import Navigation from "@/components/Tabs/Navigation.vue";
 import CesiumMap from "@/pages/Map/index.vue";
-useConnectWebSocket(messageHandler);
-// jxUseConnectWebsocket(jxMessageHandler);
-dockState()
-deviceState()
+// useConnectWebSocket(messageHandler);
+// dockState()
+// deviceState()
 </script>
 
 <style scoped>

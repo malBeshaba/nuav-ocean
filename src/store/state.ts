@@ -7,6 +7,8 @@ import {VideoFusion} from '@/components/mapTools/class/MapVideoFusionClass'
 import {TilesetData} from '@/components/mapTools/class/Map3DtilesetClass'
 
 const state = () => ({
+    iframeDockSn: '',
+    iframeDroneSn: '',
     deviceState: {
         // remote controller, dock
         gatewayInfo: {} as {

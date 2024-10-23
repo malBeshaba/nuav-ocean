@@ -264,6 +264,11 @@ const router = createRouter({
             path: '/player',
             name: 'player',
             component: () => import('@/components/video/WebrtcPlayer.vue')
+        },
+        {
+            path:"/mainPageFrame",
+            name:"mainPageFrame",
+            component:()=>import('@/pages/MainPageFrame/MainPageFrame.vue')
         }
     ]
 })
