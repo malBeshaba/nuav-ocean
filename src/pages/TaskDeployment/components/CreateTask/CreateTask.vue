@@ -33,6 +33,7 @@
             <el-radio-button border label=1 @click="showChooseTimePanel">单次定时</el-radio-button>
             <el-radio-button border label=2 @click="showChooseTimePanelRepeat">重复定时</el-radio-button>
             <el-radio-button border label=3 @click="HideshowChooseTimePanel">连续执行</el-radio-button>
+            <el-radio-button border label=4 @click="HideshowChooseTimePanel">预设任务</el-radio-button>
           </el-radio-group>
           <el-date-picker
               v-if="ChooseTimePanel"
@@ -120,7 +121,7 @@ import {getWaylineById} from "@/api/wayline";
 import WayLine from "@/pages/TaskDeployment/components/WayLine/Wayline.vue"
 import {Wayline} from "@/store/types/wayline";
 import {getBindingDeviceBySn} from '@/api/device'
-import {insertFlightTask, exectFlightTask} from "@/api/droneFlightPlan";
+import {insertFlightTask, exectFlightTask, insertFlightTaskPrepare} from "@/api/droneFlightPlan";
 import {useCookies} from "vue3-cookies";
 
 const {cookies} = useCookies()
@@ -234,50 +235,104 @@ const exectFlightTaskParams = reactive({
   planId: '',
   deviceType: 0,
 })
+interface InsertTaskParams {
+  planName: string;
+  waylineId: string;
+  deviceSn: string;
+  waylineType: number;
+  taskType: number;
+  rthAltitude: number;
+  outOfControl: number;
+  planTaskType: number;
+  planStatus: number;
+  executeTime: number;
+}
+const preparetaskInfo = ref({} as InsertTaskParams)
+
+function InsertTask() {
+  isSave = false
+  taskInfo.value.rthAltitude = Number(taskInfo.value.rthAltitude)
+  taskInfo.value.deviceSn = route.query.device_sn as string
+  taskInfo.value.executeTime = getTimeStamp()
+  console.log("taskInfo.value", taskInfo.value)
+  preparetaskInfo.value.planName = taskInfo.value.planName
+  preparetaskInfo.value.waylineId = taskInfo.value.waylineId
+  preparetaskInfo.value.deviceSn = taskInfo.value.deviceSn
+  //preparetaskInfo.value.waylineType = taskInfo.value.waylineType
+  preparetaskInfo.value.taskType = taskInfo.value.taskType
+  preparetaskInfo.value.rthAltitude = taskInfo.value.rthAltitude
+  preparetaskInfo.value.outOfControl = taskInfo.value.outOfControl
+  preparetaskInfo.value.planTaskType = taskInfo.value.planTaskType
+  preparetaskInfo.value.planStatus = 1
+  preparetaskInfo.value.executeTime = taskInfo.value.executeTime
+  console.log("preparetaskInfo.value", preparetaskInfo.value)
+  removeCache()
+  store.commit('CHANGE_CACHE_STYLE', {isReady: true, isAllow:true})
+  insertFlightTaskPrepare(preparetaskInfo.value)
+}
 
 function createTask() {
   isSave = false
   taskInfo.value.rthAltitude = Number(taskInfo.value.rthAltitude)
   taskInfo.value.deviceSn = route.query.device_sn as string
   taskInfo.value.executeTime = getTimeStamp()
+  console.log("taskInfo.value", taskInfo.value)
   removeCache()
-  store.commit('CHANGE_CACHE_STYLE', {isReady: true, isAllow: true})
-  insertFlightTask(taskInfo.value).then(res => {
-    if (res.code === 0) {
-      exectFlightTaskParams.planId = res.data.flightPlanId
-      console.log('exectFlightTaskParams', exectFlightTaskParams)
-      exectFlightTask(JSON.parse(localStorage.getItem('userInfo') as string).workspace_id, exectFlightTaskParams).then(res2 => {
-        console.log('res', res.data)
-        if (res2.code === 0) {
-          ElMessage.success({
-            message: "执行成功!",
-            offset: window.screen.height / 2,
-          })
-          store.commit('SET_TASK_FLIGHT_PLAN_INFO', {
-            flightPlanId: res.data.flightPlanId,
-            device_sn: deviceInfo.child_device_sn
-          })
-          console.log('store.state.taskFlightPlanInfo', store.state.taskFlightPlanInfo)
-          router.push({
-            path: '/default/task/task-list',
-            query: {
-              device_sn: taskInfo.value.deviceSn,
-              flightPlanId: res.data.flightPlanId
-            },
-          })
-          CancelWayLineShow()
-          // RemoveEntitiesByBatch(window.cesiumViewer, 'checkWayLine')
-          // CheckWayLine(window.cesiumViewer, String(wayline.value.waylineId), true)
-        }
-      })
-    } else {
-      ElMessage.error({
-        message: "执行失败！",
-        offset: window.screen.height / 2,
-      })
-    }
-  })
-
+  store.commit('CHANGE_CACHE_STYLE', {isReady: true, isAllow:true})
+  if(Number(taskInfo.value.taskType) === 4){
+    ElMessage({
+      message: "创建预设任务成功",
+      type: 'success'
+    });
+    InsertTask()
+    router.push({
+      path: '/default/task/task-list',
+      query: {
+        device_sn: taskInfo.value.deviceSn,
+      },
+    })
+  } else {
+    ElMessage({
+      message: "创建任务成功,并将于指定时间起飞",
+      type: 'success'
+    });
+    insertFlightTask(taskInfo.value).then(res => {
+      if (res.code === 0) {
+        console.log('res_insertFlightTask', res.data)
+        exectFlightTaskParams.planId = res.data.flightPlanId
+        console.log('exectFlightTaskParams', exectFlightTaskParams)
+        exectFlightTask(JSON.parse(localStorage.getItem('userInfo') as string).workspace_id, exectFlightTaskParams).then(res2 => {
+          console.log('res_exectFlightTask', res.data)
+          if (res2.code === 0) {
+            ElMessage.success({
+              message: "执行成功!",
+              offset: window.screen.height / 2,
+            })
+            store.commit('SET_TASK_FLIGHT_PLAN_INFO', {
+              flightPlanId: res.data.flightPlanId,
+              device_sn: deviceInfo.child_device_sn
+            })
+            console.log('store.state.taskFlightPlanInfo', store.state.taskFlightPlanInfo)
+            router.push({
+              path: '/default/task/task-list',
+              query: {
+                device_sn: taskInfo.value.deviceSn,
+                flightPlanId: res.data.flightPlanId
+              },
+            })
+            CancelWayLineShow()
+            // RemoveEntitiesByBatch(window.cesiumViewer, 'checkWayLine')
+            // CheckWayLine(window.cesiumViewer, String(wayline.value.waylineId), true)
+          }
+        })
+      } else {
+        ElMessage.error({
+          message: "执行失败！",
+          offset: window.screen.height / 2,
+        })
+      }
+    })
+  }
 }
 
 //任务创建时间相关函数

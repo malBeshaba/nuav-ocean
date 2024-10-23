@@ -1,13 +1,13 @@
 <template>
   <div @contextmenu.prevent="choseRightMenu($event)" class="cesium_map" id="cesium_map">
     <right-click-options v-show="rightClickValue.showRightClick" :rightClickValue="rightClickValue"></right-click-options>
-    <range-map v-show="showMapTool" class="range_layer"></range-map>
-	  <show-and-hide3-d-tileset v-show="showMapTool" class="show_and_hide3d_tileset"></show-and-hide3-d-tileset>
+    <!-- <range-map v-show="showMapTool" class="range_layer"></range-map> -->
+	  <!-- <show-and-hide3-d-tileset v-show="showMapTool" class="show_and_hide3d_tileset"></show-and-hide3-d-tileset> -->
 <!--    <draw-entity-on-map class="draw_entity_on_map"></draw-entity-on-map>-->
 <!--    <map-show-nofly-zone class="map_show_nofly_zone"></map-show-nofly-zone>-->
-	  <select-layer v-show="showMapTool" class="select_layer"></select-layer>
+	  <!-- <select-layer v-show="showMapTool" class="select_layer"></select-layer> -->
 <!--    <north-arrow v-show="showMapTool" class="map_north_arrow"></north-arrow>-->
-    <switch-two-three-dimensional v-show="showMapTool" class="switch_two_three_dimensional"></switch-two-three-dimensional>
+    <!-- <switch-two-three-dimensional v-show="showMapTool" class="switch_two_three_dimensional"></switch-two-three-dimensional> -->
     <real-time-coordinate-display v-show="showMapTool" class="map_real_time_coordinate_display"></real-time-coordinate-display>
 	  <flight-controller v-show="isEdit" class="flight_controller"></flight-controller>
 	  <add-way-point-action-panel v-show="isEdit" class="add_way_point_action_panel"></add-way-point-action-panel>

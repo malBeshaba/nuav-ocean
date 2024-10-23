@@ -2,7 +2,8 @@
   <div class="wayline-list">
     <div class="WayLineListTitle">
       <div class="ChooseWayLine">{{ ChooseWayLine }}</div>
-      <div class="NewWayLineBtn" @click="newWayline()">＋新建航线</div>
+      <!-- <div class="NewWayLineBtn" @click="newWayline()">＋新建航线</div> -->
+      <el-button type="primary" size="small" @click="newWayline()" style="color: white; margin-left: 147px; margin-top: -3px;"><el-icon><Plus /></el-icon>新建航线</el-button>
       <img class="CloseWayLineListPanel" @click="closeAddWayline()"
            referrerpolicy="no-referrer"
            src="https://lanhu.oss-cn-beijing.aliyuncs.com/ps0b8ui68rncgyhgp968dphjsl93bde9me5600e6a-3554-45d5-82c7-022fee77d3c6">
@@ -56,6 +57,9 @@ const route = useRoute();
 const router = useRouter();
 import { useMyStore } from "@/store"
 import {RemoveEntitiesByBatch} from '@/components/mapTools/BaseMapTools'
+import { Search, Plus, DArrowLeft, Back } from '@element-plus/icons-vue'
+
+
 const store = useMyStore();
 const SelectedList=ref([]);
 const ChooseWayLine = ref("选择航线");
@@ -263,8 +267,10 @@ const exportWayLine = (item: any) => {
   box-shadow: 8px 0px 4px 0px $LightColor;
   background-color: $ComponentBackground;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 40px);
   overflow: scroll;
+  margin-left: 21px;
+  margin-top: 20px;
 }
 // .wayline-list{
 
@@ -330,7 +336,7 @@ const exportWayLine = (item: any) => {
   justify-content: space-between;
   background-color: rgba(0, 0, 0, 1);
   border-radius: 4px;
-  width: 386px;
+  width: 97%;
   height: 32px;
   margin: 15px 0 0 5px;
 }

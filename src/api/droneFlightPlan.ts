@@ -72,3 +72,24 @@ export const deleteFlightPlan = async function (ids: String) {
     const result = await request.get(url)
     return result.data
 }
+
+// 添加预设任务
+export interface insertFlightTaskParamsPrepare {
+    flightPlanId?: string,
+    planName: string,
+    waylineId: string,
+    deviceSn: string,
+    waylineType: number,
+    taskType: number,
+    planTaskType: number,
+    executeTime?: number,
+    rthAltitude: number,
+    outOfControl: number,
+    planStatus: number,
+    flyTrajectories?: number[],
+}
+export const insertFlightTaskPrepare = async function (body: insertFlightTaskParamsPrepare) {
+    const url = "/droneFlightPlan/insert"
+    const result = await request.post(url, body)
+    return result.data
+}
