@@ -105,12 +105,13 @@
             placeholder="Select"
             size="small"
             style="width: 140px"
+            @change = handleTaskChange
         >
           <el-option
               v-for="item in flightOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.fligtPlanId"
+              :label="item.planName"
+              :value="item.fligtPlanId"
           />
         </el-select>
         <el-button type="success" size="small" @click="handleExitFlight">一键起飞</el-button>
@@ -132,15 +133,25 @@
 import { Edit, View as IconView } from '@element-plus/icons-vue'
 // import DroneBlock from "@/components/drone/drone_block.vue"
 import VideoFrame from '@/pages/ResourceManagement/components/Dock/VideoFrame.vue'
-import { onMounted, ref, reactive, watch, computed, onBeforeUnmount,defineEmits } from 'vue'
+import {onMounted, ref, reactive, watch, computed, onBeforeUnmount, defineEmits, toRaw} from 'vue'
 import { getBindingDeviceBySn } from "@/api/device";
 import { stopLivestream, getLiveAddress, startLivestream, getAILive, getLivestatus } from "@/api/live"
 import { DeviceInfo } from "@/store/types/device";
 import dockIMG from "@/assets/images/dock.png"
 import { Close, Clock } from '@element-plus/icons-vue'
+import {
+  exectFlightTask,
+  getFlightPlan,
+  getFlightPlanList,
+  insertFlightTask,
+  insertFlightTaskPrepare
+} from "@/api/droneFlightPlan"
 import { useMyStore } from "@/store"
 const store = useMyStore()
 import { useRoute, useRouter } from 'vue-router';
+import {useCookies} from "vue3-cookies";
+
+const {cookies} = useCookies()
 const route = useRoute();
 const router = useRouter();
 
@@ -222,26 +233,10 @@ const isShowInfo = ref(false)
 const deviceSn = ref("")
 
 // 一键起飞选项
-const flightValue = ref('Option1')
+const flightValue = ref('')
 
-const flightOptions = [
-  {
-    value: 'Option1',
-    label: '蚝壳巡检航线',
-  },
-  {
-    value: 'Option2',
-    label: '鱼排监测航线',
-  },
-  {
-    value: 'Option3',
-    label: '西南地区专用航线',
-  },
-  {
-    value: 'Option4',
-    label: '日常巡检航线',
-  }
-]
+const flightOptions = ref([])
+
 
 // // Emit event when isShowInfo changes
 // watch(isShowInfo, (newVal) => {
@@ -334,12 +329,179 @@ onMounted(() => {
   deviceSn.value = store.state.iframeDockSn
   getDeviceInfo()
   getDockLiveStream()
+  // const preFlightPlanRes =  getFlightPlanList()
+
+  getFlightPlanList(JSON.parse(localStorage.getItem('userInfo')).workspace_id, {
+
+    deviceSn: deviceSn.value,
+    taskType:"4"
+  }).then(res => {
+    // console.log(res)
+    if (res.code === 0) {
+      flightOptions.value = []
+      res.data.forEach((item: any) => {
+        flightOptions.value.push(item)
+      })
+      // console.log(res.data,"查询结果")
+      // taskTotal.value = res.data.pagination.total
+
+    }
+  })
 
 });
 
-const handleExitFlight = () => {
-  // router.push('/default/resource')
+
+
+interface MyObject {
+  planName: string;
+  waylineId: string;
+  deviceSn: string;
+  waylineType: number;
+  taskType: number;
+  rthAltitude: number;
+  outOfControl: number;
+  planTaskType: number;
+  executeTime: number;
 }
+
+const taskInfo = ref({} as MyObject)
+
+
+
+
+// 执行任务
+const exectFlightTaskParams = reactive({
+  planId: '',
+  deviceType: 0,
+})
+interface InsertTaskParams {
+  planName: string;
+  waylineId: string;
+  deviceSn: string;
+  waylineType: number;
+  taskType: number;
+  rthAltitude: number;
+  outOfControl: number;
+  planTaskType: number;
+  planStatus: number;
+  executeTime: number;
+}
+const preparetaskInfo = ref({} as InsertTaskParams)
+
+const removeCache = () => {
+  const taskCache = cookies.get('createTaskCache') as unknown as any
+  if (taskCache[route.query.device_sn as string]) {
+    delete taskCache[route.query.device_sn as string]
+    console.log(taskCache)
+    cookies.set('createTaskCache', JSON.stringify(taskCache))
+  }
+}
+
+// 生成时间戳
+const getTimeStamp = () => {
+  return Date.now()
+};
+let isSave = true
+
+function InsertTask() {
+  isSave = false
+  taskInfo.value.rthAltitude = Number(taskInfo.value.rthAltitude)
+  taskInfo.value.deviceSn = route.query.device_sn as string
+  taskInfo.value.executeTime = getTimeStamp()
+  console.log("taskInfo.value", taskInfo.value)
+  preparetaskInfo.value.planName = taskInfo.value.planName
+  preparetaskInfo.value.waylineId = taskInfo.value.waylineId
+  preparetaskInfo.value.deviceSn = taskInfo.value.deviceSn
+  //preparetaskInfo.value.waylineType = taskInfo.value.waylineType
+  preparetaskInfo.value.taskType = taskInfo.value.taskType
+  preparetaskInfo.value.rthAltitude = taskInfo.value.rthAltitude
+  preparetaskInfo.value.outOfControl = taskInfo.value.outOfControl
+  preparetaskInfo.value.planTaskType = taskInfo.value.planTaskType
+  preparetaskInfo.value.planStatus = 1
+  preparetaskInfo.value.executeTime = taskInfo.value.executeTime
+  console.log("preparetaskInfo.value", preparetaskInfo.value)
+  removeCache()
+  store.commit('CHANGE_CACHE_STYLE', {isReady: true, isAllow:true})
+  insertFlightTaskPrepare(preparetaskInfo.value)
+}
+
+
+// 执行飞行任务
+function handleExitFlight() {
+  isSave = false
+  taskInfo.value.rthAltitude = Number(taskInfo.value.rthAltitude)
+  taskInfo.value.deviceSn = deviceSn.value
+  taskInfo.value.executeTime = getTimeStamp()
+  removeCache()
+  store.commit('CHANGE_CACHE_STYLE', {isReady: true, isAllow:true})
+  if(Number(taskInfo.value.taskType) === 4){
+    ElMessage({
+      message: "创建预设任务成功",
+      type: 'success'
+    });
+    InsertTask()
+  } else {
+    ElMessage({
+      message: "创建任务成功,并将于指定时间起飞",
+      type: 'success'
+    });
+    insertFlightTask(taskInfo.value).then(res => {
+      if (res.code === 0) {
+        console.log('res_insertFlightTask', res.data)
+        exectFlightTaskParams.planId = res.data.flightPlanId
+        console.log('exectFlightTaskParams', exectFlightTaskParams)
+        exectFlightTask(JSON.parse(localStorage.getItem('userInfo') as string).workspace_id, exectFlightTaskParams).then(res2 => {
+          console.log('res_exectFlightTask', res.data)
+          if (res2.code === 0) {
+            ElMessage.success({
+              message: "执行成功!",
+              offset: window.screen.height / 2,
+            })
+            store.commit('SET_TASK_FLIGHT_PLAN_INFO', {
+              flightPlanId: res.data.flightPlanId,
+              device_sn: deviceInfo.child_device_sn
+            })
+            console.log('store.state.taskFlightPlanInfo', store.state.taskFlightPlanInfo)
+            router.push({
+              path: '/default/task/task-list',
+              query: {
+                device_sn: taskInfo.value.deviceSn,
+                flightPlanId: res.data.flightPlanId
+              },
+            })
+            // CancelWayLineShow()
+            // RemoveEntitiesByBatch(window.cesiumViewer, 'checkWayLine')
+            // CheckWayLine(window.cesiumViewer, String(wayline.value.waylineId), true)
+          }
+        })
+      } else {
+        ElMessage.error({
+          message: "执行失败！",
+          offset: window.screen.height / 2,
+        })
+      }
+    })
+  }
+}
+
+
+const handleTaskChange = ()=>{
+  // 获取当前被选中的对象
+  const currentTask = flightOptions.value.find((item: any) => item.fligtPlanId === flightValue.value)
+  taskInfo.value = currentTask
+}
+
+// // 点击确定或取消时删除显示的航线
+// const CancelWayLineShow = () => {
+//   if (wayline.value.waylineId) {
+//     // console.log('wayline.value.waylineId', wayline.value.waylineId)
+//     RemoveEntitiesByBatch(window.cesiumViewer, 'checkWayLine')
+//     CheckWayLine(window.cesiumViewer, String(wayline.value.waylineId), true)
+//   } else {
+//     console.log('11111')
+//   }
+
+
 
 
 

@@ -19,6 +19,24 @@ export const getFlightPlan = async function (workspace_id: string, body: getFlig
     })
 }
 
+interface getFlightPlanListParams {
+    planName?: string,
+    deviceSn?: string,
+    taskType?: string,
+    planStatus?: string
+}
+
+export const getFlightPlanList = async function (workspace_id: string, body: getFlightPlanListParams) {
+    return request({
+        url: `/droneFlightPlan/${workspace_id}/selectList`,
+        method: 'get',
+        params: body
+    }).then(response => {
+        return response.data
+    })
+}
+
+
 // 新增飞行任务
 export interface insertFlightTaskParams {
     flightPlanId?: string,
