@@ -117,8 +117,8 @@
 <script setup lang="ts">
 import { ref, reactive, watch, computed, onMounted, onBeforeUnmount,defineEmits,defineExpose } from 'vue'
 import VideoFrame from '@/pages/MainPageFrame/components/VideoFrame.vue'
-import DroneControl from "@/pages/ResourceManagement/components/Drone/DroneControl.vue";
-import PayLoadControl from "@/pages/ResourceManagement/components/Drone/PayLoadControl.vue";
+import DroneControl from "@/pages/MainPageFrame/components/DroneControl.vue";
+import PayLoadControl from "@/pages/MainPageFrame/components/PayLoadControl.vue";
 import { DeviceOsd, DeviceInfo } from "@/store/types/device";
 import { getBindingDeviceBySn,updateDroneInfo } from '@/api/device'
 import {Close, MessageBox} from '@element-plus/icons-vue'
