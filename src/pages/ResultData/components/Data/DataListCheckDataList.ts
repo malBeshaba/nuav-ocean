@@ -3,8 +3,6 @@ import * as Cesium from 'cesium'
 import {getModelDataList, getResponseUrlData} from '@/api/modelData'
 import { ModelData } from '@/store/types/modelData'
 import { TilesetData } from '@/components/mapTools/class/Map3DtilesetClass'
-import {NULL} from "sass";
-
 
 
 let tileset = ref<{id: string, tilesetData: TilesetData, isShow: boolean}[]>([])
