@@ -30,7 +30,6 @@ import {WayPoint, WayPointActionList} from "@/store/types/WayPoint";
 import {GeneratWaylinefile, getWaylinePointByWaylineId, insertWaypoint, updateWaypoint} from "@/api/wayLinePoint";
 import router from "@/router";
 import { useRoute } from 'vue-router';
-import { defineProps } from 'vue';
 import ButtonList from "@/pages/ResultData/components/Button/ButtonList.vue";
 import {getWaylineById} from "@/api/wayline";
 import * as geolib from 'geolib';

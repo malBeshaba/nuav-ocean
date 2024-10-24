@@ -8,7 +8,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
 import navbarBtn_active from '@/assets/images/navbarBtn-active.png'
 import navbarBtn from '@/assets/images/navbarBtn.png'
 

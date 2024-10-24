@@ -27,7 +27,6 @@ import * as Cesium from 'cesium'
 import {getModelDataList, getResponseUrlData} from '@/api/modelData'
 import { ModelData } from '@/store/types/modelData'
 import { TilesetData } from '@/components/mapTools/class/Map3DtilesetClass'
-import {NULL} from "sass";
 import store from "@/store";
 import bus from "@/utils/bus";
 import {Checktileset} from "@/pages/ResultData/components/Data/DataListCheckDataList";

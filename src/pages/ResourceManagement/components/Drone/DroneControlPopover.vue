@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits, reactive, watch, computed } from 'vue'
+import { defineEmits, reactive, watch, computed } from 'vue'
 
 const props = defineProps<{
     visible?: boolean,
