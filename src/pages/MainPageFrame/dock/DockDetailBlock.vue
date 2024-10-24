@@ -109,22 +109,13 @@
         >
           <el-option
               v-for="item in flightOptions"
-              :key="item.fligtPlanId"
+              :key="item.flightPlanId"
               :label="item.planName"
-              :value="item.fligtPlanId"
+              :value="item.flightPlanId"
           />
         </el-select>
         <el-button type="success" size="small" @click="handleExitFlight">一键起飞</el-button>
-
       </div>
-
-<!--      <el-link :type="isShowInfo? 'danger':'success' " @click="isShowInfo=!isShowInfo">-->
-<!--        {{isShowInfo? "关闭详情":"查看详情"}}<el-icon class="el-icon&#45;&#45;right"><icon-view /></el-icon>-->
-<!--      </el-link>-->
-<!--    </div>-->
-
-
-
   </div>
 
 </template>
@@ -348,6 +339,8 @@ onMounted(() => {
     }
   })
 
+  console.log('flightOptions', flightOptions.value)
+
 });
 
 
@@ -487,7 +480,8 @@ function handleExitFlight() {
 
 const handleTaskChange = ()=>{
   // 获取当前被选中的对象
-  const currentTask = flightOptions.value.find((item: any) => item.fligtPlanId === flightValue.value)
+  const currentTask = flightOptions.value.find((item: any) => item.flightPlanId === flightValue.value)
+  console.log('currentTask1111111111111', currentTask)
   taskInfo.value = currentTask
 }
 
