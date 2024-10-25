@@ -124,7 +124,7 @@ const handleSelect = (item) => {
       // router.push('/overview')
       break
     case '视频监管':
-      location.href = import.meta.env.VITE_AEF_URL+"#/LargeScreen?type=patrol"
+      location.href = import.meta.env.VITE_AEF_URL+"#/LargeScreen?type=warning"
       // router.push('/warning')
       break
     case '无人机巡航':
@@ -226,8 +226,6 @@ onMounted(() => {
   const path = route.path
   if (path.includes( '/overview')) {
     curPageName.value = '首页'
-  } else if (path.includes('/warning')) {
-    curPageName.value = '视频监管'
   } else if (path.includes('/clue')) {
     curPageName.value = '无人机巡航'
   } else if (path.includes('/verification-warning')) {
