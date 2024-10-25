@@ -3,10 +3,11 @@ import { watch } from 'vue'
 import {DrawPointByBillboard, RemoveEntitiesById} from '@/components/mapTools/BaseMapTools'
 import dockImage from '@/assets/map/dock.png'
 
-export function dockState () {
-  watch(store.state.deviceState.dockInfo, (value) => {
+export function dockState() {
+  // 创建一个watch的清理函数引用
+  const unwatch = watch(store.state.deviceState.dockInfo, (value) => {
     if (Object.keys(value).length !== store.state.checkDockState.length && value) {
-      // console.log('dock', value)
+      console.log('dock', value)
 
       Object.keys(value).forEach((key: string) => {
         // console.log('dock', value[key])
@@ -28,6 +29,9 @@ export function dockState () {
         // DrawPointByBillboard(window.cesiumViewer, String(key) + 'dock', [value[key].basic_osd.longitude,value[key].basic_osd.latitude, value[key].basic_osd.height], 0, dockImage)
       })
     } else {
+      // 如果不满足条件，移除监听
+      unwatch();
     }
   }, {deep: true});
 }
+
