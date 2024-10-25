@@ -14,7 +14,7 @@ import * as Cesium from 'cesium'
  * @param roll
  * @param heading
  */
-export function CesiumFlyTo(mapViewer:Cesium.Viewer, point: { longitude: number; latitude: number; height: number | undefined; }, pitch = Cesium.Math.toRadians(-45), roll: number = 0, heading: number = 0) {
+export function CesiumFlyTo(mapViewer:Cesium.Viewer, point: { longitude: number; latitude: number; height: number | undefined; }, pitch = Cesium.Math.toRadians(-90), roll: number = 0, heading: number = 0) {
     mapViewer.camera.flyTo({
       destination: Cesium.Cartesian3.fromDegrees(point.longitude, point.latitude, point.height),
       orientation: {

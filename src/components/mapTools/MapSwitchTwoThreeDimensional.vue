@@ -13,7 +13,7 @@ import {useCookies} from "vue3-cookies";
 
 const {cookies} = useCookies()
 const store = useMyStore()
-const switchDimensional = ref('3D')
+const switchDimensional = ref('2D')
 const point3D = {
   longitude: 113.0231382461631,
   latitude: 23.135108621871483,

@@ -1,18 +1,9 @@
 <template>
   <div @contextmenu.prevent="choseRightMenu($event)" class="cesium_map" id="cesium_map">
     <right-click-options v-show="rightClickValue.showRightClick" :rightClickValue="rightClickValue"></right-click-options>
-    <!-- <range-map v-show="showMapTool" class="range_layer"></range-map> -->
-	  <!-- <show-and-hide3-d-tileset v-show="showMapTool" class="show_and_hide3d_tileset"></show-and-hide3-d-tileset> -->
-<!--    <draw-entity-on-map class="draw_entity_on_map"></draw-entity-on-map>-->
-<!--    <map-show-nofly-zone class="map_show_nofly_zone"></map-show-nofly-zone>-->
-	  <!-- <select-layer v-show="showMapTool" class="select_layer"></select-layer> -->
-<!--    <north-arrow v-show="showMapTool" class="map_north_arrow"></north-arrow>-->
-    <!-- <switch-two-three-dimensional v-show="showMapTool" class="switch_two_three_dimensional"></switch-two-three-dimensional> -->
     <real-time-coordinate-display v-show="showMapTool" class="map_real_time_coordinate_display"></real-time-coordinate-display>
 	  <flight-controller v-show="isEdit" class="flight_controller"></flight-controller>
 	  <add-way-point-action-panel v-show="isEdit" class="add_way_point_action_panel"></add-way-point-action-panel>
-<!--	  <go-home v-show="showMapTool" class="go_home"></go-home>-->
-<!--    <range-all v-show="showMapTool"></range-all>-->
   </div>
 </template>
 
@@ -27,34 +18,15 @@ import {
 import { watchCameraAttribute } from "@/components/mapTools/SeniorMapTools";
 import { switchTianDiTuMap} from "@/components/mapTools/SwitchMapServices";
 import { actionEntity, movePoint } from './components/cesiumViewer/MapMouseEvent'
-import SwitchTwoThreeDimensional from "@/components/mapTools/MapSwitchTwoThreeDimensional.vue";
 import RightClickOptions from "@/components/mapTools/MapRightClickOptions.vue";
 import RealTimeCoordinateDisplay from "@/components/mapTools/MapRealTimeCoordinateDisplay.vue";
-import NorthArrow from "@/components/mapTools/MapNorthArrow.vue";
-import SelectLayer from "@/components/mapTools/SelectLayer.vue";
 import FlightController from '@/pages/Map/components/cesiumViewer/FlightController.vue'
-import ShowAndHide3DTileset from '@/components/mapTools/ShowAndHide3DTileset.vue'
-import GoHome from './components/cesiumViewer/MapGoHome.vue'
 import AddWayPointActionPanel from '@/pages/TaskDeployment/components/WayPoint/AddWayPointActionPanel.vue'
-import DrawEntityOnMap from '@/components/mapTools/MapDrawEntityOnMap.vue'
-import ParamsList from '@/pages/TaskDeployment/components/WayLineEdit/WayLineByPolygon/paramsList.vue'
 import { TilesetData } from '@/components/mapTools/class/Map3DtilesetClass'
 import * as Cesium from 'cesium'
 import {useMyStore} from '@/store'
-// @ts-ignore
-import droneModel from '@assets/models/airDrone.glb'
-import LeftNavigationBar from "@/pages/TaskDeployment/components/WaylineEdit/LeftNavigationBar.vue";
-import WebrtcPlayer from '@/components/video/WebrtcPlayer.vue'
-import {VideoFusion} from '@/components/mapTools/class/MapVideoFusionClass'
-import LeftBottomBar from "@/pages/TaskDeployment/components/WaylineEdit/LeftBottomBar.vue";
-import RightIcon from "@/pages/TaskDeployment/components/WaylineEdit/RightIcon.vue";
-import TopTheme from "@/pages/TaskDeployment/components/WaylineEdit/TopTheme.vue";
-import InitAerialViewMap from '@/pages/Map/components/AerialView/InitAerialViewMap.vue'
-// import RangeAll from "@/components/mapTools/RangeAll.vue";
 import CesiumNavigation from 'cesium-navigation-es6'
-import RangeMap from "@/components/mapTools/RangeMap.vue";
 import {useCookies} from "vue3-cookies";
-import MapShowNoflyZone from "@/components/mapTools/MapShowNoflyZone.vue";
 
 const {cookies} = useCookies()
 const store = useMyStore()
@@ -65,12 +37,8 @@ onMounted(() => {
   // 初始化地图
   initMap("cesium_map");
   // 设置中心点
-  const point = {
-    longitude: 113.0231382461631,
-    latitude: 23.135108621871483,
-    height: 1500,
-  };
-	const centerPosition = import.meta.env.VITE_MAP_CENTER_POSITION.split(',')
+
+  const centerPosition = import.meta.env.VITE_MAP_CENTER_POSITION.split(',')
   if (cookies.get('mapState')) {
     const mapState = cookies.get('mapState') as any
     console.log('mapState',mapState)
@@ -83,10 +51,15 @@ onMounted(() => {
       longitude: Number(longitude),
       latitude: Number(latitude),
       height: Number(height)
-    }, mapState.cameraPitch, mapState.cameraRoll, mapState.cameraHeading);
-      // CesiumFlyTo(window.cesiumViewer, {longitude: Number(centerPosition[0]), latitude: Number(centerPosition[1]), height: Number(centerPosition[2])});
+    }, Cesium.Math.toRadians(-90));
+		(window as any).cesiumViewer.scene.screenSpaceCameraController.enableTilt = false
   } else {
-    CesiumFlyTo(window.cesiumViewer, {longitude: Number(centerPosition[0]), latitude: Number(centerPosition[1]), height: Number(centerPosition[2])});
+    CesiumFlyTo(window.cesiumViewer, {
+			longitude: Number(centerPosition[0]),
+	    latitude: Number(centerPosition[1]),
+	    height: Number(centerPosition[2])},
+	    Cesium.Math.toRadians(-90));
+		(window as any).cesiumViewer.scene.screenSpaceCameraController.enableTilt = false
   }
 	//
 	const NorthOptions = <any> {
@@ -204,8 +177,6 @@ watch(store?.state?.mapToolShow, (value) => {
 }, { deep: true, immediate: true });
 
 </script>
-
-
 
 <style scoped>
 

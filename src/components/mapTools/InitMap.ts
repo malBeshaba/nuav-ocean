@@ -29,4 +29,5 @@ export function initMap(divId:string) {
     requestRenderMode: true, // * 在指定情况下进行渲染,提高性能
   });
   (window as any).cesiumViewer.cesiumWidget.creditContainer.style.display = "none"; // * 去除版权信息
+  // (window as any).cesiumViewer.scene.screenSpaceCameraController.enableTilt = false
 }
