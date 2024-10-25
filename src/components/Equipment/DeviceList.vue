@@ -346,7 +346,7 @@ const checkDrone = (device_sn: string) => {
 			centerPosition = [store.state.deviceState.dockInfo[key].basic_osd.longitude, store.state.deviceState.dockInfo[key].basic_osd.latitude]
 		}
 	})
-	CesiumFlyTo(window.cesiumViewer, {longitude: centerPosition[0], latitude: (centerPosition[1] - 0.014), height: 1500})
+	CesiumFlyTo(window.cesiumViewer, {longitude: centerPosition[0], latitude: centerPosition[1], height: 1500})
 }
 
 const checkDevice = (device_sn: string) => {

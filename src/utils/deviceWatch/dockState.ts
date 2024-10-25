@@ -34,9 +34,9 @@ export function dockState() {
               const dockPoint = window.cesiumViewer.entities.getById(String(item.sn) + 'dockCheck')
                 if(dockPoint) {
                   window.cesiumViewer.entities.remove(dockPoint)
-                  DrawPointByBillboard(window.cesiumViewer, String(item.sn) + 'dockCheck', [item.position.longitude,item.position.latitude, item.position.height], 0, dockImage)
+                  DrawPointByBillboard(window.cesiumViewer, String(item.sn) + 'dockCheck', [item.position.longitude - 0.00001,item.position.latitude + 0.00007, item.position.height], 0, dockImage)
                 } else {
-                  DrawPointByBillboard(window.cesiumViewer, String(item.sn) + 'dockCheck', [item.position.longitude,item.position.latitude, item.position.height], 0, dockImage)
+                  DrawPointByBillboard(window.cesiumViewer, String(item.sn) + 'dockCheck', [item.position.longitude - 0.00001,item.position.latitude + 0.00007, item.position.height], 0, dockImage)
                 }
             })
             unwatch();
