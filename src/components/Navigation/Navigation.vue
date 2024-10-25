@@ -120,11 +120,11 @@ const handleSelect = (item) => {
   // 跳转至对应页面
   switch (item.name){
     case '首页':
-      location.href = import.meta.env.VITE_AEF_URL+"/#/LargeScreen?type=overview"
+      location.href = import.meta.env.VITE_AEF_URL+"#/LargeScreen?type=overview"
       // router.push('/overview')
       break
     case '视频监管':
-      location.href = import.meta.env.VITE_AEF_URL+"/#/LargeScreen?type=patrol"
+      location.href = import.meta.env.VITE_AEF_URL+"#/LargeScreen?type=patrol"
       // router.push('/warning')
       break
     case '无人机巡航':
@@ -215,19 +215,28 @@ const CodePassWord = (val) => {
 }
 
 onMounted(() => {
-  // 加载本地localStorage中的curPageName
-  const storedPageName = localStorage.getItem('curPageName');
-  if (storedPageName) {
-    curPageName.value = storedPageName;
+  // // 加载本地localStorage中的curPageName
+  // const storedPageName = localStorage.getItem('curPageName');
+  // if (storedPageName && !storedPageName.includes()) {
+  //   curPageName.value = storedPageName;
+  // }
+  // console.log('curPageName11111111111111111111111111111111111111111111', curPageName.value)
+
+  // 获取当前的路由地址来判断当前页面，给curPageName.value赋值
+  const path = route.path
+  if (path.includes( '/overview')) {
+    curPageName.value = '首页'
+  } else if (path.includes('/warning')) {
+    curPageName.value = '视频监管'
+  } else if (path.includes('/clue')) {
+    curPageName.value = '无人机巡航'
+  } else if (path.includes('/verification-warning')) {
+    curPageName.value = '核查预警'
+  } else if (path .includes('/algorithm-house')) {
+    curPageName.value = '算法仓'
   }
 })
 
-// onBeforeMount(() => {
-//   // if (route.query && route.query.type && status.value !== route.query.type) {
-//   //   store.dispatch('largeScreen/changeStatus', route.query.type)
-//   //   setUrlQueryParam(route.query.type)
-//   // }
-// })
 </script>
 
 <style lang="scss" scoped>
