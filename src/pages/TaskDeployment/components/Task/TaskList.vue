@@ -146,7 +146,6 @@ const input = ref('')
 // 返回
 const backToEquipmentList = () => {
 	store.commit('CHECK_DOCK_STATE', { device_sn: device_sn.value, isShow: false })
-	RemoveEntitiesById(window.cesiumViewer, String(device_sn.value) + 'dockCheck')
 	router.push('/default/task')
 }
 // 新建任务

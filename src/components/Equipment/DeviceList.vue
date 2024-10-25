@@ -340,17 +340,6 @@ const handleChange = (val: string[]) =>{
 const checkDrone = (device_sn: string) => {
 	store?.commit('CHECK_DOCK_STATE', { device_sn: device_sn, isShow: true })
   console.log('store', store?.state?.checkDockState)
-	store?.state?.checkDockState.forEach((item: any) => {
-		if (item.sn == device_sn) {
-			const dockPoint = window.cesiumViewer.entities.getById(String(device_sn) + 'dockCheck')
-			if(dockPoint) {
-				window.cesiumViewer.entities.remove(dockPoint)
-				DrawPointByBillboard(window.cesiumViewer, String(device_sn) + 'dockCheck', [item.position.longitude,item.position.latitude, item.position.height], 0, dockImage)
-			} else {
-				DrawPointByBillboard(window.cesiumViewer, String(device_sn) + 'dockCheck', [item.position.longitude,item.position.latitude, item.position.height], 0, dockImage)
-			}
-		}
-	})
 	let centerPosition: number[] = []
 	Object.keys(store.state.deviceState.dockInfo).forEach((key: string) => {
 		if (key == device_sn) {

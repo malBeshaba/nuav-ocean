@@ -18,27 +18,30 @@ const getDockList = () => {
   })
 };
 export function dockState() {
-  // 创建一个watch的清理函数引用
+  // 使用设备列表获取设备数量
   getBindingDevices({
     workspace_id: JSON.parse(localStorage.getItem('userInfo') as string).workspace_id,
     page: 1,
     page_size: 100,
     domain: 3,
   }).then(res => {
-    // console.log(res)
     if (res.code === 0) {
-      console.log('res', res.data.pagination.total)
       const unwatch = watch(store.state.deviceState.dockInfo, (value) => {    
         if (Object.keys(value).length === res.data.pagination.total) {
-          console.log('dock', store.state.checkDockState.length)
+          // 完成dock位置信息获取后，停止监听
           if (store.state.checkDockState.length === res.data.pagination.total) {
-            console.log('store', store?.state?.checkDockState)
-    
+            store?.state?.checkDockState.forEach((item: any) => {
+              const dockPoint = window.cesiumViewer.entities.getById(String(item.sn) + 'dockCheck')
+                if(dockPoint) {
+                  window.cesiumViewer.entities.remove(dockPoint)
+                  DrawPointByBillboard(window.cesiumViewer, String(item.sn) + 'dockCheck', [item.position.longitude,item.position.latitude, item.position.height], 0, dockImage)
+                } else {
+                  DrawPointByBillboard(window.cesiumViewer, String(item.sn) + 'dockCheck', [item.position.longitude,item.position.latitude, item.position.height], 0, dockImage)
+                }
+            })
             unwatch();
           }
-    
           Object.keys(value).forEach((key: string) => {
-            // console.log('dock', value[key])
             if (value[key].basic_osd) {
               const dock = {
                 sn: key,
