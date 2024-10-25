@@ -115,7 +115,7 @@ const mutations: MutationTree<RootStateType> = {
             state.checkDockState = []
             state.checkDockState.push({
                 sn: data.sn,
-                isShow: false,
+                isShow: true,
                 position: data.position,
                 deviceSn: data.deviceSn,
                 deviceType: data.deviceType,
@@ -124,7 +124,7 @@ const mutations: MutationTree<RootStateType> = {
             if (!state.checkDockState.some(item => item.sn === data.sn)) {
                 state.checkDockState.push({
                     sn: data.sn,
-                    isShow: false,
+                    isShow: true,
                     position: data.position,
                     deviceSn: data.deviceSn,
                     deviceType: data.deviceType,
@@ -135,7 +135,7 @@ const mutations: MutationTree<RootStateType> = {
     CHECK_DOCK_STATE (state, data) {
         state.checkDockState.forEach((item, index) => {
             if(item.sn === data.device_sn) {
-                state.checkDockState[index].isShow = data.isShow
+                state.checkDockState[index].isShow = true
             } else {
                 // ElMessage.error('机场/无人机离线')
             }
