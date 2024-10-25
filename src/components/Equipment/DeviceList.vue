@@ -339,6 +339,7 @@ const handleChange = (val: string[]) =>{
 
 const checkDrone = (device_sn: string) => {
 	store?.commit('CHECK_DOCK_STATE', { device_sn: device_sn, isShow: true })
+  console.log('store', store?.state?.checkDockState)
 	store?.state?.checkDockState.forEach((item: any) => {
 		if (item.sn == device_sn) {
 			const dockPoint = window.cesiumViewer.entities.getById(String(device_sn) + 'dockCheck')
