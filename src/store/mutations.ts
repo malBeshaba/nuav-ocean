@@ -121,21 +121,15 @@ const mutations: MutationTree<RootStateType> = {
                 deviceType: data.deviceType,
             })
         } else {
-            state.checkDockState.forEach((item, index) => {
-                if(item.sn === data.sn) {
-                    // state.checkDockState[index].position = data.position,
-                    // state.checkDockState[index].deviceSn = data.deviceSn,
-                    // state.checkDockState[index].deviceType = data.deviceType
-                } else {
-                    state.checkDockState.push({
-                        sn: data.sn,
-                        isShow: false,
-                        position: data.position,
-                        deviceSn: data.deviceSn,
-                        deviceType: data.deviceType,
-                    })
-                }
-            })
+            if (!state.checkDockState.some(item => item.sn === data.sn)) {
+                state.checkDockState.push({
+                    sn: data.sn,
+                    isShow: false,
+                    position: data.position,
+                    deviceSn: data.deviceSn,
+                    deviceType: data.deviceType,
+                })
+            }
         }
     },
     CHECK_DOCK_STATE (state, data) {

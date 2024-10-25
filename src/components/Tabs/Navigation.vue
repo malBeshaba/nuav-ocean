@@ -7,8 +7,8 @@
       <Navigation></Navigation>
       <div class="tabs">
         <TabSelector :ssr="planIMG" :src="planIMG" name="任务部署" :selected="activeName==='plan'" @click="clickTab('plan')"></TabSelector>
-        <!-- <TabSelector :ssr="resouceIMG" :src="resouceIMG" name="资源管理" :selected="activeName==='resource'" style="margin-left: 30px" @click="clickTab('resource')"></TabSelector> -->
-        <TabSelector :ssr="dataIMG" :src="dataIMG" name="成果数据" :selected="activeName==='data'" @click="clickTab('data')"></TabSelector>
+        <TabSelector :ssr="resouceIMG" :src="resouceIMG" name="资源管理" :selected="activeName==='resource'" style="margin-left: 30px" @click="clickTab('resource')"></TabSelector>
+        <TabSelector :ssr="dataIMG" :src="dataIMG" name="成果数据" :selected="activeName==='data'" style="margin-left: 30px" @click="clickTab('data')"></TabSelector>
       </div>
     <!-- <div class="Title" @click="clickTab('home')">
       <div class="title-zh">广东省海城海岛视频监控监测平台</div>
