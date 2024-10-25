@@ -3,6 +3,7 @@ node_modules
 dist
 dist-ssr
 .idea
+hszx
 *.local
 auto-imports.d.ts
 dronesv2
