@@ -5,10 +5,10 @@ import store from "@/store"
 const router = createRouter({
     history: createWebHistory('hszx'),
     routes: [
-        // {
-        //     path: '/',
-        //     redirect: '/default/home'
-        // },
+        {
+            path: '/',
+            redirect: '/default/task'
+        },
         {
             path: '/login',
             component: () => import('@/pages/Login/index.vue')

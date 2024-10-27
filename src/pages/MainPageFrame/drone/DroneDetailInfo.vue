@@ -214,16 +214,18 @@ defineExpose({ closeAll });
 
 onMounted(() => {
   isEditing.value = false
-  getDeviceInfo()
   device_sn.value = store.state.iframeDroneSn
+  getDeviceInfo()
   getBindingDeviceBySn({
     workspace_id: JSON.parse(localStorage.getItem('userInfo') as string).workspace_id,
-    device_sn: '4TADL2L0010027'
+    // device_sn: '4TADL2L0010027'
+    device_sn: device_sn.value
   }).then(res => {
     // console.log(res)
     if(res.code === 0) {
       if (res.data.child_device_sn == device_sn.value) {
-        control_sn.value = '4TADL2L0010027'
+        // control_sn.value = '4TADL2L0010027'
+        control_sn.value = device_sn.value
       } else {
         control_sn.value = device_sn.value
       }
@@ -234,15 +236,15 @@ onMounted(() => {
 // 获取设备信息
 let droneInfo = reactive({} as DeviceInfo)
 const getDeviceInfo = async () => {
-  if (route.query.device_sn) {
+  if (store.state.iframeDroneSn) {
     getBindingDeviceBySn({
       workspace_id: JSON.parse(localStorage.getItem('userInfo') as string).workspace_id,
-      device_sn: route.query.device_sn as string
+      device_sn: store.state.iframeDroneSn as string
     }).then(res => {
       // console.log(res)
       if(res.code === 0) {
         droneInfo = res.data
-          inputValue.value = droneInfo.nickname
+        inputValue.value = droneInfo.nickname
         getDroneLiveStream()
       }
     })
@@ -258,10 +260,10 @@ watch(() => store.state.deviceState, (newData, oldData) => {
   }
 }, { deep: true, })
 
-// 监听路由
-watch(() => route.query.device_sn, (newData, oldData) => {
-  getDeviceInfo()
-}, { deep: true })
+// // 监听路由
+// watch(() => store.state.iframeDroneSn, (newData, oldData) => {
+//   getDeviceInfo()
+// }, { deep: true })
 
 const SnName = computed (()=>{
   return droneInfo.device_name
@@ -358,12 +360,11 @@ const getDroneLiveStream = async function () {
   let rtmpUrl = await getLiveAddress()
   isloading.value = !isloading.value
 
-  const timestamp = route.query.device_sn
+  const timestamp = store.state.iframeDroneSn
   let liveUrl = rtmpUrl.data + timestamp
   let videoID = droneInfo.device_sn + '/53-0-0/normal-0'
   let urlType = '1'
   let videoQ = '2'
-  console.log(liveUrl)
   getLivestatus(timestamp as string).then(res => {
     // console.log(res)
     if (res.data.webRtcStream) {
