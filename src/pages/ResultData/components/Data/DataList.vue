@@ -17,86 +17,21 @@
       </div>
     </div>
     <div class="list-main">
-      <el-tabs tab-position="left" style="height: 100%" class="demo-tabs" v-model="activeTab">
-        <el-tab-pane name="flight_path">
-<!--          <template #label><el-icon><Files /></el-icon></template>-->
-	        <template #label>
-		        <el-popover
-					    placement="top-start"
-					    title="飞行轨迹"
-					    :width="200"
-					    trigger="hover"
-					    content="单击查看历史飞行轨迹"
-					  >
-			        <template #reference><i class="iconfont icon-qifeiweizhi"></i></template>
-		        </el-popover>
-	        </template>
-<!--          <template #label>-->
-
-<!--	          <i class="iconfont icon-qifeiweizhi"></i>-->
-<!--          </template>-->
-          <el-collapse v-model="activeName" @change="handleChange">
-            <el-collapse-item name="drone" >
-              <template #title>
-                <div class="collapse-title" >
-                  <div class="orange-dot"></div>
-                  <div class="collapse-title-left">无人机</div>
-                  <div class="collapse-title-main"> </div>
-                  <div class="collapse-title-right">收起({{ droneTotal }})</div>
-                </div>
-              </template>
-              <div v-if="droneInfo.length > 0">
-                <div v-for="item in droneInfo" :key="item.device_sn">
-                  <DroneItem :droneInfo="item" @click="getDroneDetail(item.device_sn)"></DroneItem>
-                </div>
-              </div>
-              <div v-else>
-                无数据！
-              </div>
-            </el-collapse-item>
-            <el-collapse-item name="dock" >
-              <template #title>
-                <div class="collapse-title">
-                  <div class="orange-dot"></div>
-                  <div class="collapse-title-left">停机坪</div>
-                  <div class="collapse-title-main"> </div>
-                  <div class="collapse-title-right">收起({{ dockTotal }})</div>
-                </div>
-              </template>
-              <div v-for="item in dockInfo" :key="item.device_sn">
-                <DockItem :dockInfo="item" @click="getDockDetail(item.device_sn)"></DockItem>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-        </el-tab-pane>
-        <el-tab-pane name="Oblique">
-<!--          <template #label><el-icon><Link /></el-icon></template>-->
-	        <template #label>
-		        <el-popover
-					    placement="top-start"
-					    title="倾斜数据"
-					    :width="200"
-					    trigger="hover"
-					    content="单击查看倾斜数据"
-					  >
-			        <template #reference><i class="iconfont icon--chanpinzhuanye"></i></template>
-		        </el-popover>
-	        </template>
-          <ImportData v-if="isImportData" class="list-main-import" @closeImportData="closeImportData">
-          </ImportData>
-          <div v-else class="list-main-import">
-            <el-button plain class="import-btn" @click="clickImportData">+ 导入数据</el-button>
-            <div class="import-content" v-if="externalData.length > 0" >
-              <div v-for="(item, index) in externalData" :key="index" @click="ItemClick(item)">
-                <DataListItem :dataInfo="item" :class="{'selected': SelectedList[index].isSelected}"></DataListItem>
-              </div>
+      <el-collapse v-model="activeName" @change="handleChange" style="width: 100%;">
+        <el-collapse-item name="dock" >
+          <template #title>
+            <div class="collapse-title">
+              <div class="orange-dot"></div>
+              <div class="collapse-title-left">停机坪</div>
+              <div class="collapse-title-main"> </div>
+              <div class="collapse-title-right">收起({{ dockTotal }})</div>
             </div>
-            <div class="import-content" v-else>
-              暂无数据
-            </div>
+          </template>
+          <div v-for="item in dockInfo" :key="item.device_sn">
+            <DockItem :dockInfo="item" @click="getDockDetail(item.device_sn)"></DockItem>
           </div>
-        </el-tab-pane>
-      </el-tabs>
+        </el-collapse-item>
+      </el-collapse>
     </div>
   </div>
 </template>
@@ -257,7 +192,7 @@ const selectChange = (val: string) => {
 // 搜索框
 const input = ref('');
 // 折叠面板
-const activeName = ref(['drone']);
+const activeName = ref(['dock']);
 const handleChange = (val: string[]) =>{
   // console.log('val', val);
 };
