@@ -2,16 +2,6 @@
   <div class="data-list">
     <list-head title="成果数据" style="width: 100%;"></list-head>
     <div class="list-function">
-      <!-- <div class="list-function-select">
-          <el-select v-model="selectValue" placeholder="请选择设备" @change="selectChange" size="default" >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </div> -->
       <div class="list-function-input">
         <el-input v-model="input" placeholder="请输入搜索内容" :suffix-icon="Search" size="default"/>
       </div>
@@ -37,25 +27,18 @@
 </template>
 
 <script setup lang="ts">
-import DroneItem from "@/components/Equipment/DroneItem.vue";
 import DockItem from "@/components/Equipment/DockItem.vue";
 import ListHead from "@/components/Head/ListHead.vue";
-import DataListItem from '@/pages/ResultData/components/Data/DataListItem.vue';
-import ImportData from '@/pages/ResultData/components/Data/ImportData.vue';
 import {onBeforeUnmount, onMounted, reactive, ref, watch} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getBindingDevices } from '@/api/device'
 import { getFlightPlan } from '@/api/droneFlightPlan'
-import {getModelDataList, getResponseUrlData} from '@/api/modelData'
-import { CesiumFlyTo, DrawPointByBillboard } from '@/components/mapTools/BaseMapTools'
-import { Search, Files, Link } from '@element-plus/icons-vue'
+import { getModelDataList } from '@/api/modelData'
+import { DrawPointByBillboard } from '@/components/mapTools/BaseMapTools'
+import { Search } from '@element-plus/icons-vue'
 import { useMyStore } from '@/store'
 import dockImage from '@/assets/map/dock.png'
-import {TilesetData} from "@/components/mapTools/class/Map3DtilesetClass";
-import {CheckWayLine} from "@/pages/TaskDeployment/components/WayLine/WayLineListCheckWayLine";
-import index from "@/pages/ResourceManagement/index.vue";
 import {Checktileset} from "@/pages/ResultData/components/Data/DataListCheckDataList";
-import bus from "@/utils/bus";
 import {useCookies} from "vue3-cookies";
 const {cookies} = useCookies()
 const store = useMyStore()
@@ -83,9 +66,6 @@ const getDroneList = () => {
     if (res.code === 0) {
       droneTotal.value = res.data.pagination.total
       droneInfo.value = res.data.list
-      // res.data.list.forEach((item: any) => {
-      //   droneInfo.push(item)
-      // })
     }
   })
 };
@@ -100,7 +80,6 @@ const getDockList = () => {
     page_size: 100,
     domain: 3,
   }).then(res => {
-    // console.log(res)
     if (res.code === 0) {
       dockTotal.value = res.data.pagination.total
       dockInfo.value = res.data.list
@@ -125,7 +104,6 @@ const getTaskInfo = async () => {
 const route = useRoute();
 const router = useRouter();
 const getDroneDetail = (device_sn: string) => {
-  // console.log('route', route.path.split('/')[2])
   if (route.path.split('/')[2] == 'task') {
     goToTask(device_sn)
   } else if (route.path.split('/')[2] == 'resource') {
@@ -170,31 +148,12 @@ const goToResult = (device_sn: string) => {
     }
   })
 };
-// 筛选框
-const options = reactive([
-  {
-    label: '无人机',
-    value: 'drone',
-  },{
-    label: '停机坪',
-    value: 'dock',
-  }
-  // ,{
-  //   label: '地勤人员',
-  //   value: 'user',
-  // }
-]);
-const selectValue = ref('');
-const selectChange = (val: string) => {
-  activeName.value = [];
-  activeName.value.push(val)
-};
+
 // 搜索框
 const input = ref('');
 // 折叠面板
 const activeName = ref(['dock']);
 const handleChange = (val: string[]) =>{
-  // console.log('val', val);
 };
 
 
@@ -232,17 +191,10 @@ const getModelData = async () => {
   })
 };
 // 导入数据
-const isImportData = ref(false)
-const clickImportData = () =>{
-  isImportData.value = true
-};
-const closeImportData = () =>{
-  isImportData.value = false
-  getModelData()
-};
-const radio=ref(5)
+
 let showdataId = ref('')
 let select_data_item = {} as any;
+
 function ItemClick(clickedItem: { dataName: any; dataId: string }) {
   select_data_item = clickedItem
   // console.log('????')
@@ -255,12 +207,10 @@ function ItemClick(clickedItem: { dataName: any; dataId: string }) {
       item.isSelected = (item.dataName === clickedItem.dataName);
     });
   }
-  // SelectedList.value.forEach((item: { isSelected: any; dataName: any }) => {
-  //   item.isSelected = (item.dataName === clickedItem.dataName);
-  // });
   showdataId.value = clickedItem.dataId
   Checktileset(window.cesiumViewer, clickedItem, false)
 }
+
 function save_cache() {
   const cache = {
     'tab_name': activeTab.value,
@@ -268,6 +218,7 @@ function save_cache() {
   }
   cookies.set('result_cache', JSON.stringify(cache))
 }
+
 onMounted(() => {
   window.addEventListener('beforeunload', save_cache)
   if (cookies.get('result_cache')) {
@@ -276,9 +227,11 @@ onMounted(() => {
     ItemClick(data['select_item'])
   }
 })
+
 onBeforeUnmount(() => {
   cookies.remove('result_cache')
 })
+
 </script>
 
 <style scoped lang="scss">
@@ -298,17 +251,6 @@ html {
   display: flex;
   flex-direction: column;
 }
-
-// 旧版本
-// .list-title {
-//   font-size: 16px;
-//   font-family: Microsoft YaHei, sans-serif;
-//   font-weight: 400;
-//   color: #FFFFFF;
-//   height: 17px;
-//   border-left: 4px solid orange;
-//   padding-left: 1rem;
-// }
 
 .list-function {
   display: flex;
