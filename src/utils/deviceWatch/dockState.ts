@@ -4,19 +4,6 @@ import {DrawPointByBillboard, RemoveEntitiesById} from '@/components/mapTools/Ba
 import dockImage from '@/assets/map/dock.png'
 import { getBindingDevices } from '@/api/device'
 
-const getDockList = () => {
-  getBindingDevices({
-    workspace_id: JSON.parse(localStorage.getItem('userInfo') as string).workspace_id,
-    page: 1,
-    page_size: 100,
-    domain: 3,
-  }).then(res => {
-    // console.log(res)
-    if (res.code === 0) {
-      dockTotal.value = res.data.pagination.total
-    }
-  })
-};
 export function dockState() {
   // 使用设备列表获取设备数量
   getBindingDevices({

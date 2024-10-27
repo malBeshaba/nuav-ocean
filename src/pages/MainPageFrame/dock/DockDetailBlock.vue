@@ -105,7 +105,7 @@
             placeholder="Select"
             size="small"
             style="width: 140px"
-            @change = handleTaskChange
+            @change="handleTaskChange"
         >
           <el-option
               v-for="item in flightOptions"
@@ -114,7 +114,7 @@
               :value="item.flightPlanId"
           />
         </el-select>
-        <el-button type="success" size="small" @click="handleExitFlight">一键起飞</el-button>
+        <el-button type="success" size="small" @click="takeOff_click(deviceSn)">一键起飞</el-button>
       </div>
   </div>
 
@@ -129,7 +129,8 @@ import { getBindingDeviceBySn } from "@/api/device";
 import { stopLivestream, getLiveAddress, startLivestream, getAILive, getLivestatus } from "@/api/live"
 import { DeviceInfo } from "@/store/types/device";
 import dockIMG from "@/assets/images/dock.png"
-import { Close, Clock } from '@element-plus/icons-vue'
+import {RemoveEntitiesByBatch} from "@/components/mapTools/BaseMapTools";
+import {CheckWayLine} from "@/pages/TaskDeployment/components/WayLine/WayLineListCheckWayLine";
 import {
   exectFlightTask,
   getFlightPlan,
@@ -358,14 +359,89 @@ interface MyObject {
 }
 
 const taskInfo = ref({} as MyObject)
+const flightPlan = ref({} as any);
+const handleOnTaskChange = (val: any) => {
+  flightPlan.value = val;
+  console.log('val', flightPlan.value, val, val.value)
+}
 
+const CancelWayLineShow = () => {
+  if(wayline_prepare.value.waylineId){
+    // console.log('wayline.value.waylineId', wayline.value.waylineId)
+    RemoveEntitiesByBatch(window.cesiumViewer, 'checkWayLine')
+    CheckWayLine(window.cesiumViewer, String(wayline_prepare.value.waylineId), true)
+  } else {
+    console.log('11111')
+  }
+}
 
+const takeOff_click = (device_sn: string) => {
+  console.log("device_sn",device_sn)
+  let taskParams: MyObject = {
+    planName: '',
+    waylineId: '',
+    deviceSn: '',
+    waylineType: 0,
+    taskType: 0,
+    rthAltitude: 0,
+    outOfControl: 0,
+    planTaskType: 0,
+    executeTime: 0,
+  };
+  const currentDate = new Date();
+  taskParams.planName = flightPlan.value.planName + currentDate.toLocaleString();
+  taskParams.waylineId = flightPlan.value.waylineId;
+  taskParams.deviceSn = deviceSn.value;
+  taskParams.waylineType = flightPlan.value.waylineType;
+  taskParams.taskType = 0;
+  taskParams.rthAltitude = flightPlan.value.rthAltitude;
+  taskParams.outOfControl = flightPlan.value.outOfControl;
+  taskParams.planTaskType = flightPlan.value.planTaskType;
+  taskParams.executeTime = Date.now();
+  console.log("taskParams",taskParams)
+  insertFlightTask(taskParams).then(res => {
+    console.log(res); // 打印响应
+    if(res.code === 0) {
+      console.log('res_insertFlightTask', res.data)
+      exectFlightTaskParams.planId = res.data.flightPlanId
+      console.log('exectFlightTaskParams', exectFlightTaskParams)
+      exectFlightTask(JSON.parse(localStorage.getItem('userInfo') as string).workspace_id, exectFlightTaskParams).then(res2 => {
+        console.log('res_exectFlightTask', res.data)
+        console.log('res2',res2.data)
+        if (res2.code === 0) {
+          ElMessage.success({
+            message: "执行成功!",
+            offset: window.screen.height / 2,
+          })
+          store.commit('SET_TASK_FLIGHT_PLAN_INFO', {
+            flightPlanId: res.data.flightPlanId,
+            device_sn: deviceInfo.child_device_sn
+          })
+          console.log('store.state.taskFlightPlanInfo', store.state.taskFlightPlanInfo)
+          router.push({
+            path: '/default/task/task-list',
+            query: {
+              device_sn: taskParams.deviceSn,
+              flightPlanId: res.data.flightPlanId
+            },
+          })
+        }
+        CancelWayLineShow()
+      })
+    } else {
+      ElMessage.error({
+        message: "执行失败！",
+        offset: window.screen.height / 2,
+      })
+    }
+  })
+}
 
 
 // 执行任务
 const exectFlightTaskParams = reactive({
   planId: '',
-  deviceType: 0,
+  deviceType: 1,
 })
 interface InsertTaskParams {
   planName: string;
@@ -480,9 +556,8 @@ function handleExitFlight() {
 
 const handleTaskChange = ()=>{
   // 获取当前被选中的对象
-  const currentTask = flightOptions.value.find((item: any) => item.flightPlanId === flightValue.value)
-  console.log('currentTask1111111111111', currentTask)
-  taskInfo.value = currentTask
+  flightPlan.value = flightOptions.value.find((item: any) => item.flightPlanId === flightValue.value)
+  console.log('currentTask1111111111111', flightPlan.value)
 }
 
 // // 点击确定或取消时删除显示的航线

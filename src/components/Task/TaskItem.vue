@@ -184,10 +184,6 @@ const takeOff_click = (device_sn: string) => {
     executeTime: 0,
   };
   const currentDate = new Date();
-  // console.log(currentDate); // 输出当前日期和时间
-  // console.log(currentDate.toLocaleDateString()); // 输出格式化的日期
-  // console.log(currentDate.toLocaleTimeString()); // 输出格式化的时间
-  // console.log(currentDate.toLocaleString()); // 输出格式化的日期和时间
   taskParams.planName = Props.planInfo.planName + currentDate.toLocaleString();
   taskParams.waylineId = Props.planInfo.waylineId;
   taskParams.deviceSn = device_sn;
