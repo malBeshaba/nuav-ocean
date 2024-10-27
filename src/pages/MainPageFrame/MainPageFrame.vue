@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import type { TabsPaneContext } from 'element-plus'
-import DockDetail from "@/pages/MainPageFrame/dock/DockDetail.vue";
+// import DockDetail from "@/pages/MainPageFrame/dock/DockDetail.vue";
 import DroneDetailInfo from "@/pages/MainPageFrame/drone/DroneDetailInfo.vue";
 import DockDetailBlock from "@/pages/MainPageFrame/dock/DockDetailBlock.vue";
 const isSmall = ref(true);
