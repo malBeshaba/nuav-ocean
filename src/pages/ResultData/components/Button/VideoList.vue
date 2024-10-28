@@ -1,7 +1,7 @@
 <template>
   <div class="video-list">
     <div class="list-header">
-      无人机图传视频
+      AI检测视频
     </div>
     <div v-if="videoList.length > 0" class="list-main">
       <el-row class="list-item" :gutter="20">
@@ -56,17 +56,37 @@ const handleCurrentChange = (val: number) => {
 const videoList = ref([] as VedioFile[])
 const getVideoList = async () => {
   videoList.value = []
-  getDronesVideo({
-    pageNo: currentPage.value,
-    pageSize: currentSize.value,
-    flightPlanId: route.query.flightPlanId
-  }).then(res => {
+  // getDronesVideo({
+  //   pageNo: currentPage.value,
+  //   pageSize: currentSize.value,
+  //   flightPlanId: route.query.flightPlanId as string
+  // }).then(res => {
+  //   if(res.code === 0) {
+  //     videoList.value = res.data.list
+  //     videoTotal.value = res.data.pagination.total
+  //   }
+  // })
+  getFilesListByFlightPlanId(
+      JSON.parse(localStorage.getItem('userInfo') as string).workspace_id,
+      route.query.flightPlanId as string, {
+        page: currentPage.value, 
+        page_size: currentSize.value,
+        // fileTypes: '4,5,6,8,10'
+        fileTypes: '12'
+      }).then(res => {
     if(res.code === 0) {
-      videoList.value = res.data.list
+      res.data.list.forEach((item: any)=>{
+        let obj = {} as any
+        obj['videoId'] = item.file_id
+        obj['videoName'] = item.file_name
+        obj['videoPlayUrl'] = item.row_url
+        obj['videoCoverUrl'] = ""
+        obj['createTime'] = item.create_time
+        videoList.value.push(obj)
+      })
       videoTotal.value = res.data.pagination.total
     }
   })
-
 
 };
 
@@ -81,7 +101,7 @@ const backToEquipmentDetail = () => {
 }
 
 // 随机生成id
-const generateRandomID = (length) => {
+const generateRandomID = (length: number) => {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   for (let i = 0; i < length; i++) {
@@ -103,14 +123,14 @@ html {
 
 .video-list{
   background: transparent;
-  background-color: rgba(10, 11, 14, 0.85);
+  background-color: $ComponentBackground;
   box-sizing: border-box;
   overflow: hidden;
   position: fixed;
-  top: 0px;
+  bottom: 20px;
   margin-top: $NavigationHeight;
-  height: calc(100% - $NavigationHeight);
-  left: $LeftWidth;
+  height: calc(100% - $NavigationHeight - 40px);
+  left: $LeftWidth + 20px;
   right: 0px;
   display: flex;
   flex-direction: column;
@@ -118,7 +138,7 @@ html {
 }
 
 .list-header {
-  border-top: 1px solid $TouchColor;
+  border-bottom: 1px solid $TouchColor;
   background: $ComponentHeadBackground;
   color: $FirstLevelTitleColor;
   height: $ComponenHeadHeight;

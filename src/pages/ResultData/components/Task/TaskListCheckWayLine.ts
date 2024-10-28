@@ -30,7 +30,7 @@ export function TaskListCheckWayLine (wayLinePointData: WayLinePointUpload[], gl
     RemoveEntitiesByBatch(window.cesiumViewer, 'ResultData')
     drawWayLine(window.cesiumViewer, TaskListWayLines.points)
   }
-  let offsetY = 0.013000000000000
+  let offsetY = 0
   CesiumFlyTo(window.cesiumViewer, {longitude:wayLinePointData[0].pointX, latitude:wayLinePointData[0].pointY - offsetY, height: 2000})
 }
 
