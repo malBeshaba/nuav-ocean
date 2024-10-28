@@ -91,7 +91,7 @@
 <script setup lang="ts">
 import {onMounted, ref, reactive, watch, onBeforeUnmount} from 'vue'
 import { JxDockState} from "@/store/types/device";
-import dockIMG from "@/assets/images/dock2.png"
+import dockIMG from "@/assets/images/dock.png"
 import {useMyStore} from "@/store"
 import {useRoute, useRouter} from 'vue-router';
 import {getHomepageSiteList} from "@/api/jiexiang/site";
