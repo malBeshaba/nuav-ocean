@@ -57,15 +57,16 @@ const videoList = ref([] as VedioFile[])
 const getVideoList = async () => {
   videoList.value = []
   getFilesListByFlightPlanId(
-      JSON.parse(localStorage.getItem('userInfo')).workspace_id,
-      route.query.flightPlanId, {
-        page: currentPage.value,
+      JSON.parse(localStorage.getItem('userInfo') as string).workspace_id,
+      route.query.flightPlanId as string, {
+        page: currentPage.value, 
         page_size: currentSize.value,
-        fileTypes: '4,5,6,8,10'
+        // fileTypes: '4,5,6,8,10'
+        fileTypes: '11'
       }).then(res => {
     if(res.code === 0) {
-      res.data.list.forEach(item=>{
-        let obj = {}
+      res.data.list.forEach((item: any)=>{
+        let obj = {} as any
         obj['videoId'] = item.file_id
         obj['videoName'] = item.file_name
         obj['videoPlayUrl'] = item.row_url
@@ -111,14 +112,14 @@ html {
 
 .video-list{
   background: transparent;
-  background-color: rgba(10, 11, 14, 0.85);
+  background-color: $ComponentBackground;
   box-sizing: border-box;
   overflow: hidden;
   position: fixed;
-  top: 0px;
+  bottom: 20px;
   margin-top: $NavigationHeight;
-  height: calc(100% - $NavigationHeight);
-  left: $LeftWidth;
+  height: calc(100% - $NavigationHeight - 40px);
+  left: $LeftWidth + 20px;
   right: 0px;
   display: flex;
   flex-direction: column;
@@ -126,7 +127,7 @@ html {
 }
 
 .list-header {
-  border-top: 1px solid $TouchColor;
+  border-bottom: 1px solid $TouchColor;
   background: $ComponentHeadBackground;
   color: $FirstLevelTitleColor;
   height: $ComponenHeadHeight;
