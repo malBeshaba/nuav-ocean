@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import {computed, onMounted, ref} from 'vue';
-import dockIMG from "@/assets/images/dock.png"
+import dockIMG from "@/assets/images/dock2.png"
 import {useMyStore} from "@/store"
 
 const store = useMyStore()

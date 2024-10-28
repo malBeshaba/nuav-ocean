@@ -50,7 +50,7 @@ import {WayLinePoint} from '@/components/mapTools/class/MapWayLinePointClass'
 import * as Cesium from 'cesium'
 import {DrawPolyline, RemoveEntitiesByBatch, RemoveEntitiesById} from '@/components/mapTools/BaseMapTools'
 import {DrawFlightControllerGLB, DrawFlightControllerFRU} from '@/components/mapTools/FlightControllerDrawElement'
-import ImageDroneController from '@/assets/images/directedDrone.png'
+import ImageDroneController from '@/assets/images/directedDrone3.png'
 
 const route = useRoute();
 const router = useRouter();

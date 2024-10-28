@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import {computed, onMounted, ref, watch} from 'vue';
-import dockIMG from "@/assets/images/dock.png"
+import dockIMG from "@/assets/images/dock2.png"
 import {useMyStore} from "@/store"
 
 // 判断某个对象中是否有某个属性

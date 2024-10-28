@@ -50,7 +50,7 @@ import {getModelDataList, getResponseUrlData} from '@/api/modelData'
 import { CesiumFlyTo, DrawPointByBillboard } from '@/components/mapTools/BaseMapTools'
 import { Search, Files, Link } from '@element-plus/icons-vue'
 import { useMyStore } from '@/store'
-import dockImage from '@/assets/map/dock.png'
+import dockImage from '@/assets/map/dock2.png'
 import {TilesetData} from "@/components/mapTools/class/Map3DtilesetClass";
 import {CheckWayLine} from "@/pages/TaskDeployment/components/WayLine/WayLineListCheckWayLine";
 import index from "@/pages/ResourceManagement/index.vue";

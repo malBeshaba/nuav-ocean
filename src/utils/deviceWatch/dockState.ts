@@ -1,7 +1,7 @@
 import store from '@/store'
 import { watch } from 'vue'
 import {DrawPointByBillboard, RemoveEntitiesById} from '@/components/mapTools/BaseMapTools'
-import dockImage from '@/assets/map/dock.png'
+import dockImage from '@/assets/map/dock2.png'
 import { getBindingDevices } from '@/api/device'
 
 export function dockState() {
@@ -13,7 +13,7 @@ export function dockState() {
     domain: 3,
   }).then(res => {
     if (res.code === 0) {
-      const unwatch = watch(store.state.deviceState.dockInfo, (value) => {    
+      const unwatch = watch(store.state.deviceState.dockInfo, (value) => {
         if (Object.keys(value).length === res.data.pagination.total) {
           // 完成dock位置信息获取后，停止监听
           if (store.state.checkDockState.length === res.data.pagination.total) {
@@ -46,7 +46,7 @@ export function dockState() {
               }
               store.commit('SET_CHECK_DOCK_STATE', dock)
             }
-    
+
             // RemoveEntitiesById(window.cesiumViewer, String(key) + 'dock')
             // DrawPointByBillboard(window.cesiumViewer, String(key) + 'dock', [value[key].basic_osd.longitude,value[key].basic_osd.latitude, value[key].basic_osd.height], 0, dockImage)
           })
@@ -54,6 +54,6 @@ export function dockState() {
       }, {deep: true});
     }
   })
-  
+
 }
 

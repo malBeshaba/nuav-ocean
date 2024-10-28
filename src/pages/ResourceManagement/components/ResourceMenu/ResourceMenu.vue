@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import droneIMG from "@/assets/images/drone.png"
-import dockIMG from "@/assets/images/dock.png"
+import dockIMG from "@/assets/images/dock2.png"
 
 const handleOpen = (key: string, keyPath: string[]) => {
   // console.log(key, keyPath)

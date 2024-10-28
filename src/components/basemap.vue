@@ -41,7 +41,7 @@ import { CalculateTheZoomLevelAndCenter } from './mapTools/SeniorMapTools'
 import { remove3DTileSet } from './mapTools/Load3DTileset'
 import { DrawWayLinePoint } from './mapTools/BaseMapToolsCreatePoint'
 import { onMounted } from 'vue'
-import droneFlyingIcon from '@/assets/images/directedDrone.png'
+import droneFlyingIcon from '@/assets/images/directedDrone3.png'
 // @ts-ignore
 import droneModel from '@assets/models/airDrone.glb'
 import { VideoFusion } from '@/components/mapTools/class/MapVideoFusionClass'

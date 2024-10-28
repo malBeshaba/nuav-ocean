@@ -104,7 +104,7 @@ import { onMounted, ref, reactive, watch, computed, onBeforeUnmount } from 'vue'
 import { getBindingDeviceBySn } from "@/api/device";
 import { stopLivestream, getLiveAddress, startLivestream, getAILive, getLivestatus } from "@/api/live"
 import { DeviceInfo } from "@/store/types/device";
-import dockIMG from "@/assets/images/dock.png"
+import dockIMG from "@/assets/images/dock2.png"
 import { Close, Clock } from '@element-plus/icons-vue'
 import { useMyStore } from "@/store"
 const store = useMyStore()

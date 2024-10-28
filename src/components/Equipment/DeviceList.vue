@@ -104,7 +104,7 @@ import { CesiumFlyTo, DrawPointByBillboard } from '@/components/mapTools/BaseMap
 import { Search } from '@element-plus/icons-vue'
 import { useMyStore } from '@/store'
 import {getUsers,selectPage} from "@/api/adminUser";
-import dockImage from '@/assets/map/dock.png'
+import dockImage from '@/assets/map/dock2.png'
 // import { getHomepageSiteList } from '@/api/jiexiang/site'
 import * as Cesium from 'cesium'
 import Light1IMG from '@/assets/images/light1.png';

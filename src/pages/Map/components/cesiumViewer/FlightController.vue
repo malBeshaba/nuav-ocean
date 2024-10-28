@@ -61,7 +61,7 @@ import { useMyStore } from '@/store'
 import { DrawFlightControllerGLB,DrawFlightControllerFRU } from '@/components/mapTools/FlightControllerDrawElement'
 import * as Cesium from 'cesium'
 import ImageDial from '@/assets/map/MapFlightControllerDial.svg'
-import ImageDroneController from '@/assets/images/directedDrone.png'
+import ImageDroneController from '@/assets/images/directedDrone3.png'
 import { CreateFrustum } from "@/components/mapTools/FlightControllerDrawFrustum";
 
 const store = useMyStore()

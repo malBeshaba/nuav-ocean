@@ -128,7 +128,7 @@ import {onMounted, ref, reactive, watch, computed, onBeforeUnmount, defineEmits,
 import { getBindingDeviceBySn } from "@/api/device";
 import { stopLivestream, getLiveAddress, startLivestream, getAILive, getLivestatus } from "@/api/live"
 import { DeviceInfo } from "@/store/types/device";
-import dockIMG from "@/assets/images/dock.png"
+import dockIMG from "@/assets/images/dock2.png"
 import {RemoveEntitiesByBatch} from "@/components/mapTools/BaseMapTools";
 import {CheckWayLine} from "@/pages/TaskDeployment/components/WayLine/WayLineListCheckWayLine";
 import {

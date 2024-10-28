@@ -1,6 +1,6 @@
 import * as Cesium from 'cesium'
 import { updateFlightPlan } from '@/api/droneFlightPlan'
-import deviceNotFly from '@/assets/images/directedDrone.png'
+import deviceNotFly from '@/assets/images/directedDrone3.png'
 import store from '@/store'
 // @ts-ignore
 import droneModel from '@assets/models/airDrone.glb'
