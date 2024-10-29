@@ -223,12 +223,7 @@ watch(() => store.state.selectWayline, (val, oldVal) => {
 }, {deep: true})
 // 返回
 const closeCreateTask = () => {
-  router.push({
-    path: '/default/task/task-list',
-    query: {
-      device_sn: taskInfo.value.deviceSn
-    },
-  })
+  centerDialogVisible.value = true;
 };
 // 执行任务
 const exectFlightTaskParams = reactive({
@@ -426,12 +421,12 @@ function dlConfirm() {
   centerDialogVisible.value = false
   save_cache()
   CancelWayLineShow()
-  const spath = store.state.isComSaveCache.path;
-  const squery = store.state.isComSaveCache.query;
   store.commit('CHANGE_CACHE_STYLE', {isAllow: true})
   router.push({
-    path: spath,
-    query: squery
+    path: '/default/task/task-list',
+    query: {
+      device_sn: taskInfo.value.deviceSn
+    },
   })
 }
 
@@ -440,12 +435,12 @@ function dlCancel() {
   isSave = false
   CancelWayLineShow()
   removeCache()
-  const spath = store.state.isComSaveCache.path;
-  const squery = store.state.isComSaveCache.query;
   store.commit('CHANGE_CACHE_STYLE', {isAllow: true})
   router.push({
-    path: spath,
-    query: squery
+    path: '/default/task/task-list',
+    query: {
+      device_sn: taskInfo.value.deviceSn
+    },
   })
 }
 </script>

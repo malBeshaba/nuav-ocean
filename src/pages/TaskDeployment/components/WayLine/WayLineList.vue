@@ -270,7 +270,6 @@ const exportWayLine = (item: any) => {
   height: calc(100% - 40px);
   overflow: scroll;
   margin-left: 21px;
-  margin-top: 20px;
 }
 // .wayline-list{
 
