@@ -273,29 +273,39 @@ const router = createRouter({
     ]
 })
 router.beforeEach((to, from, next) => {
-    if (localStorage.getItem('userInfo')) {
-        if (from.path.includes('/default/task/create') && !to.path.includes('/default/task/create') && !to.path.includes('/default/edit-waypoint')) {
-            if (store.state.isComSaveCache.isAllow) {
-                store.commit('CHANGE_CACHE_STYLE', {isReady: false, isAllow: false, path: '', query: {} as any})
-                next()
-            } else if (!store.state.isComSaveCache.isReady)
-                store.commit('CHANGE_CACHE_STYLE', {isReady: true, isAllow: false, path: to.path, query: to.query})
-        } else {
+    if (from.path.includes('/default/task/create') && !to.path.includes('/default/task/create') && !to.path.includes('/default/edit-waypoint')) {
+        if (store.state.isComSaveCache.isAllow) {
+            store.commit('CHANGE_CACHE_STYLE', {isReady: false, isAllow: false, path: '', query: {} as any})
             next()
-        }
+        } else if (!store.state.isComSaveCache.isReady)
+            store.commit('CHANGE_CACHE_STYLE', {isReady: true, isAllow: false, path: to.path, query: to.query})
     } else {
-        switch (to.path) {
-            case '/login':
-                ElMessage({
-                    message: "登录已过期，请重新登录！",
-                    type: "error",
-                    showClose: true,
-                });
-                next()
-                break
-        }
-        next('/login')
+        next()
     }
+
+    // if (localStorage.getItem('userInfo')) {
+    //     if (from.path.includes('/default/task/create') && !to.path.includes('/default/task/create') && !to.path.includes('/default/edit-waypoint')) {
+    //         if (store.state.isComSaveCache.isAllow) {
+    //             store.commit('CHANGE_CACHE_STYLE', {isReady: false, isAllow: false, path: '', query: {} as any})
+    //             next()
+    //         } else if (!store.state.isComSaveCache.isReady)
+    //             store.commit('CHANGE_CACHE_STYLE', {isReady: true, isAllow: false, path: to.path, query: to.query})
+    //     } else {
+    //         next()
+    //     }
+    // } else {
+    //     switch (to.path) {
+    //         case '/login':
+    //             ElMessage({
+    //                 message: "登录已过期，请重新登录！",
+    //                 type: "error",
+    //                 showClose: true,
+    //             });
+    //             next()
+    //             break
+    //     }
+    //     next('/login')
+    // }
 })
 router.afterEach((to, from) => {
     // sendToAnalytics(to.fullPath)
