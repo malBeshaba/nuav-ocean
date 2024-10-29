@@ -130,8 +130,8 @@ html {
   bottom: 40px;
   margin-top: $NavigationHeight;
   height: calc(100% - $NavigationHeight - 40px);
-  left: $LeftWidth + 20px;
-  right: 0px;
+  right: $RightWidth + 20px;
+  left: 0;
   display: flex;
   flex-direction: column;
   z-index: 2;

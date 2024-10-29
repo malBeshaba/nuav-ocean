@@ -176,40 +176,11 @@ const showResultDataButton = (flightPlanId: string) => {
 let select_task_info = {} as any
 
 const loadTaskInfo = (flightPlanId: string, waylineId: string) => {
-  console.log('in')
   select_task_info = {fpi: flightPlanId, wli: waylineId}
   bus.emit('clickResultTaskItem', flightPlanId)
   if (waylineId) {
 	  showResultDataButton(flightPlanId)
-	  getWaylineById(waylineId).then(res => {
-      if (res.code === 0 && res.data !== '') {
-	      getWaylineGlobalParamsByWaylineId(res.data.waylineId).then(res2 => {
-		      if (res2.data === '') {
-			      const dataV2 = res.data.templateContent
-			      const placemark = dataV2.Folder.placemark.sort((a: Placemark, b: Placemark) => a.index - b.index)
-						let wayLineDataV2 = [] as WayLinePointUpload[]
-			      placemark.forEach( (item: any, index: number) => {
-							const tmpPoint = item.Point.coordinates.split(',')
-							const tmpPlacemark = {
-								pointX: Number(tmpPoint[0]),
-								pointY: Number(tmpPoint[1]),
-								executeHeight: Number(item.executeHeight),
-								pIndex: index,
-							}
-							//@ts-ignore
-							wayLineDataV2.push(tmpPlacemark)
-			      })
-		      } else {
-			      getWayLinePointByGlobalParamsId(res2.data.globalParamsId).then(res3 => {
-			      })
-		      }
-	      })
-      }else{
-        // 清除绘制的轨迹
-        RemoveEntitiesByBatch(window.cesiumViewer, 'ResultData')
-        ElMessage.error("该任务航线不存在")
-      }
-    })
+
 }
 }
 const getTaskInformation = (flightPlanId: string, waylineId: string) => {
