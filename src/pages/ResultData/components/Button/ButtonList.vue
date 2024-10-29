@@ -126,7 +126,7 @@ html {
 
 .button-list {
   position: fixed;
-  top: 20px;
+  top: 0;
   margin-top: $NavigationHeight;
   right: $ComponentGap + $RightWidth + 20px;
   gap: $ComponentGap;

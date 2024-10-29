@@ -251,6 +251,7 @@ const getDockDetail = (device_sn: string) => {
   console.log(device_sn,'新建任务页面跳转')
   if(device_sn){
     checkDrone(device_sn)
+    store.commit('SET_IFRAME_DOCK_SN', device_sn);
     if (route.path.split('/')[2] == 'task') {
       goToTask(device_sn)
     } else if (route.path.split('/')[2] == 'resource') {
@@ -372,8 +373,7 @@ html {
   position: fixed;
   top: 0;
   left: 20px;
-
-  margin-top: $NavigationHeight + 20px;
+  margin-top: $NavigationHeight ;
   height: calc(100% - $NavigationHeight - 40px);
   width: $LeftWidth;
   background: $ComponentBackground;

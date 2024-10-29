@@ -1,6 +1,5 @@
 <template>
     <div :style="frameStyle" class="main_page_frame">
-
       <div class="device">
         <div class="device_tab">
           <el-tabs
@@ -14,8 +13,6 @@
             </el-tab-pane>
           </el-tabs>
         </div>
-
-
         <div class="dock" v-if="activeName==='dock'">
           <dock-detail-block ></dock-detail-block>
         </div>

@@ -127,7 +127,7 @@ html {
   box-sizing: border-box;
   overflow: hidden;
   position: fixed;
-  bottom: 20px;
+  bottom: 40px;
   margin-top: $NavigationHeight;
   height: calc(100% - $NavigationHeight - 40px);
   left: $LeftWidth + 20px;

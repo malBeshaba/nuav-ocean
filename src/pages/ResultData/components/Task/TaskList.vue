@@ -4,7 +4,7 @@
     <div class="list-header">
       <div class="title">任务列表</div>
       <div class="title-function">
-        <el-icon class="button-backward" :size="16" @click="backToEquipmentList()"><DArrowLeft /></el-icon>
+        <el-icon class="button-backward" :size="16" @click="backToEquipmentList()"><Back /></el-icon>
       </div>
     </div>
     <div class="list-function">
@@ -57,7 +57,7 @@ import {
 	Placemark,
 	WaylineList
 } from '@/api/wayline'
-import { Search, Plus, DArrowLeft } from '@element-plus/icons-vue'
+import { Search, Back } from '@element-plus/icons-vue'
 import { getWayLinePointByGlobalParamsId } from '@/api/wayLinePoint'
 import { RemoveEntitiesByBatch, RemoveEntitiesById } from '@/components/mapTools/BaseMapTools'
 import { insertFlightTaskParams } from '@/api/droneFlightPlan'
@@ -68,6 +68,7 @@ import { TaskListCheckWayLine } from '@/pages/ResultData/components/Task/TaskLis
 import bus from "@/utils/bus";
 import {useCookies} from "vue3-cookies";
 import {WayLinePointUpload} from '@/store/types/wayline'
+import { cos } from "mathjs";
 const {cookies} = useCookies()
 const store = useMyStore()
 const route = useRoute();
@@ -80,6 +81,10 @@ onMounted(() => {
   //   const data = cookies.get('result_task') as any
   //   setTimeout(() => getTaskInformation(data.fpi, data.wli), 4000)
   // }
+  if (route.path.includes('result')) {
+    
+    loadTaskInfo(route.query?.fpi as string, route.query?.wli as string)
+  }
   device_sn.value = route.query.device_sn;
   getTaskInfo()
 });
@@ -140,6 +145,7 @@ const selectChange = (val: string) => {
 const input = ref('')
 // 返回
 const backToEquipmentList = () => {
+  // console.log(ResultDataButtonValue.isShow)
 	store.commit('CHECK_DOCK_STATE', { device_sn: device_sn.value, isShow: false })
 	RemoveEntitiesById(window.cesiumViewer, String(device_sn.value) + 'dockCheck')
 	RemoveEntitiesByBatch(window.cesiumViewer, 'ResultData')
@@ -168,6 +174,44 @@ const showResultDataButton = (flightPlanId: string) => {
   }
 }
 let select_task_info = {} as any
+
+const loadTaskInfo = (flightPlanId: string, waylineId: string) => {
+  console.log('in')
+  select_task_info = {fpi: flightPlanId, wli: waylineId}
+  bus.emit('clickResultTaskItem', flightPlanId)
+  if (waylineId) {
+	  showResultDataButton(flightPlanId)
+	  getWaylineById(waylineId).then(res => {
+      if (res.code === 0 && res.data !== '') {
+	      getWaylineGlobalParamsByWaylineId(res.data.waylineId).then(res2 => {
+		      if (res2.data === '') {
+			      const dataV2 = res.data.templateContent
+			      const placemark = dataV2.Folder.placemark.sort((a: Placemark, b: Placemark) => a.index - b.index)
+						let wayLineDataV2 = [] as WayLinePointUpload[]
+			      placemark.forEach( (item: any, index: number) => {
+							const tmpPoint = item.Point.coordinates.split(',')
+							const tmpPlacemark = {
+								pointX: Number(tmpPoint[0]),
+								pointY: Number(tmpPoint[1]),
+								executeHeight: Number(item.executeHeight),
+								pIndex: index,
+							}
+							//@ts-ignore
+							wayLineDataV2.push(tmpPlacemark)
+			      })
+		      } else {
+			      getWayLinePointByGlobalParamsId(res2.data.globalParamsId).then(res3 => {
+			      })
+		      }
+	      })
+      }else{
+        // 清除绘制的轨迹
+        RemoveEntitiesByBatch(window.cesiumViewer, 'ResultData')
+        ElMessage.error("该任务航线不存在")
+      }
+    })
+}
+}
 const getTaskInformation = (flightPlanId: string, waylineId: string) => {
 
   // 跳转
@@ -175,7 +219,9 @@ const getTaskInformation = (flightPlanId: string, waylineId: string) => {
     path: '/default/result/task-list',
     query: {
       flightPlanId: flightPlanId,
-      device_sn: device_sn.value
+      device_sn: device_sn.value,
+      fpi: flightPlanId,
+      wli: waylineId
     },
   })
 

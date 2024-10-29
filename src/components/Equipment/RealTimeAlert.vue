@@ -15,12 +15,15 @@ import MainPageFrame from "@/pages/MainPageFrame/MainPageFrame.vue";
 import { Close } from '@element-plus/icons-vue'
 import { watch, ref} from "vue";
 import { useMyStore } from "@/store"
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const store = useMyStore();
 const isShow = ref(false);
 
 const handleOnClose = () => {
     store.commit('SET_IFRAME_DOCK_SN', '');
+    router.push('/default/task');
 }
 
 watch(() => store.state.iframeDockSn, (value) => {

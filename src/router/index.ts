@@ -282,6 +282,12 @@ router.beforeEach((to, from, next) => {
     } else {
         next()
     }
+    if (from.path === '/default/task/task-list' && to.path !=='/default/task/task-list') {
+        store.commit('SET_IFRAME_DOCK_SN', '');
+    }
+    if (to.path === '/default/task/task-list') {
+        store.commit('SET_IFRAME_DOCK_SN', to.query?.device_sn)
+    }
 
     // if (localStorage.getItem('userInfo')) {
     //     if (from.path.includes('/default/task/create') && !to.path.includes('/default/task/create') && !to.path.includes('/default/edit-waypoint')) {

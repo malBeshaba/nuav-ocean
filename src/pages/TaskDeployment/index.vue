@@ -27,7 +27,7 @@ html {
   box-sizing: border-box;
   overflow: hidden;
   position: fixed;
-  top: 20px;
+  top: 0;
   height: calc(100% - $NavigationHeight - 40px);
   left: 20px;
   width: $LeftWidth;
