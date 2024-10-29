@@ -32,7 +32,7 @@ export const CURRENT_CONFIG = {
 
 }
 export function getCloadWebSocketURL () {
-  const token: string = localStorage.getItem('token') || '' as string
+  const token: string = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3b3Jrc3BhY2VfaWQiOiJlM2RlYTBmNS0zN2YyLTRkNzktYWU1OC00OTBhZjMyMjgwNjkiLCJzdWIiOiJDbG91ZEFwaVNhbXBsZSIsInVzZXJfdHlwZSI6IjEiLCJuYmYiOjE3MjkxNTM0NjcsImxvZyI6IkxvZ2dlcltjb20uZGppLnNhbXBsZS5jb21tb24ubW9kZWwuQ3VzdG9tQ2xhaW1dIiwiaXNzIjoiREpJIiwiaWQiOiJhMTU1OWU3Yy04ZGQ4LTQ3ODAtYjk1Mi0xMDBjYzQ3OTdkYTIiLCJleHAiOjE4MTU1NTM0NjcsImlhdCI6MTcyOTE1MzQ2NywidXNlcm5hbWUiOiJhZG1pblBDIn0.MR0-8jApvPA4JutgvHeAoQNkkTCe6hoydPBFMUouRLk"
   return CURRENT_CONFIG.websocketURL + '?x-auth-token=' + encodeURI(token)
 }
 
