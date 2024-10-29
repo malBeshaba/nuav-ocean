@@ -1,6 +1,6 @@
 <!--suppress TypeScriptValidateTypes -->
 <template>
-  <div class="task-list">
+  <div class="task-list" id="rtl">
     <div class="list-header">
       <div class="title">任务列表</div>
       <div class="title-function">
@@ -75,11 +75,11 @@ const device_sn = ref();
 const router = useRouter();
 
 onMounted(() => {
-  window.addEventListener('beforeunload', save_cache)
-  if (cookies.get('result_task')) {
-    const data = cookies.get('result_task') as any
-    setTimeout(() => getTaskInformation(data.fpi, data.wli), 4000)
-  }
+  // window.addEventListener('beforeunload', save_cache)
+  // if (cookies.get('result_task')) {
+  //   const data = cookies.get('result_task') as any
+  //   setTimeout(() => getTaskInformation(data.fpi, data.wli), 4000)
+  // }
   device_sn.value = route.query.device_sn;
   getTaskInfo()
 });
@@ -95,7 +95,7 @@ const handleCurrentChange = (val: number) => {
 const planInfo = reactive<insertFlightTaskParams[]>([]);
 const getTaskInfo = async () => {
   planInfo.splice(0, planInfo.length);
-  getFlightPlan(JSON.parse(localStorage.getItem('userInfo')).workspace_id, {
+  getFlightPlan(JSON.parse(localStorage.getItem('userInfo') as string).workspace_id, {
     pageNo: currentPage.value,
     pageSize: currentSize.value,
     deviceSn: device_sn.value,
@@ -144,7 +144,11 @@ const backToEquipmentList = () => {
 	RemoveEntitiesById(window.cesiumViewer, String(device_sn.value) + 'dockCheck')
 	RemoveEntitiesByBatch(window.cesiumViewer, 'ResultData')
 	ResultDataButtonValue.isShow = false
-	router.push('/default/result')
+  if (route.path.includes('/default/task/task-list')) {
+    router.push('/default/task')
+  } else {
+    router.push('/default/task/task-list?device_sn=' + device_sn.value)
+  }
 }
 
 // 判断飞行成果数据按钮是否显示
@@ -241,9 +245,11 @@ html {
   box-sizing: inherit;
 }
 
-.task-list {
-  width: 100%;
-  height: 100%;
+#rtl {
+  position: fixed;
+  right: 20px;
+  width: $LeftWidth;
+  height: calc(100% - $NavigationHeight - 40px);
   background-color: $ComponentBackground;
   color: $ContentColor;
   display: flex;

@@ -2,6 +2,7 @@ import * as Cesium from 'cesium'
 import store from '@/store'
 import { SceneCoordinateToWgs84 } from '@/components/mapTools/SeniorMapTools'
 import {LOG2E} from "mathjs";
+import router from '@/router';
 
 // 监听地图元素点击事件
 export function actionEntity(mapViewer: Cesium.Viewer) {
@@ -19,9 +20,10 @@ export function actionEntity(mapViewer: Cesium.Viewer) {
 					pointZ: cartographic.height
 				}
 				store.commit('SET_WAY_LINE_POINT_DRAWING_ACTIVE', value)
-			}
+			}	
 			if (pick.id._id.includes('dockCheck')) {
 				console.log(pick);
+				router.push('/default/task/task-list?device_sn='+pick.id._id.replace('dockCheck', ''));
 				store.commit('SET_IFRAME_DOCK_SN', pick.id._id.replace('dockCheck', ''));
 			}
 		}

@@ -56,23 +56,26 @@
     </div>
     <router-view name="task_detail"></router-view>
   </div>
+  <task-list></task-list>
 </template>
 
 <script setup lang="ts">
 import TaskItem from "@/components/Task/TaskItem.vue";
 import { ref, onMounted, reactive, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { getFlightPlan } from '@/api/droneFlightPlan'
-import { TaskStatus } from '@/store/types/task'
-import { Search, Plus, DArrowLeft, Back } from '@element-plus/icons-vue'
-import { useMyStore } from '@/store'
-import {DrawPolyline, RemoveEntitiesByBatch, RemoveEntitiesById} from '@/components/mapTools/BaseMapTools'
-import {getWaylineById, getWaylineGlobalParamsByWaylineId} from '@/api/wayline'
-import {getWayLinePointByGlobalParamsId} from '@/api/wayLinePoint'
-import {WayLinePointUpload} from '@/store/types/wayline'
-import {DrawWayLinePoint} from '@/components/mapTools/BaseMapToolsCreatePoint'
-import * as Cesium from 'cesium'
-import {NotFlyPolylineLabel} from '@/components/mapTools/mapMaterial/mapMaterialStyle'
+import { getFlightPlan } from '@/api/droneFlightPlan';
+import { TaskStatus } from '@/store/types/task';
+import { Search, Plus, DArrowLeft, Back } from '@element-plus/icons-vue';
+import { useMyStore } from '@/store';
+import {DrawPolyline, RemoveEntitiesByBatch, RemoveEntitiesById} from '@/components/mapTools/BaseMapTools';
+import {getWaylineById, getWaylineGlobalParamsByWaylineId} from '@/api/wayline';
+import {getWayLinePointByGlobalParamsId} from '@/api/wayLinePoint';
+import {WayLinePointUpload} from '@/store/types/wayline';
+import {DrawWayLinePoint} from '@/components/mapTools/BaseMapToolsCreatePoint';
+import * as Cesium from 'cesium';
+import {NotFlyPolylineLabel} from '@/components/mapTools/mapMaterial/mapMaterialStyle';
+import TaskList from '@/pages/ResultData/components/Task/TaskList.vue';
+
 const store = useMyStore()
 
 const route = useRoute();

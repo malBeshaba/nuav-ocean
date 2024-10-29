@@ -119,8 +119,8 @@ html {
   bottom: 20px;
   margin-top: $NavigationHeight;
   height: calc(100% - $NavigationHeight - 40px);
-  left: $LeftWidth + 20px;
-  right: 0px;
+  left: 0;
+  right: $RightWidth + 20px;
   display: flex;
   flex-direction: column;
   z-index: 2;

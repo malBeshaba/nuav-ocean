@@ -128,7 +128,7 @@ html {
   position: fixed;
   top: 20px;
   margin-top: $NavigationHeight;
-  right: $ComponentGap;
+  right: $ComponentGap + $RightWidth + 20px;
   gap: $ComponentGap;
   background-color: transparent;
   display: flex;
