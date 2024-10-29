@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import router from "@/router";
 import { useMyStore } from "@/store"
-
+import {onMounted} from "vue";
 import {
   useConnectWebSocket,
   messageHandler,
@@ -48,6 +48,7 @@ if (login_info[0]) {
     router.push('/default/task');
   }
 }
+
 
 </script>
 
