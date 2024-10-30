@@ -12,15 +12,20 @@
 import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
 import {PlanePhotos} from "@/utils/location/Location_Node";
 const PP = new PlanePhotos()
-const Props = defineProps<{
-	videoSrc: string
-}>()
+
+const Props = defineProps({
+  videoSrc: {
+    type: String,
+    default: '' // 设置默认值为空字符串，或者你可以设置为其他默认值
+  }
+})
 const isFull = computed(()=>window.document.fullscreenEnabled)
 onMounted(() => {
   watch(() => Props.videoSrc, (newData, oldData) => {
-    // console.log('播放视频路径：', newData)
-    if (Props.videoSrc) {
-      initVideo(Props.videoSrc)
+    if (newData) {
+      console.log('播放视频路径：', newData)
+
+      initVideo(newData)
     }
   }, { immediate: true })
 });
@@ -64,6 +69,7 @@ videos.forEach(video => {
 let player: any = null
 let jswebrtc = ref(null)
 const initVideo = (url: string) => {
+  console.log('初始化播放器', url)
   // 播放器存在 清空重置
   if (player) {
     player.destroy()

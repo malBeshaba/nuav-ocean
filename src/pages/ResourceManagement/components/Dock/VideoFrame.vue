@@ -3,7 +3,7 @@
     <div>
       <WebrtcPlayer v-show="!isYoloAction" :videoSrc="isAI? aisource: videoSource.norsource"></WebrtcPlayer>
       <WebrtcPlayer v-show="false" id="videoFusion" :videoSrc="isAI? aisource: videoSource.norsource"></WebrtcPlayer>
-      <WebrtcPlayer v-show="isYoloAction" :videoSrc="yoloVideoSource"></WebrtcPlayer>
+      <WebrtcPlayer v-if="isYoloAction" :videoSrc="yoloVideoSource"></WebrtcPlayer>
     </div>
     <el-select v-if="videoSource.sn" v-model="vtCode" placeholder="video" :class="isFullScreen? 'Bbutton_': 'Bbutton'" style="width: 120px">
       <el-option
