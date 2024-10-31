@@ -36,7 +36,8 @@ export interface DeviceOsd {
     attitude_head?: number;// 偏航轴角度
     attitude_pitch?: number;// 俯仰轴角度
     attitude_roll?: number;// 横滚轴角度
-    cameras?: DeviceOsdCamera[]
+    cameras?: DeviceOsdCamera[],
+    payloads: any[],
 }
 // 夜航灯开关
 export enum NightLightsStateEnum {

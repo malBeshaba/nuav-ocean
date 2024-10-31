@@ -121,8 +121,6 @@
 </template>
 
 <script setup lang="ts">
-import { Edit, View as IconView } from '@element-plus/icons-vue'
-// import DroneBlock from "@/components/drone/drone_block.vue"
 import VideoFrame from '@/pages/ResourceManagement/components/Dock/VideoFrame.vue'
 import {onMounted, ref, reactive, watch, computed, onBeforeUnmount, defineEmits, toRaw} from 'vue'
 import { getBindingDeviceBySn } from "@/api/device";
@@ -133,17 +131,17 @@ import {RemoveEntitiesByBatch} from "@/components/mapTools/BaseMapTools";
 import {CheckWayLine} from "@/pages/TaskDeployment/components/WayLine/WayLineListCheckWayLine";
 import {
   exectFlightTask,
-  getFlightPlan,
   getFlightPlanList,
   insertFlightTask,
   insertFlightTaskPrepare
-} from "@/api/droneFlightPlan"
-import { useMyStore } from "@/store"
-const store = useMyStore()
+} from "@/api/droneFlightPlan";
+import { DockOsd } from '@/store/types/device';
+import { useMyStore } from "@/store";
 import { useRoute, useRouter } from 'vue-router';
 import {useCookies} from "vue3-cookies";
 
-const {cookies} = useCookies()
+const store = useMyStore();
+const {cookies} = useCookies();
 const route = useRoute();
 const router = useRouter();
 
@@ -175,7 +173,8 @@ interface deviceInfoType {
         remain_upload: string;
       };
     };
-  };
+  },
+  child_device_sn: string;
 }
 const deviceInfo = reactive({
   dock: {
@@ -211,30 +210,17 @@ const acc_time = ref(0 as number)
 let dockInfo = reactive({} as DeviceInfo)
 let droneInfo = reactive({} as DeviceInfo)
 
-let rtmpUrl = ref(null)
 const dockOutLiveStream = ref('' as string)
-const droneOutLiveStream = ref(false)
+const droneOutLiveStream = ref('' as string)
 const aiDockStream = ref('')
-// const dockLoaded = ref(false as boolean)
 const isFull = ref(false as boolean)
-
-
-const isShowInfo = ref(false)
-// const emit = defineEmits(['show-info-changed']);
 
 const deviceSn = ref("")
 
 // 一键起飞选项
 const flightValue = ref('')
 
-const flightOptions = ref([])
-
-
-// // Emit event when isShowInfo changes
-// watch(isShowInfo, (newVal) => {
-//   emit('show-info-changed', newVal);
-// });
-
+const flightOptions = ref([] as any[])
 
 const RainfallEnum = computed(() => {
   switch (deviceInfo?.dock.basic_osd?.rainfall) {
@@ -312,8 +298,6 @@ const CalAccTime = computed(() => {
   return timeArr.join(' ')
 })
 
-
-
 onMounted(() => {
   // getDeviceInfo()
   // getDockLiveStream()
@@ -322,9 +306,7 @@ onMounted(() => {
   getDeviceInfo()
   getDockLiveStream()
   // const preFlightPlanRes =  getFlightPlanList()
-
-  getFlightPlanList(JSON.parse(localStorage.getItem('userInfo')).workspace_id, {
-
+  getFlightPlanList(JSON.parse(localStorage.getItem('userInfo') as string).workspace_id, {
     deviceSn: deviceSn.value,
     taskType:"4"
   }).then(res => {
@@ -339,12 +321,8 @@ onMounted(() => {
 
     }
   })
-
-  console.log('flightOptions', flightOptions.value)
-
+  // console.log('flightOptions', flightOptions.value)
 });
-
-
 
 interface MyObject {
   planName: string;
@@ -366,13 +344,12 @@ const handleOnTaskChange = (val: any) => {
 }
 
 const CancelWayLineShow = () => {
-  if(wayline_prepare.value.waylineId){
-    // console.log('wayline.value.waylineId', wayline.value.waylineId)
-    RemoveEntitiesByBatch(window.cesiumViewer, 'checkWayLine')
-    CheckWayLine(window.cesiumViewer, String(wayline_prepare.value.waylineId), true)
-  } else {
-    console.log('11111')
-  }
+  // wayline_prepare未定义
+  // if(wayline_prepare.value.waylineId){
+  //   // console.log('wayline.value.waylineId', wayline.value.waylineId)
+  //   RemoveEntitiesByBatch(window.cesiumViewer, 'checkWayLine')
+  //   CheckWayLine(window.cesiumViewer, String(wayline_prepare.value.waylineId), true)
+  // }
 }
 
 const takeOff_click = (device_sn: string) => {
@@ -400,7 +377,7 @@ const takeOff_click = (device_sn: string) => {
   taskParams.executeTime = Date.now();
   console.log("taskParams",taskParams)
   insertFlightTask(taskParams).then(res => {
-    console.log(res); // 打印响应
+    // console.log(res); // 打印响应
     if(res.code === 0) {
       console.log('res_insertFlightTask', res.data)
       exectFlightTaskParams.planId = res.data.flightPlanId
@@ -488,7 +465,7 @@ function InsertTask() {
   preparetaskInfo.value.planTaskType = taskInfo.value.planTaskType
   preparetaskInfo.value.planStatus = 1
   preparetaskInfo.value.executeTime = taskInfo.value.executeTime
-  console.log("preparetaskInfo.value", preparetaskInfo.value)
+  // console.log("preparetaskInfo.value", preparetaskInfo.value)
   removeCache()
   store.commit('CHANGE_CACHE_STYLE', {isReady: true, isAllow:true})
   insertFlightTaskPrepare(preparetaskInfo.value)
@@ -516,11 +493,11 @@ function handleExitFlight() {
     });
     insertFlightTask(taskInfo.value).then(res => {
       if (res.code === 0) {
-        console.log('res_insertFlightTask', res.data)
+        // console.log('res_insertFlightTask', res.data)
         exectFlightTaskParams.planId = res.data.flightPlanId
-        console.log('exectFlightTaskParams', exectFlightTaskParams)
+        // console.log('exectFlightTaskParams', exectFlightTaskParams)
         exectFlightTask(JSON.parse(localStorage.getItem('userInfo') as string).workspace_id, exectFlightTaskParams).then(res2 => {
-          console.log('res_exectFlightTask', res.data)
+          // console.log('res_exectFlightTask', res.data)
           if (res2.code === 0) {
             ElMessage.success({
               message: "执行成功!",
@@ -530,7 +507,7 @@ function handleExitFlight() {
               flightPlanId: res.data.flightPlanId,
               device_sn: deviceInfo.child_device_sn
             })
-            console.log('store.state.taskFlightPlanInfo', store.state.taskFlightPlanInfo)
+            // console.log('store.state.taskFlightPlanInfo', store.state.taskFlightPlanInfo)
             router.push({
               path: '/default/task/task-list',
               query: {
@@ -557,22 +534,8 @@ function handleExitFlight() {
 const handleTaskChange = ()=>{
   // 获取当前被选中的对象
   flightPlan.value = flightOptions.value.find((item: any) => item.flightPlanId === flightValue.value)
-  console.log('currentTask1111111111111', flightPlan.value)
+  // console.log('currentTask1111111111111', flightPlan.value)
 }
-
-// // 点击确定或取消时删除显示的航线
-// const CancelWayLineShow = () => {
-//   if (wayline.value.waylineId) {
-//     // console.log('wayline.value.waylineId', wayline.value.waylineId)
-//     RemoveEntitiesByBatch(window.cesiumViewer, 'checkWayLine')
-//     CheckWayLine(window.cesiumViewer, String(wayline.value.waylineId), true)
-//   } else {
-//     console.log('11111')
-//   }
-
-
-
-
 
 const getDeviceInfo = async () => {
   getBindingDeviceBySn({
@@ -590,7 +553,7 @@ const getDeviceInfo = async () => {
       }).then(res => {
         if(res.code === 0) {
           droneInfo = res.data
-          console.log('机场信息：1111111111111111111', dockInfo)
+          // console.log('机场信息：1111111111111111111', dockInfo)
           // getDroneLiveStream(dockInfo.child_device_sn)
         }
       })
@@ -613,7 +576,7 @@ const closeLiveStream = () => {
     stopLivestream({
       video_id: store.state.liveStreamState[dockInfo.device_sn]
     }).then(res => {
-      console.log('机场' + dockInfo.device_sn + '直播流已断开')
+      // console.log('机场' + dockInfo.device_sn + '直播流已断开')
     })
   }
   if (droneOutLiveStream && store.state.liveStreamState[dockInfo.child_device_sn as string]) {
@@ -684,24 +647,23 @@ watch(() => store.state.deviceState, (newData, oldData) => {
   // console.log('dock', newData)
   if (newData.currentType === 3 && newData.dockInfo[newData.currentSn]) {
     if (dockInfo.device_sn === newData.currentSn) {
-      deviceInfo.dock = newData.dockInfo[dockInfo.device_sn]
+      deviceInfo.dock = newData.dockInfo[dockInfo.device_sn] as any;
       if (deviceInfo.dock.work_osd && deviceInfo.dock.link_osd && deviceInfo.dock.basic_osd) {
-        acc_time.value = deviceInfo.dock.work_osd.activation_time
+        acc_time.value = deviceInfo.dock.work_osd.activation_time;
       }
-    } else {
     }
   }
 
 }, { deep: true, immediate: true})
 
-watch([dockInfo, droneInfo], ([newDockInfo, newDroneInfo]) => {
-  // getDockLiveStream()
-  // if (newDockInfo && newDroneInfo) {
-  //   title.value = `${newDockInfo.device_name}-${newDroneInfo.device_name}`;
-  // } else if (newDockInfo) {
-  //   title.value = newDockInfo.device_name;
-  // }
-}, { deep: true, immediate: true});
+// watch([dockInfo, droneInfo], ([newDockInfo, newDroneInfo]) => {
+//   // getDockLiveStream()
+//   // if (newDockInfo && newDroneInfo) {
+//   //   title.value = `${newDockInfo.device_name}-${newDroneInfo.device_name}`;
+//   // } else if (newDockInfo) {
+//   //   title.value = newDockInfo.device_name;
+//   // }
+// }, { deep: true, immediate: true});
 </script>
 
 <style scoped lang="scss">

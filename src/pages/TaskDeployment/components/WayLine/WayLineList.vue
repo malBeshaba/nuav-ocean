@@ -13,7 +13,12 @@
       <el-input placeholder="请输入搜索内容" :suffix-icon="Search" size="default"/>
     </div>
     <div class="WaylineList" @click="handleClick">
-      <div class="WayLineListItem" v-for="(item, index) in listItems" :key="index" :class="{ 'selected': SelectedList[index].isSelected }" @click="ItemClick(item)">
+      <div class="WayLineListItem" 
+        v-for="(item, index) in listItems" 
+        :key="index" 
+        :class="{ 'selected': SelectedList[index].isSelected }" 
+        @click="ItemClick(item)"
+      >
         <div class="WaylineInfo">
           <div class="InfoCellOne" >
             <div class="orange-dot"></div>
@@ -39,20 +44,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import {
 	getWaylineList,
 	WaylineList,
-	insertWayline,
-	insertWaylineGlobalParams,
 	deleteWaylineById,
 	getWaylineGlobalParamsByWaylineId,
   exportWaylineById
 } from "@/api/wayline";
 import { WayLineGlobalParams } from '@/store/types/wayline'
 import { CheckWayLine } from './WayLineListCheckWayLine'
-const flylength=ref(756)
 const route = useRoute();
 const router = useRouter();
 import { useMyStore } from "@/store"
@@ -61,7 +63,7 @@ import { Search, Plus, DArrowLeft, Back } from '@element-plus/icons-vue'
 
 
 const store = useMyStore();
-const SelectedList=ref([]);
+const SelectedList=ref([] as any[]);
 const ChooseWayLine = ref("选择航线");
 const DeviceState = ref("在线");
 let listItems = ref([] as WaylineList[]);
@@ -76,7 +78,7 @@ onMounted(() => {
     console.log("res", res.data.list);
     listItems.value = res.data.list;
     console.log("listItems123345", listItems.value);
-    listItems.value = listItems.value.map(item => {
+    listItems.value = listItems.value.map((item: any) => {
       // 增加 templateContent 不为空的判断
       if (item.templateContent) {
         if (item.templateContent.missionConfig.droneInfo.droneEnumValue === 67) {
@@ -98,7 +100,7 @@ onMounted(() => {
     });
     console.log("listItems", listItems.value);
 
-    SelectedList.value = res.data.list.map((item) => {
+    SelectedList.value = res.data.list.map((item: any) => {
       const droneType = item.templateContent && item.templateContent.missionConfig.droneInfo.droneEnumValue === 67 ? "M30系列" : "Mavic 3 行业系列";
       const payloadType = item.templateContent && item.templateContent.missionConfig.payloadInfo.payloadEnumValue === 53 ? "M300相机" : "H20";
 
@@ -122,7 +124,7 @@ function ItemClick(clickedItem: { waylineName: any; waylineId: string }) {
 }
 // 选中航线
 let isShow = false
-const handleClick = (event: { target: { closest: (arg0: string) => any; }; }) => {
+const handleClick = (event: any) => {
   const listItem = event.target.closest('.WayLineListItem')
   if (listItem) {
     const index = [...listItem.parentNode.children].indexOf(listItem)
@@ -271,21 +273,7 @@ const exportWayLine = (item: any) => {
   overflow: scroll;
   margin-left: 21px;
 }
-// .wayline-list{
 
-//   border-left: 1px solid #F9A100;;
-//   box-shadow: 8px 0px 4px 0px rgba(255, 120, 0, 1);
-//   background-color: rgba(10, 11, 14, 0.85);
-//   position: fixed;
-//   width: $LeftWidth;
-//   top: 0px;
-//   margin-top: $NavigationHeight;
-//   height: calc(100% - $NavigationHeight);
-//   left: $LeftWidth;
-//   /* display: flex;
-//   flex-direction: column; */
-//   overflow: scroll;
-// }
 .WayLineListTitle{
   display: flex;
   width: 360px;

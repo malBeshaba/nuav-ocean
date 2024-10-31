@@ -69,8 +69,8 @@ const getVideoList = async () => {
   getFilesListByFlightPlanId(
       JSON.parse(localStorage.getItem('userInfo') as string).workspace_id,
       route.query.flightPlanId as string, {
-        page: currentPage.value, 
-        page_size: currentSize.value,
+        page: currentPage.value.toString(), 
+        page_size: currentSize.value.toString(),
         // fileTypes: '4,5,6,8,10'
         fileTypes: '12'
       }).then(res => {

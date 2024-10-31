@@ -168,7 +168,7 @@ const getUserList = ()=>{
         "page_size":50,
     }).then(res=>{
         const response = res.data
-        response.data.list.forEach(element => {
+        response.data.list.forEach((element: any) => {
 						userInfos.value.push(element);
         });
         userTotal.value = String(response.data.list.length)
@@ -217,7 +217,7 @@ const handleUserDelete = (id: string) => {
 // 获取飞行任务
 const taskTotal = ref('-');
 const getTaskInfo = async () => {
-  getFlightPlan(JSON.parse(localStorage.getItem('userInfo')).workspace_id, {
+  getFlightPlan(JSON.parse(localStorage.getItem('userInfo') as string).workspace_id, {
     pageNo: 1,
     pageSize: 50,
     deviceSn: ''

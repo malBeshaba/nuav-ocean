@@ -12,7 +12,9 @@ export interface WaylineList {
     createTime: string,
     updateTime: string,
     waylineStatus: number,
-    waylineType: number
+    waylineType: number,
+    droneType: string,
+    payloadType: string,
 }
 
 export interface templateContent {

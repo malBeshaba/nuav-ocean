@@ -1,7 +1,5 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import {ElMessage} from "element-plus";
 import store from "@/store"
-// @ts-ignore
 const router = createRouter({
     history: createWebHistory('hszx'),
     routes: [

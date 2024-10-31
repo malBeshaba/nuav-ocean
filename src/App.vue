@@ -5,7 +5,6 @@
 <script setup lang="ts">
 import router from "@/router";
 import { useMyStore } from "@/store"
-import {onMounted} from "vue";
 import {
   useConnectWebSocket,
   messageHandler,
@@ -16,7 +15,6 @@ import { deviceState } from '@/utils/deviceWatch/deviceState'
 const store = useMyStore()
 
 useConnectWebSocket(messageHandler);
-// jxUseConnectWebsocket(jxMessageHandler);
 dockState()
 deviceState()
 

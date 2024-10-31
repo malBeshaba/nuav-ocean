@@ -202,7 +202,7 @@ onMounted(() => {
   })
 });
 
-const initAiSourceList = (newCode)=>{
+const initAiSourceList = (newCode: string)=>{
   getLivestatus(newCode + Props.videoSource.sn).then(res => {
     if (res.data.webRtcStream) {
       aiSourceList.push({id:newCode,url:res.data.webRtcStream})
@@ -278,7 +278,7 @@ watch(aiCode, (newCode, oldCode) => {
     // })
   }
   if (oldCode !== '' && oldCode !== "1631525384183484418") {
-    stopAlgorithm(oldCode).then(res => {
+    stopAlgorithm(oldCode as string).then(res => {
       console.log('stoplive',res)
     })
   }
@@ -393,16 +393,16 @@ watch(isShowVideo, (value) => {
   } else {
     // downLoadDroneList()
     if(VideoFusionModel !== null) {
-      VideoFusionModel.clearAll()
-      VideoFusionModel = null
-      store.commit('SET_VIDEO_FUSION_STATE', {sn: '', state: false})
+      VideoFusionModel.clearAll();
+      VideoFusionModel = null;
+      store.commit('SET_VIDEO_FUSION_STATE', {sn: '', state: false});
     }
   }
 })
 
-let videoPoints:any[] = []
+let videoPoints:any[] = [];
 const numberOfInterpolatedPoints = 48;
-let timer =null
+let timer: any = null;
 watch(store.state.deviceState.deviceInfo, (value) => {
   if(value) {
     Object.keys(value).forEach((key: string) => {

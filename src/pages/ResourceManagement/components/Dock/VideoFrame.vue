@@ -3,7 +3,7 @@
     <div>
       <WebrtcPlayer v-show="!isYoloAction" :videoSrc="isAI? aisource: videoSource.norsource"></WebrtcPlayer>
       <WebrtcPlayer v-show="false" id="videoFusion" :videoSrc="isAI? aisource: videoSource.norsource"></WebrtcPlayer>
-      <WebrtcPlayer v-if="isYoloAction" :videoSrc="yoloVideoSource"></WebrtcPlayer>
+      <WebrtcPlayer v-show="isYoloAction" :videoSrc="yoloVideoSource"></WebrtcPlayer>
     </div>
     <el-select v-if="videoSource.sn" v-model="vtCode" placeholder="video" :class="isFullScreen? 'Bbutton_': 'Bbutton'" style="width: 120px">
       <el-option
@@ -97,8 +97,9 @@ import {string} from "mathjs";
 
 const Props = defineProps<{
   videoSource: {
+    aisource?: string;
     norsource: string;
-    sn: string;
+    sn?: string;
     // type: any,
   },
 }>()
@@ -190,11 +191,11 @@ onMounted(() => {
       }
       getLivestatus("1631525384183484418"+ Props.videoSource.sn).then(res => {
         if (res.data.webRtcStream) {
-          yoloVideoSource.value = res.data.webRtcStream
+          yoloVideoSource.value = res.data.webRtcStream ?? ''
 
         } else {
-          getAILive("1631525384183484418", Props.videoSource.sn).then(res => {
-            yoloVideoSource.value = res.data.webRtcStream
+          getAILive("1631525384183484418", Props.videoSource.sn as string).then(res => {
+            yoloVideoSource.value = res.data.webRtcStream ?? ''
           })
         }
       })
@@ -202,7 +203,7 @@ onMounted(() => {
   })
 });
 
-const initAiSourceList = (newCode)=>{
+const initAiSourceList = (newCode: string)=>{
   getLivestatus(newCode + Props.videoSource.sn).then(res => {
     if (res.data.webRtcStream) {
       aiSourceList.push({id:newCode,url:res.data.webRtcStream})
@@ -210,7 +211,7 @@ const initAiSourceList = (newCode)=>{
       // isAI.value = true
       // console.log(aisource.value, isAI.value)
     } else {
-      getAILive(newCode, Props.videoSource.sn).then(res => {
+      getAILive(newCode, Props.videoSource.sn as string).then(res => {
         aiSourceList.push({id:newCode,url:res.data.webRtcStream})
         // console.log('getAIlive', res)
         // aisource.value = res.data.webRtcStream
@@ -252,8 +253,8 @@ watch(aiCode, (newCode, oldCode) => {
           isAI.value = true
           console.log(aisource.value, isAI.value)
         } else {
-          getAILive(newCode, Props.videoSource.sn).then(res => {
-            console.log('getAIlive', res)
+          getAILive(newCode, Props.videoSource.sn as string).then(res => {
+            // console.log('getAIlive', res)
             aisource.value = res.data.webRtcStream
             isAI.value = true
             console.log(aisource.value, isAI.value)
@@ -278,20 +279,17 @@ watch(aiCode, (newCode, oldCode) => {
     // })
   }
   if (oldCode !== '' && oldCode !== "1631525384183484418") {
-    stopAlgorithm(oldCode).then(res => {
-      console.log('stoplive',res)
+    stopAlgorithm(oldCode as string).then(res => {
+      // console.log('stoplive',res)
     })
   }
 }, { deep: true, immediate:true });
 
-// watch(Props.videoSource, (newData, oldData) => {
-//   console.log('新的', newData)
-// })
 let currentUrl = window.location.href;
 let url = new URL(currentUrl);
 let drone_sn :string = ''
 drone_sn = string(url.searchParams.get("device_sn"));
-console.log('drone_sn', drone_sn)
+// console.log('drone_sn', drone_sn)
 let airport_sn : string = ""
 
 const getBindingDeviceBySn = async () => {
@@ -299,10 +297,10 @@ const getBindingDeviceBySn = async () => {
     workspace_id: JSON.parse(localStorage.getItem('userInfo') as string).workspace_id,
     drone_sn: drone_sn
   }).then(res => {
-    console.log('getDockSnByDroneSn', res)
+    // console.log('getDockSnByDroneSn', res)
     if (res.code === 0) {
       airport_sn = res.data.device_sn
-      console.log('airport_sn', airport_sn)
+      // console.log('airport_sn', airport_sn)
     }
   })
 }
@@ -312,8 +310,6 @@ watch(vtColor, (newCode, oldCode) => {
   setRedR(airport_sn, {thermal_current_palette_style: parseInt(newCode)}).then(res => {
     if (res.code === 0) {
       ElMessage.success(res.message)
-    } else {
-      // ElMessage.error(res.message)
     }
   })
 })
@@ -386,23 +382,23 @@ const downLoadDroneList = ()=>{
 
 watch(isShowVideo, (value) => {
   if(value) {
-    droneList = []
-    const videoElement = document.getElementById('videoFusion') as HTMLVideoElement
-    VideoFusionModel = initVideoFusionModel(videoElement, Props.videoSource.sn)
-    store.commit('SET_VIDEO_FUSION_STATE', {sn: Props.videoSource.sn, state: true})
+    droneList = [];
+    const videoElement = document.getElementById('videoFusion') as HTMLVideoElement;
+    VideoFusionModel = initVideoFusionModel(videoElement, Props.videoSource.sn as string);
+    store.commit('SET_VIDEO_FUSION_STATE', {sn: Props.videoSource.sn, state: true});
   } else {
     // downLoadDroneList()
     if(VideoFusionModel !== null) {
-      VideoFusionModel.clearAll()
-      VideoFusionModel = null
-      store.commit('SET_VIDEO_FUSION_STATE', {sn: '', state: false})
+      VideoFusionModel.clearAll();
+      VideoFusionModel = null;
+      store.commit('SET_VIDEO_FUSION_STATE', {sn: '', state: false});
     }
   }
 })
 
-let videoPoints:any[] = []
+let videoPoints: any[] = [];
 const numberOfInterpolatedPoints = 48;
-let timer =null
+let timer: any = null;
 watch(store.state.deviceState.deviceInfo, (value) => {
   if(value) {
     Object.keys(value).forEach((key: string) => {
@@ -498,7 +494,7 @@ onBeforeUnmount(() => {
     isShowVideo.value = false
   }
   stopAlgorithm(aiCode.value).then(res => {
-    console.log('stoplive',res)
+    // console.log('stoplive',res)
   })
 })
 
