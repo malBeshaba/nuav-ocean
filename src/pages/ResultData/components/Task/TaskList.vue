@@ -2,7 +2,7 @@
 <template>
   <div class="task-list" id="rtl">
     <div class="list-header">
-      <div class="title">任务列表</div>
+      <div class="title">成果数据</div>
       <div class="title-function">
         <el-icon class="button-backward" :size="16" @click="backToEquipmentList()"><Back /></el-icon>
       </div>

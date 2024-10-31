@@ -56,12 +56,12 @@
     </div>
     <router-view name="task_detail"></router-view>
   </div>
-  <task-list></task-list>
+  <task-list v-show="showResultList"></task-list>
 </template>
 
 <script setup lang="ts">
 import TaskItem from "@/components/Task/TaskItem.vue";
-import { ref, onMounted, reactive, watch } from 'vue';
+import { ref, onMounted, reactive, watch, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getFlightPlan } from '@/api/droneFlightPlan';
 import { Search, Plus, Back } from '@element-plus/icons-vue';
@@ -80,10 +80,19 @@ const store = useMyStore()
 const route = useRoute();
 const device_sn = ref();
 const router = useRouter();
-
+const handlePopstate = (event: PopStateEvent) => {
+  console.log('用户回退了路由', event);
+  showResultList.value = true;
+  // 在这里执行你的回退逻辑
+};
 onMounted(() => {
   device_sn.value = route.query.device_sn;
   getTaskInfo()
+  window.addEventListener('popstate', handlePopstate);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('popstate', handlePopstate);
 });
 // 分页
 const currentPage = ref(1)
@@ -159,8 +168,11 @@ const createTask = () => {
     },
   })
 }
+
+const showResultList = ref(true);
 // 任务详细信息
 const getTaskInformation = (flightPlanId: string, planStatus: number, wayLineId: string) => {
+  showResultList.value = false;
   if (planStatus === 2 || planStatus === 1) {
     router.push({
       path: '/default/task/task-list/detail',

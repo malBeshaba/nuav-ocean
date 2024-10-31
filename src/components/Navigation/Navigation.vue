@@ -120,11 +120,11 @@ const handleSelect = (item) => {
   // 跳转至对应页面
   switch (item.name){
     case '首页':
-      location.href = import.meta.env.VITE_AEF_URL+"#/?type=overview"
+      location.href = import.meta.env.VITE_AEF_URL+"#/LargeScreen?type=overview"
       // router.push('/overview')
       break
     case '视频监管':
-      location.href = import.meta.env.VITE_AEF_URL+"#/?type=warning"
+      location.href = import.meta.env.VITE_AEF_URL+"#/LargeScreen?type=warning"
       // router.push('/warning')
       break
     case '无人机巡航':
