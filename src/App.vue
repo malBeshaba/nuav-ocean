@@ -45,6 +45,11 @@ if (login_info[0]) {
   }else{
     router.push('/default/task');
   }
+} else {
+  localStorage.setItem("token", import.meta.env.VITE_TOKEN as string);
+  localStorage.setItem("userInfo", JSON.stringify({
+    workspace_id: import.meta.env.VITE_WORKSPACE_ID as string
+  }));
 }
 
 

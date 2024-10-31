@@ -62,7 +62,7 @@ const getVideoList = async () => {
   getDronesVideo({
     pageNo: currentPage.value,
     pageSize: currentSize.value,
-    flightPlanId: route.query.flightPlanId
+    flightPlanId: route.query.flightPlanId as string
   }).then(res => {
     // console.log('视频', res)
     if(res.code === 0) {
