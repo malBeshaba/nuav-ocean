@@ -31,7 +31,8 @@ export interface MediaFile {
   job_id: string,
   planId?: string,
   waylineId?: string,
-  preview_url: string
+  preview_url: string,
+  row_url: string,
 }
 
 // 媒体文件

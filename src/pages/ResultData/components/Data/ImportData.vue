@@ -33,15 +33,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router';
+import { reactive, onMounted } from 'vue';
 import { insertModelData } from "@/api/modelData";
-const route = useRoute();
-const router = useRouter();
-
-onMounted(() => {
-
-});
 
 // 生成时间戳
 const getTimeStamp = () => {
@@ -63,7 +56,7 @@ const closeImportData = () => {
 };
 // 新增数据
 const createData = () => {
-  insertModelData(dataInfo).then(res => {
+  insertModelData(dataInfo as any).then(res => {
     console.log(res)
 		if(res.code === 0) {
 			ElMessage.success('新增数据成功！')

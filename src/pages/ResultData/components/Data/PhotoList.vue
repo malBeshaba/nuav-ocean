@@ -2,7 +2,7 @@
   <div class="photo-list">
     <el-tabs v-model="activeTab" class="demo-tabs">
       <el-tab-pane label="成果管理" name="manage">
-        <PhotoManagement :plan-id="route.query.flightPlanId"></PhotoManagement>
+        <PhotoManagement :plan-id="route.query.flightPlanId?.toString()"></PhotoManagement>
       </el-tab-pane>
 <!--      <el-tab-pane label="缺陷识别" name="analysis">-->
 <!--        <PhotoAnalysis :plan-id="route.query.flightPlanId"></PhotoAnalysis>-->

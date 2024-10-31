@@ -59,21 +59,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive, computed, watch } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { Search, DocumentCopy, Download, Delete, MagicStick } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router';
-import { useMyStore } from "@/store"
 import { getFilesListByFlightPlanId } from "@/api/file";
 import { MediaFile } from "@/store/types/file";
 import loadingFailImg from "@/assets/Resource/loadingFailImg.png"
 import loadingImg from "@/assets/Resource/loadingImg.png"
 import PhotoItem from "@/pages/ResultData/components/Data/PhotoListItem.vue";
 import {bridgeDetectAlgorithm} from "@/api/aiAlgorithm";
-const store = useMyStore()
 const route = useRoute();
 const router = useRouter();
 const Props = defineProps<{
-  planId: string
+  planId: string | undefined
 }>()
 // 分页
 const currentPage = ref(1)
@@ -107,16 +105,16 @@ const getFileList = async () => {
   srcList.value = []
   photoContent.value = ' '
   getFilesListByFlightPlanId(
-    JSON.parse(localStorage.getItem('userInfo')).workspace_id,
-    route.query.flightPlanId, {
-    page: currentPage.value,
-    page_size: currentSize.value,
+    JSON.parse(localStorage.getItem('userInfo') as string).workspace_id,
+    route.query.flightPlanId?.toString() as string, {
+    page: currentPage.value.toString(),
+    page_size: currentSize.value.toString(),
     fileTypes: '1,2,3,7,9'
   }).then(res => {
     if(res.code === 0) {
       fileList.value = res.data.list
       fileTotal.value = res.data.pagination.total
-      res.data.list.forEach((item) => {
+      res.data.list.forEach(() => {
         srcList.value.push(loadingImg)
       });
     }
@@ -124,22 +122,22 @@ const getFileList = async () => {
 };
 
 // 是否预先加载走马灯
-const loadImage = () => {
-  for (let i = 0; i < fileList.value.length; i++) {
-    // console.log('loadImage1', fileList.value[i])
-    if (fileList.value[i].row_url) {
-      // console.log('loadImage1', fileList.value[i].row_url)
-      loadImageAsync(fileList.value[i].row_url).then(res => {
-        srcList.value[i] = res  //赋值新的 url
-      }).catch(err => {
-        srcList.value[i] = loadingFailImg
-      })
-    }
-    else {
-      srcList.value[i] = loadingFailImg
-    }
-  }
-}
+// const loadImage = () => {
+//   for (let i = 0; i < fileList.value.length; i++) {
+//     // console.log('loadImage1', fileList.value[i])
+//     if (fileList.value[i].row_url) {
+//       // console.log('loadImage1', fileList.value[i].row_url)
+//       loadImageAsync(fileList.value[i].row_url).then(res => {
+//         srcList.value[i] = res  //赋值新的 url
+//       }).catch(err => {
+//         srcList.value[i] = loadingFailImg
+//       })
+//     }
+//     else {
+//       srcList.value[i] = loadingFailImg
+//     }
+//   }
+// }
 const loadImageAsync = (url: string) => {
   return new Promise(function(resolve, reject) {
     const image = new Image();
@@ -156,7 +154,7 @@ const loadImageAsync = (url: string) => {
 // 查看照片
 const showViewer = ref(false)
 const initialImgeIndex = ref(0)
-const photoSwitch = (val) => {
+const photoSwitch = (val: number) => {
   const loading = ElLoading.service({
     lock: false,
     text: 'Loading',
@@ -167,7 +165,7 @@ const photoSwitch = (val) => {
   if (srcList.value[index] === loadingImg) {
     if (fileList.value[index].row_url) {
       loadImageAsync(fileList.value[index].row_url).then(res => {
-        srcList.value[index] = res  //赋值新的 url
+        srcList.value[index] = res as string  //赋值新的 url
       }).catch(err => {
         srcList.value[index] = loadingFailImg
       }).then(() => {
@@ -196,7 +194,7 @@ const showImgViewer = (id: any) => {
   if (srcList.value[index] === loadingImg) {
     if (fileList.value[index].row_url) {
       loadImageAsync(fileList.value[index].row_url).then(res => {
-        srcList.value[index] = res  //赋值新的 url
+        srcList.value[index] = res as string //赋值新的 url
       }).catch(err => {
         srcList.value[index] = loadingFailImg
       }).then(() => {
@@ -244,7 +242,7 @@ const algorithmProcess = () => {
   })
   bridgeDetectAlgorithm({
     mediaFileIds: selectedPhotos.value,
-    planId: Props.planId,
+    planId: Props.planId as string,
     algorithmId: '1631642305952845827'
   }).then(res => {
     console.log('算法返回：',res)
@@ -259,7 +257,7 @@ const deleteProcess = () => {
 const cancelProcess = () => {
   isProcessing.value = false
 }
-const selectPhoto = (val) => {
+const selectPhoto = (val: any) => {
   const index = selectedPhotos.value.indexOf(val.file_id)
   if (val.state) {
     if (index === -1) {

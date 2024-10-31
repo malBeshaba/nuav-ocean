@@ -52,7 +52,7 @@ onMounted(() => {
   getTaskInfo();
   getModelData();
 });
-const SelectedList=ref([]);
+const SelectedList=ref([] as any[]);
 const activeTab = ref("flight_path")
 // 获取无人机设备
 const droneInfo = ref([] as any[]);

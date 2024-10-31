@@ -12,13 +12,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue';
-import loadingFailImg from "@/assets/Resource/loadingFailImg.png"
-import loadingImg from "@/assets/Resource/loadingImg.png"
-import { useMyStore } from "@/store"
+import { ref, onMounted, watch } from 'vue';
+import loadingFailImg from "@/assets/Resource/loadingFailImg.png";
+import loadingImg from "@/assets/Resource/loadingImg.png";
 import { aiResultFile } from "@/store/types/file";
-import testIMG from "@/assets/images/photo.jpg"
-const store = useMyStore()
 
 // 获取设备名
 const Props = defineProps<{
@@ -29,7 +26,6 @@ const Props = defineProps<{
 }>()
 
 const photoUrl = ref('' as any)
-const srcList = ref([] as string[])
 onMounted(() => {
   // 处理预览图片
   photoUrl.value = loadingImg

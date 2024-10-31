@@ -135,7 +135,7 @@ const handleChange = (val: string[]) =>{
 };
 
 
-const selectPhoto = (val) => {
+const selectPhoto = (val: any) => {
   const index = selectedPhotos.value.indexOf(val.file_id)
   if (val.state) {
     if (index === -1) {
@@ -165,7 +165,7 @@ const loadImageAsync = (url: string) => {
 // 查看照片
 const showViewer = ref(false)
 const initialImgeIndex = ref(0)
-const photoSwitch = (val) => {
+const photoSwitch = (val: number) => {
   const loading = ElLoading.service({
     lock: false,
     text: 'Loading',
@@ -176,7 +176,7 @@ const photoSwitch = (val) => {
   if (srcList.value[index] === loadingImg) {
     if (fileList.value[index].fileManagementDTO.previewPath) {
       loadImageAsync(fileList.value[index].fileManagementDTO.previewPath).then(res => {
-        srcList.value[index] = res  //赋值新的 url
+        srcList.value[index] = res as string  //赋值新的 url
       }).catch(err => {
         srcList.value[index] = loadingFailImg
       }).then(() => {
@@ -206,7 +206,7 @@ const showImgViewer = (id: any) => {
   if (srcList.value[index] === loadingImg) {
     if (fileList.value[index].fileManagementDTO.previewPath) {
       loadImageAsync(fileList.value[index].fileManagementDTO.previewPath).then(res => {
-        srcList.value[index] = res  //赋值新的 url
+        srcList.value[index] = res as string  //赋值新的 url
       }).catch(err => {
         srcList.value[index] = loadingFailImg
       }).then(() => {

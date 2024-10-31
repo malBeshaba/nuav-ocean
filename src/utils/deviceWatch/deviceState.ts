@@ -4,7 +4,7 @@ import deviceNotFly from '@/assets/images/directedDrone3.png'
 import store from '@/store'
 // @ts-ignore
 import droneModel from '@assets/models/airDrone.glb'
-import {ref, watch} from 'vue'
+import {watch} from 'vue'
 import {DeviceOsd} from '@/store/types/device'
 import {FlyingGlowPolylineLabel} from '@/components/mapTools/mapMaterial/mapMaterialStyle'
 
@@ -22,18 +22,10 @@ export function deviceState () {
   let flyList: UAVShow[] = []
   watch(store.state.deviceState.deviceInfo, (value) => {
     if (value) {
-      // console.log('deviceInfo', value)
       Object.keys(value).forEach((key: string) => {
-        // console.log('device1', value[key])
         let modelHeading = 360 - (( Number(value[key].attitude_head) + 360 ) % 360)
         let isExist = false
         if (flyList.length === 0) {
-          // console.log('首次接入无人机')
-          // ElNotification({
-          //   title: '无人机上线',
-          //   message: `${key}上线`,
-          //   type: 'info',
-          // })
           let addFlyModel = new flyModel({
             id: key,
             droneModelUri: droneModel,

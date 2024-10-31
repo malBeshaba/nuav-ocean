@@ -25,7 +25,7 @@ const Props = defineProps<{
 	videoInfo: VedioFile,
 }>()
 
-const flvPlayer = ref(null);
+const flvPlayer = ref();
 const createVideo = () => {
   if (flvjs.isSupported()) {
     var videoElement = document.getElementById(Props.videoInfo.videoId);

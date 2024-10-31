@@ -43,8 +43,8 @@ const Props = defineProps<{
 		planName: string,
 	  createTime: string,
 	  waylineId: string,
-    planTaskType: Number,
-	  planStatus: Number,
+    planTaskType: number,
+	  planStatus: number,
   },
 }>()
 

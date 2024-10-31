@@ -6,14 +6,6 @@
 </template>
 
 <script setup lang="ts">
-import DeviceList from "@/components/Equipment/DeviceList.vue";
-import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-onMounted(() => {
-  // console.log('$router:', router.currentRoute.value.name);
-});
 
 </script>
 

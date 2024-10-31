@@ -36,7 +36,6 @@ import {
 	updateWayline,
 	getWaylineById,
 	getWaylineGlobalParamsById,
-	deleteWaylineGlobalParamsByIds,
 	updateWaylineGlobalParams,
 	insertGenerateWaylineFile,
 } from "@/api/wayline";
@@ -45,12 +44,14 @@ import { Wayline, WayLinePoint, WayLineGlobalParams } from "@/store/types/waylin
 import { useRoute, useRouter } from 'vue-router';
 import { useMyStore} from '@/store'
 import bus from "@/utils/bus";
+import { WayLinePointUpload } from '@/store/types/wayline'
+import { WayLineOriginAction } from "@/store/types/waylineAction"
+
 const route = useRoute();
 const router = useRouter();
 const store = useMyStore();
 const wayLineName = ref('');
 const waypointIdlist: any[]=[]
-const ActiongroupIdlist: any[]=[]
 let GroupIdCount=1
 onMounted(() => {
   createWayline()
@@ -78,7 +79,7 @@ const createWayline = () => {
 				WayLineGlobalParams.value = res.data
 			}
 		})
-		console.log(route.query.device_sn)
+		// console.log(route.query.device_sn)
 	}, 1000)
 	bus.emit('rightClickEvent', {
     flag: 'wayLinePointsDrawing',
@@ -99,20 +100,6 @@ const goBackToWayline = () => {
 	    flag: 'emptyEvent',
 	    wayLineId: 'emptyEvent'
 	  })
-  //   if (res.code === 0) {
-	// 		router.push({
-  //       path: '/default/task/create/add-wayline',
-  //       query: {
-  //         device_sn: route.query.device_sn
-  //       },
-  //     })
-	//     bus.emit('rightClickEvent', {
-	// 	    flag: 'emptyEvent',
-	// 	    wayLineId: 'emptyEvent'
-	// 	  })
-  //   } else {
-  //     console.log('删除航线失败！', res)
-  //   }
   })
 };
 
@@ -202,22 +189,6 @@ const updateWayLine = () => {
 							}
 						})
 					}, 5000)
-					// insertGenerateWaylineFile(String(route.query.wayline_id), String(route.query.device_sn)).then(res => {
-					// 	if(res.code === 0) {
-					// 		ElMessage.success('已经生成航线文件，现在可以起飞了')
-					// 	}
-					// })
-					// router.push({
-					// 	path: '/default/task/create/add-wayline',
-					// 	query: {
-					// 		device_sn: route.query.device_sn
-					// 	},
-					// })
-					// bus.emit('rightClickEvent', {
-				  //   flag: 'emptyEvent',
-				  //   wayLineId: 'emptyEvent'
-				  // })
-					// ElMessage.success('创建航线成功！')
 				} else {
 					console.log('更新航线全局参数成功！')
 				}
@@ -229,12 +200,12 @@ const updateWayLine = () => {
 }
 const updateActionlistGroupId = (array: any[]) =>{
 
-  let temlist=store.state.beforeprocesswaylineaction
+  let temlist = store.state.beforeprocesswaylineaction
   //还需要两个变量来处理间隔拍照,-1指没有这种动作，不为一则是间隔动作的起点
   let processEqualDistanceInterval=-1
   let processEqualInterval=-1
   //下面是循环处理每一个航点的代码
-  temlist.forEach((item) => {
+  temlist.forEach((item: WayLineOriginAction) => {
     ///这里没写完
     //需要首先区分有没有间隔拍摄
     // @ts-ignore
@@ -253,10 +224,9 @@ const updateActionlistGroupId = (array: any[]) =>{
     //   console.log(`Key: ${key}, Value: ${value}`);
     // });
 
-    const ActionGroupBody={
+    const ActionGroupBody = {
       // placemarkId:String(waypointIdlist['0']),
-      // @ts-ignore
-      placemarkId:waypointIdlist[item.index].placemarkId,
+      placemarkId:waypointIdlist[item.index as number].placemarkId,
       actionGroupId:GroupIdCount,
       actionGroupStartIndex:item.index,
       actionGroupEndIndex:item.index,
@@ -264,15 +234,14 @@ const updateActionlistGroupId = (array: any[]) =>{
       actionTrigger:{
         actionTriggerType:"reachPoint"
       }
-    }
+    } as WayLinePointUpload;
     GroupIdCount=GroupIdCount+1
     generatActionGroupId(ActionGroupBody).then(res4=>{
       //这里首先创建航点的动作的整体的body
       let pointid=0;
       //这里处理回调
       //将该点的其他所有航点的动作添加到表中
-      // @ts-ignore
-      Object.keys(item.param).forEach(key => {
+      Object.keys(item.param as any).forEach(key => {
         // @ts-ignore
         const value =item.param[key]
         if(value.ActionName==="StartEqualDistanceIntervalTakePhoto"||value.ActionName==="StartEqualIntervalTakePhoto"||value.ActionName==="takePhotoParam"){
@@ -352,17 +321,14 @@ const updateActionlistGroupId = (array: any[]) =>{
           insertWaypointACtion(pointActionBody).then(res5=>{})
           pointid=pointid+1
         }
-        console.log(`Key: ${key}, Value: ${value}`);
+        // console.log(`Key: ${key}, Value: ${value}`);
       });
     })
     // 在这里执行对每个元素的操作
-    console.log(item.index);
+    // console.log(item.index);
 
   })
 }
-onUnmounted(() => {
-	// console.log('onUnmounted')
-})
 
 </script>
 
