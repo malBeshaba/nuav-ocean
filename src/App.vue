@@ -16,7 +16,7 @@ const store = useMyStore()
 
 useConnectWebSocket(messageHandler);
 // dockState()
-deviceState()
+// deviceState()
 
 function getTokenFromUrl() {
   const params = new URLSearchParams(window.location.search);

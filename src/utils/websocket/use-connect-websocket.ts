@@ -86,7 +86,7 @@ export function messageHandler (payload: any) {
       break
     case EBizCode.FlightTaskProgress:
       //将sn号和飞行到的航点数绑定到一起
-      console.log(payload)
+      // console.log(payload)
       let TemData={
         sn:payload.data.sn,
         num:parseFloat(payload.data.output.ext.current_waypoint_index)

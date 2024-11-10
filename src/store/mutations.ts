@@ -8,6 +8,9 @@ import {WayLineV2} from "@/store/types/WayLineV2";
 import {WayPointActionList} from "@/store/types/WayPoint";
 import store from "@/store/index";
 const mutations: MutationTree<RootStateType> = {
+    SET_SHOW_VIDEO_OR_MAP(state, show) {
+        state.showVideoOrMap = show
+    },
     SET_IFRAME_DOCK_SN(state, sn) {
         state.iframeDockSn = sn
     },

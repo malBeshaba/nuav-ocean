@@ -2,6 +2,7 @@
     <div class="content">
         <DockInfo class="dock" />
         <TaskInfo class="task" />
+        <CenterView class="center" />
         <DroneInfo class="drone" />
     </div>
 </template>
@@ -9,10 +10,10 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import DockInfo from '@/pages/FlightControl/components/DockInfo.vue';
+import DockInfo from '@/pages/FlightControl/components/DockInfo/index.vue';
 import TaskInfo from '@/pages/FlightControl/components/TaskInfo.vue';
 import DroneInfo from '@/pages/FlightControl/components/DroneInfo.vue';
-
+import CenterView from '@/pages/FlightControl/components/CenterView.vue';
 const router = useRouter();
 
 </script>
@@ -33,6 +34,17 @@ html {
   height: calc(100% - $NavigationHeight - 40px);
   left: 20px;
   width: $LeftWidth;
+  display: flex;
+  margin-top: $NavigationHeight;
+  z-index: 2;
+}
+.center {
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  height: calc(100% - $NavigationHeight - 40px);
+  left: calc($LeftWidth + 25px);
+  width: calc(100% - $LeftWidth * 2 - 50px);
   display: flex;
   margin-top: $NavigationHeight;
   z-index: 2;

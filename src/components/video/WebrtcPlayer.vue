@@ -11,6 +11,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
 import {PlanePhotos} from "@/utils/location/Location_Node";
+import { useMyStore } from '@/store';
+
+const store = useMyStore()
 const PP = new PlanePhotos()
 
 const Props = defineProps({
@@ -24,8 +27,19 @@ onMounted(() => {
   watch(() => Props.videoSrc, (newData, oldData) => {
     if (newData) {
       console.log('播放视频路径：', newData)
-
       initVideo(newData)
+      var videos = document.querySelectorAll('video');
+
+      // 添加点击事件监听器到视频元素上
+      videos[0].addEventListener('click', function(event) {
+        // 阻止默认行为，即阻止播放/暂停
+        event.preventDefault();
+        store.commit('SET_SHOW_VIDEO_OR_MAP', 'Video');
+        // 自定义效果
+        // 这里可以放置你想实现的任何代码
+        console.log('视频被点击了！但是不会触发播放/暂停。', Props.videoSrc, event);
+        
+      });
     }
   }, { immediate: true })
 });
@@ -43,17 +57,6 @@ function checkIsFullScreen() {
 document.addEventListener('fullscreenchange', () => {
   isFullScreen = checkIsFullScreen()
   console.log(isFullScreen)
-})
-const videos = document.querySelectorAll("video");
-videos.forEach(video => {
-  // 阻止单击暂停
-  video.addEventListener("click", (event) => {
-    console.log(event.x, event.y)
-    PP.click2loc([event.x, event.y])
-    PP.click2loc([event.x, event.y])
-    console.log(PP.loc)
-    event.preventDefault();
-  });
 })
 // function clickPlayer(e:any) {
 //   e.stopPropagation()
