@@ -15,7 +15,7 @@ import { deviceState } from '@/utils/deviceWatch/deviceState'
 const store = useMyStore()
 
 useConnectWebSocket(messageHandler);
-dockState()
+// dockState()
 deviceState()
 
 function getTokenFromUrl() {

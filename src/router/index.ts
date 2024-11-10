@@ -246,6 +246,11 @@ const router = createRouter({
                         }
                     ]
                 },
+                {
+                    path: 'info',
+                    name: 'info',
+                    component: () => import('@/pages/FlightControl/index.vue')
+                }
             ]
         },
         {

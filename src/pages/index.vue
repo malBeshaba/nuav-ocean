@@ -1,9 +1,7 @@
 <template>
   <div id="page">
     <Navigation></Navigation>
-    <cesium-map class="cesium_map"></cesium-map>
     <router-view></router-view>
-    <real-time-alert class="alert"></real-time-alert>
   </div>
 </template>
 
@@ -15,6 +13,13 @@ import CesiumMap from "@/pages/Map/index.vue";
 </script>
 
 <style scoped>
+#page {
+  width: 100vw;
+  height: 100vh;
+  background: url('../assets/images/background.png') no-repeat;
+  background-size: 100% 100%;
+  background-attachment: fixed;
+}
 .cesium_map {
   position: absolute;
   top: 0;
