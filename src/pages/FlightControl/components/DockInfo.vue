@@ -1,9 +1,12 @@
 <template>
-    <div class="dockInfo"></div>
+    <div class="dockInfo">
+        <ListHead title="无人机机场"/>
+        
+    </div>
 </template>
 
 <script setup lang="ts">
-
+import ListHead from '@/components/Head/ListHead.vue';
 
 </script>
 
@@ -12,7 +15,7 @@
     position: relative;
     height: 100%;
     width: 100%;
-    background-color: blue;
+    background-color: $ComponentBackground;
 }
 </style>
   
