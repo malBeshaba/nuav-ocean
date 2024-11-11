@@ -31,15 +31,16 @@ onMounted(() => {
       var videos = document.querySelectorAll('video');
 
       // 添加点击事件监听器到视频元素上
-      videos[0].addEventListener('click', function(event) {
-        // 阻止默认行为，即阻止播放/暂停
-        event.preventDefault();
-        store.commit('SET_SHOW_VIDEO_OR_MAP', 'Video');
-        // 自定义效果
-        // 这里可以放置你想实现的任何代码
-        console.log('视频被点击了！但是不会触发播放/暂停。', Props.videoSrc, event);
-        
-      });
+      videos.forEach(video => {
+        video.addEventListener('click', function(event) {
+          // 阻止默认行为，即阻止播放/暂停
+          event.preventDefault();
+          // 自定义效果
+          // 这里可以放置你想实现的任何代码
+          console.log('视频被点击了！但是不会触发播放/暂停。', Props.videoSrc, event);
+          
+        });
+      })
     }
   }, { immediate: true })
 });

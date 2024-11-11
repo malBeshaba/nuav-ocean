@@ -1,39 +1,21 @@
 <template>
   <div class="drone_block_parent">
-    <div class="drone_block">
-      <div class="BlockContent">
-        <div class="drone-info">
-          <div class="info-center">
-            <div class="info-center__title">
-              名称： {{ droneInfo.nickname }}
-            </div>
-            <div>
-              型号：{{ droneInfo.device_name ? droneInfo.device_name : str }}
-            </div>
+    <div class="drone-info">
+        <img :src="DronePng" style="padding-left: 15px;" />
+        <div class="info-center">
+          <div class="info-center__title">
+            名称： {{ droneInfo.nickname }}
           </div>
-          <div class="info-right">
-            <div class="circle" :style="deviceInfo?.device?.mode_code !== 14 ? 'background: #19BE6B;' : 'background: red;'"> </div>
-            <div style="padding-left: 12px;width: 75%;"> {{ EDroneModeCode }} </div>
+          <div>
+            型号：{{ droneInfo.device_name ? droneInfo.device_name : str }}
           </div>
         </div>
-        <div class="flex-display">
-          <VideoFrame @toFullScreen="toFull_sc" :videoSource="{aisource: '', norsource: droneOutLiveStream, sn: device_sn}"
-                      :class="isFull?'dronevideo_frame_':'dronevideo_frame'"
-                      ref="dronevideo_frame"></VideoFrame>
+        <div class="info-right">
+          <div class="circle" :style="deviceInfo?.device?.mode_code !== 14 ? 'background: #19BE6B;' : 'background: red;'"> </div>
+          <div style="padding-left: 12px;width: 75%;"> {{ EDroneModeCode }} </div>
         </div>
-
-        <div class="drone_option" style="display: flex;justify-content: center;padding-top: 15px">
-          <el-link @click="isShowInfo=!isShowInfo" :type="isShowInfo? 'danger' : 'success'" style="margin-right: 15px">
-            {{isShowInfo? "关闭无人机详情":"无人机详情"}}<el-icon ><icon-view /></el-icon>
-          </el-link>
-          <el-link @click="isShowControl=!isShowControl" :type="isShowControl? 'danger' : 'success'" style="margin-left: 15px">
-            {{isShowControl? "关闭无人机控制":"无人机控制"}}<el-icon ><icon-view /></el-icon>
-          </el-link>
-        </div>
-      </div>
     </div>
-
-    <div class="drone-info_1" v-if="isShowInfo">
+    <div class="drone-info_1">
       <div class="drone-control-header">
         <div class="orange-dot"></div>
         <div>无人机详情</div>
@@ -41,72 +23,53 @@
       <div class="TableFirstRow">
         <div class="TableBox DroneElectricitLevel" >
           <div class="table-title">无人机电量<br></div>
-          <div class="table-content">{{!deviceInfo.device.battery.capacity_percent || deviceInfo.device.battery.capacity_percent === str ? str : deviceInfo.device.battery?.capacity_percent + ' %'}}</div>
+          <div class="table-content">{{!deviceInfo.device?.battery?.capacity_percent || deviceInfo.device.battery.capacity_percent === str ? str : deviceInfo.device.battery?.capacity_percent + ' %'}}</div>
         </div>
         <div class="TableBox" >
           <div class="table-title">GPS<br></div>
-          <div class="table-content">{{deviceInfo.device.position_state.gps_number ? deviceInfo.device.position_state.gps_number : str}}</div>
+          <div class="table-content">{{deviceInfo.device?.position_state.gps_number ? deviceInfo.device?.position_state.gps_number : str}}</div>
         </div>
         <div class="TableBox" >
           <div class="table-title">RTK<br></div>
-          <div class="table-content">{{deviceInfo.device.position_state.rtk_number ? deviceInfo.device.position_state.rtk_number : str}}</div>
+          <div class="table-content">{{deviceInfo.device?.position_state.rtk_number ? deviceInfo.device?.position_state.rtk_number : str}}</div>
+        </div>
+        <div class="TableBox DroneElectricitLevel" >
+            <div class="table-title">飞行模式<br></div>
+            <div class="table-content">{{EGear}}</div>
         </div>
       </div>
       <div class="TableFirstRow">
-        <div class="TableBox DroneElectricitLevel" >
-          <div class="table-title">飞行模式<br></div>
-          <div class="table-content">{{EGear}}</div>
-        </div>
         <div class="TableBox " >
           <div class="table-title">海拔高度<br></div>
-          <div class="table-content">{{!deviceInfo.device.height || deviceInfo.device.height === str ? str : deviceInfo.device?.height.toFixed(2) + ' m'}}</div>
+          <div class="table-content">{{!deviceInfo.device?.height || deviceInfo.device?.height === str ? str : Number(deviceInfo.device?.height).toFixed(2) + ' m'}}</div>
         </div>
         <div class="TableBox " >
           <div class="table-title">相对起飞点高度<br></div>
-          <div class="table-content">{{!deviceInfo.device.elevation || deviceInfo.device.elevation === str ? str : deviceInfo.device?.elevation.toFixed(2) + ' m'}}</div>
+          <div class="table-content">{{!deviceInfo.device?.elevation || deviceInfo.device?.elevation === str ? str : Number(deviceInfo.device?.elevation).toFixed(2) + ' m'}}</div>
+        </div>
+        <div class="TableBox DroneElectricitLevel" >
+            <div class="table-title">相距起飞点距离<br></div>
+            <div class="table-content">{{!deviceInfo.device?.home_distance || deviceInfo.device.home_distance === str ? str : Number(deviceInfo.device?.home_distance).toFixed(2) + ' m'}}</div>
         </div>
       </div>
       <div class="TableFirstRow">
-        <div class="TableBox DroneElectricitLevel" >
-          <div class="table-title">相距起飞点距离<br></div>
-          <div class="table-content">{{!deviceInfo.device.home_distance || deviceInfo.device.home_distance === str ? str : deviceInfo.device?.home_distance.toFixed(2) + ' m'}}</div>
-        </div>
+        
         <div class="TableBox " >
           <div class="table-title">水平速度<br></div>
-          <div class="table-content">{{!deviceInfo.device.horizontal_speed || deviceInfo.device?.horizontal_speed === str ? str : deviceInfo.device?.horizontal_speed.toFixed(2) + ' m/s'}}</div>
+          <div class="table-content">{{!deviceInfo.device?.horizontal_speed || deviceInfo.device?.horizontal_speed === str ? str : Number(deviceInfo.device?.horizontal_speed).toFixed(2) + ' m/s'}}</div>
         </div>
         <div class="TableBox " >
           <div class="table-title">垂直速度<br></div>
-          <div class="table-content">{{!deviceInfo.device.vertical_speed || deviceInfo.device.vertical_speed === str ? str : deviceInfo.device?.vertical_speed.toFixed(2) + ' m/s'}}</div>
+          <div class="table-content">{{!deviceInfo.device?.vertical_speed || deviceInfo.device?.vertical_speed === str ? str : Number(deviceInfo.device?.vertical_speed).toFixed(2) + ' m/s'}}</div>
         </div>
-      </div>
-      <div class="TableFirstRow">
         <div class="TableBox DroneElectricitLevel" >
-          <div class="table-title">相距起飞点距离<br></div>
-          <div class="table-content">{{!deviceInfo.device.home_distance || deviceInfo.device.home_distance === str ? str : deviceInfo.device?.home_distance.toFixed(2) + ' m'}}</div>
-        </div>
-        <div class="TableBox " >
-          <div class="table-title">水平速度<br></div>
-          <div class="table-content">{{!deviceInfo.device.horizontal_speed || deviceInfo.device?.horizontal_speed === str ? str : deviceInfo.device?.horizontal_speed.toFixed(2) + ' m/s'}}</div>
-        </div>
-        <div class="TableBox " >
-          <div class="table-title">垂直速度<br></div>
-          <div class="table-content">{{!deviceInfo.device.vertical_speed || deviceInfo.device.vertical_speed === str ? str : deviceInfo.device?.vertical_speed.toFixed(2) + ' m/s'}}</div>
-        </div>
-      </div>
-      <div class="TableFirstRow">
-        <div class="TableBox DroneElectricitLevel" >
-          <div class="table-title">风速<br></div>
-          <div class="table-content">{{!deviceInfo.device.wind_speed || deviceInfo.device.wind_speed === str ? str : (deviceInfo.device?.wind_speed / 10).toFixed(2) + ' m/s'}}</div>
-        </div>
-        <div class="TableBox " >
-        </div>
-        <div class="TableBox " >
+            <div class="table-title">风速<br></div>
+            <div class="table-content">{{!deviceInfo.device?.wind_speed || deviceInfo.device?.wind_speed === str ? str : (Number(deviceInfo.device?.wind_speed) / 10).toFixed(2) + ' m/s'}}</div>
         </div>
       </div>
     </div>
 
-    <div class="drone_control" v-if="isShowControl">
+    <div class="drone_control">
       <drone-control payloads="" :sn="control_sn" :device-info="deviceInfo"></drone-control>
       <pay-load-control :sn="control_sn" :device-info="deviceInfo"></pay-load-control>
     </div>
@@ -117,8 +80,8 @@
 <script setup lang="ts">
 import { ref, reactive, watch, computed, onMounted, onBeforeUnmount,defineEmits,defineExpose } from 'vue'
 import VideoFrame from '@/pages/MainPageFrame/components/VideoFrame.vue'
-import DroneControl from "@/pages/MainPageFrame/components/DroneControl.vue";
-import PayLoadControl from "@/pages/MainPageFrame/components/PayLoadControl.vue";
+import DroneControl from "@/pages/FlightControl/components/DroneInfo/DroneControl.vue";
+import PayLoadControl from "@/pages/FlightControl/components/DroneInfo/PayloadControl.vue";
 import { DeviceOsd, DeviceInfo } from "@/store/types/device";
 import { getBindingDeviceBySn,updateDroneInfo } from '@/api/device'
 import {Close, MessageBox} from '@element-plus/icons-vue'
@@ -129,6 +92,8 @@ import {
     Check,
 } from '@element-plus/icons-vue'
 import { Edit, View as IconView } from '@element-plus/icons-vue'
+import DronePng from '@/assets/images/drone.png';
+
 const emit = defineEmits(['show-info-changed']);
 
 const store = useMyStore()
@@ -212,26 +177,53 @@ const closeAll =()=>{
 
 defineExpose({ closeAll });
 
+const iframeDroneSn = computed(() => store.state.iframeDroneSn);
+
 onMounted(() => {
   isEditing.value = false
-  device_sn.value = store.state.iframeDroneSn
-  getDeviceInfo()
-  getBindingDeviceBySn({
-    workspace_id: JSON.parse(localStorage.getItem('userInfo') as string).workspace_id,
-    // device_sn: '4TADL2L0010027'
-    device_sn: device_sn.value
-  }).then(res => {
-    // console.log(res)
-    if(res.code === 0) {
-      if (res.data.child_device_sn == device_sn.value) {
-        // control_sn.value = '4TADL2L0010027'
-        control_sn.value = device_sn.value
-      } else {
-        control_sn.value = device_sn.value
+  if (iframeDroneSn.value) {
+    device_sn.value = iframeDroneSn.value
+    getDeviceInfo()
+    getBindingDeviceBySn({
+      workspace_id: JSON.parse(localStorage.getItem('userInfo') as string).workspace_id,
+      // device_sn: '4TADL2L0010027'
+      device_sn: device_sn.value
+    }).then(res => {
+      // console.log(res)
+      if(res.code === 0) {
+        if (res.data.child_device_sn == device_sn.value) {
+          // control_sn.value = '4TADL2L0010027'
+          control_sn.value = device_sn.value
+        } else {
+          control_sn.value = device_sn.value
+        }
+        console.log(control_sn.value) 
       }
-      console.log(control_sn.value) 
-    }
-  })
+    })
+  }
+})
+
+watch(() => iframeDroneSn.value, () => {
+    if (iframeDroneSn.value) {
+    device_sn.value = iframeDroneSn.value
+    getDeviceInfo()
+    getBindingDeviceBySn({
+      workspace_id: JSON.parse(localStorage.getItem('userInfo') as string).workspace_id,
+      // device_sn: '4TADL2L0010027'
+      device_sn: device_sn.value
+    }).then(res => {
+      // console.log(res)
+      if(res.code === 0) {
+        if (res.data.child_device_sn == device_sn.value) {
+          // control_sn.value = '4TADL2L0010027'
+          control_sn.value = device_sn.value
+        } else {
+          control_sn.value = device_sn.value
+        }
+        console.log(control_sn.value) 
+      }
+    })
+  }
 })
 
 // 获取设备信息
@@ -246,7 +238,6 @@ const getDeviceInfo = async () => {
       if(res.code === 0) {
         droneInfo = res.data
         inputValue.value = droneInfo.nickname
-        getDroneLiveStream()
       }
     })
   }
@@ -257,7 +248,7 @@ watch(() => store.state.deviceState, (newData, oldData) => {
   if (newData.currentType === 2 && newData.deviceInfo[newData.currentSn]) {
     // console.log('drone', newData)
     deviceInfo.device = newData.deviceInfo[droneInfo.device_sn]
-	  // videoFusionValue(deviceInfo.device, droneInfo.device_sn)
+      // videoFusionValue(deviceInfo.device, droneInfo.device_sn)
   }
 }, { deep: true, })
 
@@ -478,7 +469,10 @@ const inputValue = ref("")
 
 <style scoped lang="scss">
 .drone_block_parent{
+  width: 100%;
   display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .editNickName{
@@ -491,7 +485,7 @@ const inputValue = ref("")
   margin: 0;
 }
 .drone_block {
-  width: 300px;
+  width: 95%;
   height: 100%;
   // overflow: hidden auto;
   background-color: $ComponentBackground;
@@ -558,7 +552,7 @@ const inputValue = ref("")
   color: white;
 }
 .TableFirstRow{
-  margin-top: 16px;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -612,7 +606,7 @@ const inputValue = ref("")
 
 /* 设备信息 */
 .drone-info {
-  width: 280px;
+  width: 95%;
   height: 62px;
   display: flex;
   justify-content: space-between;
@@ -625,29 +619,24 @@ const inputValue = ref("")
   font-weight: $ContentFontWeight;
   background: $TouchColor2;
   border-radius: 4px;
-  margin: 0px $ComponentGap;
   box-sizing: border-box;
 }
 
 .drone-info_1{
-  width: 280px;
-  height: 62px;
+  width: 95%;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0px;
   box-sizing: border-box;
   font-size: $ContentFontSize;
   font-family: $ContentFontFamily;
   color: $ContentColor;
   font-weight: $ContentFontWeight;
-  background: $TouchColor2;
   border-radius: 4px;
   margin: 0px $ComponentGap;
-  box-sizing: border-box;
 }
 
 .drone_control{
-  width: 300px;
+  width: 95%;
 }
 
 .info-left {
@@ -659,6 +648,7 @@ const inputValue = ref("")
 
 .info-center {
   flex-grow: 1;
+  padding-left: 20px;
   display: flex;
   flex-direction: column;
 }
@@ -729,3 +719,4 @@ const inputValue = ref("")
   background-color: $TouchColor;
 }
 </style>
+  

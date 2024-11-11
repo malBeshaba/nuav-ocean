@@ -1,28 +1,29 @@
 <template>
   <div class="dronevideo_frame" v-show="dronevideo_frame" ref="dronevideo_frame">
-    <div>
+    <div @click="handleOnPlayerClick">
       <WebrtcPlayer v-show="!isYoloAction" :videoSrc="isAI? aisource: videoSource.norsource"></WebrtcPlayer>
-      <WebrtcPlayer v-show="false" id="videoFusion" :videoSrc="isAI? aisource: videoSource.norsource"></WebrtcPlayer>
       <WebrtcPlayer v-show="isYoloAction" :videoSrc="yoloVideoSource"></WebrtcPlayer>
     </div>
-    <el-select v-if="videoSource.sn" v-model="vtCode" placeholder="video" :class="isFullScreen? 'Bbutton_': 'Bbutton'" style="width: 120px">
-      <el-option
-          v-for="item in video_types"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-      >
-      </el-option>
-    </el-select>
-    <el-select v-if="videoSource.sn" v-model="aiCode" placeholder="AI"  style="width: 120px; margin-left: 70px;">
-      <el-option
-          v-for="item in aiList"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-      >
-      </el-option>
-    </el-select>
+    <div style="display: flex; align-items: center; justify-content: center;">
+      <el-select v-if="videoSource.sn" v-model="vtCode" placeholder="video" :class="isFullScreen? 'Bbutton_': 'Bbutton'" style="width: 120px">
+        <el-option
+            v-for="item in video_types"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        >
+        </el-option>
+      </el-select>
+      <el-select v-if="videoSource.sn" v-model="aiCode" placeholder="AI"  style="width: 120px; margin-left: 70px;">
+        <el-option
+            v-for="item in aiList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+        >
+        </el-option>
+      </el-select>
+    </div>
     <br>
     <div class="red-comp" v-if="vtCode === 'ir'">
       <el-tooltip :content="isotherm_state? '关闭等温线': '开启等温线'" placement="top">
@@ -497,6 +498,12 @@ onBeforeUnmount(() => {
     // console.log('stoplive',res)
   })
 })
+
+const handleOnPlayerClick = () => {
+  if (Props.videoSource.sn) {
+    store.commit('SET_SHOW_VIDEO_OR_MAP', 'Video');
+  }
+}
 
 </script>
 

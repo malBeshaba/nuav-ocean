@@ -50,18 +50,13 @@
             </el-row>
         </div>
         <div class="option" style="display: flex;justify-content: space-around;align-items: center; gap: 5px">
-            <el-select v-model="flightValue" placeholder="Select" style="width: 140px;"
+            <el-select v-model="flightValue" placeholder="选择航线" style="width: 140px;"
                 @change="handleTaskChange">
                 <el-option v-for="item in flightOptions" :key="item.flightPlanId" :label="item.planName"
                     :value="item.flightPlanId" />
             </el-select>
             <el-button type="primary" round @click="takeOff_click(deviceSn)">一键起飞</el-button>
-            <el-button type="primary" round>一键返航</el-button>
-        </div>
-        <div class="drone-video" style="width: 90%;">
-            <VideoFrame @toFullScreen="toFull_sc" :videoSource="{aisource: '', norsource: droneOutLiveStream, sn: droneInfo.device_sn}"
-                      :class="isFull?'dronevideo_frame_':'dronevideo_frame'"
-                      ref="dronevideo_frame"></VideoFrame>
+            <el-button type="primary" round @click="takeOff">一键返航</el-button>
         </div>
         <div class="dock-video">
             <div class="video-item" v-if="dockOutLiveStream !== ''">
@@ -70,7 +65,11 @@
                      ref="dockvideo_frame"></VideoFrame>
             </div>
         </div>
-
+        <div class="drone-video" style="width: 100%;">
+            <VideoFrame @toFullScreen="toFull_sc" :videoSource="{aisource: '', norsource: droneOutLiveStream, sn: droneInfo.device_sn}"
+                      :class="isFull?'dronevideo_frame_':'dronevideo_frame'"
+                      ref="dronevideo_frame"></VideoFrame>
+        </div>
     </div>
 
 </template>
@@ -92,8 +91,7 @@ import { DockOsd } from '@/store/types/device';
 import { useMyStore } from "@/store";
 import { useRoute, useRouter } from 'vue-router';
 import { useCookies } from "vue3-cookies";
-import DroneControl from "@/pages/MainPageFrame/components/DroneControl.vue";
-import PayLoadControl from "@/pages/MainPageFrame/components/PayLoadControl.vue";
+import {retuenHome} from "@/api/drone-control/drone";
 const Props = defineProps({
     deviceSn: {
         type: String,
@@ -260,6 +258,11 @@ const CalAccTime = computed(() => {
     // 返回计算结果
     return timeArr.join(' ')
 })
+
+// 一键返航
+const takeOff = () => {
+    retuenHome(droneInfo.device_sn);
+}
 
 onMounted(() => {
     deviceSn.value = Props.deviceSn
@@ -628,14 +631,13 @@ div {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    box-sizing: border-box;
 }
 
 /* 设备信息 */
 .dock-info {
     margin-top: 10px;
     width: 95%;
-    height: 62px;
+    height: 45px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -683,11 +685,11 @@ div {
 /* 设备具体信息 */
 .dock-information {
     width: 95%;
-    height: 100%;
+    height: 95%;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    padding-bottom: 10px;
+    padding-bottom: 3px;
     background: $TouchColor2;
 }
 
@@ -724,6 +726,7 @@ div {
 /* 设备视频 */
 .dock-video {
     width: 100%;
+    height: 220px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;

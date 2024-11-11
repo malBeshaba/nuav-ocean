@@ -13,7 +13,7 @@ import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import DockInfo from '@/pages/FlightControl/components/DockInfo/index.vue';
 import TaskInfo from '@/pages/FlightControl/components/TaskInfo.vue';
-import DroneInfo from '@/pages/FlightControl/components/DroneInfo.vue';
+import DroneInfo from '@/pages/FlightControl/components/DroneInfo/index.vue';
 import CenterView from '@/pages/FlightControl/components/CenterView.vue';
 const router = useRouter();
 
