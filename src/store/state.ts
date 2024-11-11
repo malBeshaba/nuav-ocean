@@ -7,6 +7,7 @@ import {VideoFusion} from '@/components/mapTools/class/MapVideoFusionClass'
 import {TilesetData} from '@/components/mapTools/class/Map3DtilesetClass'
 
 const state = () => ({
+    showVideoOrMap: 'Map',
     iframeDockSn: '',
     iframeDroneSn: '',
     deviceState: {

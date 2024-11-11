@@ -1,9 +1,8 @@
 <template>
   <div class="dronevideo_frame" v-show="dronevideo_frame" ref="dronevideo_frame">
-    <div>
+    <div style="width: 100%; height: 100%;" @click.stop="handleOnPlayerClick">
       <WebrtcPlayer v-show="!isYoloAction" :videoSrc="isAI? aisource: videoSource.norsource"></WebrtcPlayer>
-      <WebrtcPlayer v-show="false" id="videoFusion" :videoSrc="isAI? aisource: videoSource.norsource"></WebrtcPlayer>
-      <WebrtcPlayer v-show="isYoloAction" :videoSrc="yoloVideoSource"></WebrtcPlayer>
+      <!-- <WebrtcPlayer v-show="isYoloAction" :videoSrc="yoloVideoSource"></WebrtcPlayer> -->
     </div>
     <el-select v-if="videoSource.sn" v-model="vtCode" placeholder="video" :class="isFullScreen? 'Bbutton_': 'Bbutton'" style="width: 120px">
       <el-option
@@ -357,6 +356,9 @@ let videoPitch = 180
 let videoRoll = 0
 let droneList:any[] = []
 
+const handleOnPlayerClick = () => {
+  console.log('handleOnPlayerClick')
+}
 
 //用来下载姿态数据
 const downLoadDroneList = ()=>{
