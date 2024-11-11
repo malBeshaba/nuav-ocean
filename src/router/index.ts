@@ -249,7 +249,16 @@ const router = createRouter({
                 {
                     path: 'info',
                     name: 'info',
-                    component: () => import('@/pages/FlightControl/index.vue')
+                    component: () => import('@/pages/FlightControl/index.vue'),
+                    children: [
+                        {
+                            path: 'create',
+                            name: '创建任务',
+                            components: {
+                                info_list: () => import('@/pages/FlightControl/components/TaskInfo/TaskCreate.vue')
+                            }
+                        }
+                    ]
                 }
             ]
         },

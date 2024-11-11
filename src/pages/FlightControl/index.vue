@@ -1,8 +1,9 @@
 <template>
     <div class="content">
-        <DockInfo class="dock" />
-        <TaskInfo class="task" />
-        <DroneInfo class="drone" />
+      <DockInfo class="dock" />
+      <TaskInfo class="task" />
+      <DroneInfo class="drone" />
+	    <router-view name="info_list" />
     </div>
 </template>
 
@@ -42,7 +43,7 @@ html {
   overflow: hidden;
   position: fixed;
   top: 0;
-  height: calc((100% - $NavigationHeight - 40px) / 3 - 10px);
+  height: calc((100% - $NavigationHeight - 10px) / 3 - 10px);
   right: 20px;
   width: $LeftWidth;
   display: flex;
@@ -62,4 +63,3 @@ html {
   z-index: 2;
 }
 </style>
-  

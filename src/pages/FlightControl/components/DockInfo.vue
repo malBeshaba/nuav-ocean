@@ -1,7 +1,6 @@
 <template>
     <div class="dockInfo">
         <ListHead title="无人机机场"/>
-        
     </div>
 </template>
 
@@ -18,4 +17,3 @@ import ListHead from '@/components/Head/ListHead.vue';
     background-color: $ComponentBackground;
 }
 </style>
-  
