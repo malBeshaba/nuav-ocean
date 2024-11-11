@@ -36,7 +36,7 @@ const getDockList = () => {
       dockOptions.value = res.data.list.map((item: any) => {
         return { value: item.device_sn, label: item.device_name }
       })
-      dockValue.value = dockOptions.value[1].value
+      dockValue.value = dockOptions.value[0].value
     }
   })
 };
