@@ -198,17 +198,6 @@ const RainfallEnum = computed(() => {
     }
 })
 
-const DroneInDockEnum = computed(() => {
-    switch (deviceInfo?.dock.basic_osd?.drone_in_dock) {
-        case 0:
-            return '在机场外'
-        case 1:
-            return '在机场中'
-        default:
-            return '错误'
-    }
-})
-
 const EDockModeCode = computed(() => {
     switch (deviceInfo?.dock.basic_osd?.mode_code) {
         case -1:
@@ -226,45 +215,12 @@ const EDockModeCode = computed(() => {
     }
 })
 
-const CalAccTime = computed(() => {
-    let timeArr = []
-    let time = acc_time.value
-    // 计算月份
-    if (time >= 2592000) {
-        let month = Math.floor(time / 2592000)
-        timeArr.push(`${month}m`)
-        time -= month * 2592000
-    }
-    // 计算天数
-    if (time >= 86400) {
-        let day = Math.floor(time / 86400)
-        timeArr.push(`${day}d`)
-        time -= day * 86400
-    }
-    // 计算小时数
-    if (time >= 3600) {
-        let hour = Math.floor(time / 3600)
-        timeArr.push(`${hour}h`)
-        time -= hour * 3600
-    }
-    // 计算分钟数
-    if (time >= 60) {
-        let minute = Math.floor(time / 60)
-        timeArr.push(`${minute}min`)
-        time -= minute * 60
-    }
-    // 计算秒数
-    // timeArr.push(`${Math.floor(time)}s`)
-    // 返回计算结果
-    return timeArr.join(' ')
-})
-
 // 一键返航
 const takeOff = () => {
     retuenHome(droneInfo.device_sn);
 }
 
-onMounted(() => {
+const initialize = () => {
     deviceSn.value = Props.deviceSn
     getDeviceInfo()
     getDockLiveStream()
@@ -279,6 +235,10 @@ onMounted(() => {
             })
         }
     })
+}
+
+onMounted(() => {
+    initialize();
 });
 
 interface MyObject {
@@ -293,7 +253,6 @@ interface MyObject {
     executeTime: number;
 }
 
-const taskInfo = ref({} as MyObject)
 const flightPlan = ref({} as any);
 const handleOnTaskChange = (val: any) => {
     flightPlan.value = val;
@@ -370,116 +329,6 @@ const exectFlightTaskParams = reactive({
     planId: '',
     deviceType: 1,
 })
-interface InsertTaskParams {
-    planName: string;
-    waylineId: string;
-    deviceSn: string;
-    waylineType: number;
-    taskType: number;
-    rthAltitude: number;
-    outOfControl: number;
-    planTaskType: number;
-    planStatus: number;
-    executeTime: number;
-}
-const preparetaskInfo = ref({} as InsertTaskParams)
-
-const removeCache = () => {
-    const taskCache = cookies.get('createTaskCache') as unknown as any
-    if (taskCache[route.query.device_sn as string]) {
-        delete taskCache[route.query.device_sn as string]
-        console.log(taskCache)
-        cookies.set('createTaskCache', JSON.stringify(taskCache))
-    }
-}
-
-// 生成时间戳
-const getTimeStamp = () => {
-    return Date.now()
-};
-let isSave = true
-
-function InsertTask() {
-    isSave = false
-    taskInfo.value.rthAltitude = Number(taskInfo.value.rthAltitude)
-    taskInfo.value.deviceSn = route.query.device_sn as string
-    taskInfo.value.executeTime = getTimeStamp()
-    console.log("taskInfo.value", taskInfo.value)
-    preparetaskInfo.value.planName = taskInfo.value.planName
-    preparetaskInfo.value.waylineId = taskInfo.value.waylineId
-    preparetaskInfo.value.deviceSn = taskInfo.value.deviceSn
-    //preparetaskInfo.value.waylineType = taskInfo.value.waylineType
-    preparetaskInfo.value.taskType = taskInfo.value.taskType
-    preparetaskInfo.value.rthAltitude = taskInfo.value.rthAltitude
-    preparetaskInfo.value.outOfControl = taskInfo.value.outOfControl
-    preparetaskInfo.value.planTaskType = taskInfo.value.planTaskType
-    preparetaskInfo.value.planStatus = 1
-    preparetaskInfo.value.executeTime = taskInfo.value.executeTime
-    // console.log("preparetaskInfo.value", preparetaskInfo.value)
-    removeCache()
-    store.commit('CHANGE_CACHE_STYLE', { isReady: true, isAllow: true })
-    insertFlightTaskPrepare(preparetaskInfo.value)
-}
-
-
-// 执行飞行任务
-function handleExitFlight() {
-    isSave = false
-    taskInfo.value.rthAltitude = Number(taskInfo.value.rthAltitude)
-    taskInfo.value.deviceSn = deviceSn.value
-    taskInfo.value.executeTime = getTimeStamp()
-    removeCache()
-    store.commit('CHANGE_CACHE_STYLE', { isReady: true, isAllow: true })
-    if (Number(taskInfo.value.taskType) === 4) {
-        ElMessage({
-            message: "创建预设任务成功",
-            type: 'success'
-        });
-        InsertTask()
-    } else {
-        ElMessage({
-            message: "创建任务成功,并将于指定时间起飞",
-            type: 'success'
-        });
-        insertFlightTask(taskInfo.value).then(res => {
-            if (res.code === 0) {
-                // console.log('res_insertFlightTask', res.data)
-                exectFlightTaskParams.planId = res.data.flightPlanId
-                // console.log('exectFlightTaskParams', exectFlightTaskParams)
-                exectFlightTask(JSON.parse(localStorage.getItem('userInfo') as string).workspace_id, exectFlightTaskParams).then(res2 => {
-                    // console.log('res_exectFlightTask', res.data)
-                    if (res2.code === 0) {
-                        ElMessage.success({
-                            message: "执行成功!",
-                            offset: window.screen.height / 2,
-                        })
-                        store.commit('SET_TASK_FLIGHT_PLAN_INFO', {
-                            flightPlanId: res.data.flightPlanId,
-                            device_sn: deviceInfo.child_device_sn
-                        })
-                        // console.log('store.state.taskFlightPlanInfo', store.state.taskFlightPlanInfo)
-                        router.push({
-                            path: '/default/task/task-list',
-                            query: {
-                                device_sn: taskInfo.value.deviceSn,
-                                flightPlanId: res.data.flightPlanId
-                            },
-                        })
-                        // CancelWayLineShow()
-                        // RemoveEntitiesByBatch(window.cesiumViewer, 'checkWayLine')
-                        // CheckWayLine(window.cesiumViewer, String(wayline.value.waylineId), true)
-                    }
-                })
-            } else {
-                ElMessage.error({
-                    message: "执行失败！",
-                    offset: window.screen.height / 2,
-                })
-            }
-        })
-    }
-}
-
 
 const handleTaskChange = () => {
     // 获取当前被选中的对象
@@ -611,6 +460,9 @@ watch(() => store.state.deviceState, (newData, oldData) => {
 
 }, { deep: true, immediate: true })
 
+watch(() => Props.deviceSn, () => {
+    initialize()
+})
 </script>
 
 <style scoped lang="scss">
