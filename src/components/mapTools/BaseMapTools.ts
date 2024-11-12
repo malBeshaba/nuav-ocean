@@ -2,7 +2,8 @@
  * @file 基础地图工具类
  * @desc 包含设置中心点；绘制点、线、面；根据ID移除点、线、面等方法
  */
-import * as Cesium from 'cesium'
+import * as Cesium from 'cesium';
+import * as turf from '@turf/turf';
 
 /**
  * 设置中心点
@@ -23,6 +24,28 @@ export function CesiumFlyTo(mapViewer:Cesium.Viewer, point: { longitude: number;
         roll: roll  //旋转角
       },
     })
+}
+
+/**
+ * 使用SetView加载到指定位置
+ * @param mapViewer:Cesium.Viewer 当前地图画布
+ * @constructor
+ * @param mapViewer 地图形参
+ * @param pointList 坐标点，[经度，纬度]
+ * @param isBuffer 是否缓冲区，若是，输入距离[西，南，东，北]
+ */
+export const CesiumSetViewByRectangle = (mapViewer:Cesium.Viewer, pointList: number[][], isBuffer: number[] = [0, 0, 0, 0]) => {
+  let [bufferWest, bufferSouth, bufferEast, bufferNorth] = isBuffer;
+  let line  = turf.lineString(pointList)
+  let [West, South, East, North] = turf.bbox(line);
+  let [toMercatorWest, toMercatorSouth] = turf.toMercator(turf.point([West, South])).geometry.coordinates;
+  let [toMercatorEast, toMercatorNorth] = turf.toMercator(turf.point([East, North])).geometry.coordinates;
+  let [toMercatorWestBuffer, toMercatorSouthBuffer, toMercatorEastBuffer, toMercatorNorthBuffer] = [toMercatorWest - bufferWest, toMercatorSouth - bufferSouth, toMercatorEast + bufferEast, toMercatorNorth + bufferNorth];
+  let [WestBuffer, SouthBuffer] = turf.toWgs84(turf.point([toMercatorWestBuffer, toMercatorSouthBuffer])).geometry.coordinates;
+  let [EastBuffer, NorthBuffer] = turf.toWgs84(turf.point([toMercatorEastBuffer, toMercatorNorthBuffer])).geometry.coordinates;
+  mapViewer.camera.setView({
+    destination: Cesium.Rectangle.fromDegrees(WestBuffer, SouthBuffer, EastBuffer, NorthBuffer)
+  });
 }
 
 /**

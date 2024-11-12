@@ -198,8 +198,9 @@ function ItemClick(clickedItem: { waylineName: any; waylineId: string }) {
   SelectedList.value.forEach((item: { isSelected: any; waylineName: any }) => {
     item.isSelected = (item.waylineName === clickedItem.waylineName);
   });
-	showWaylineId.value = clickedItem.waylineId;
-	CheckWayLine(window.cesiumViewer, clickedItem.waylineId, false)
+
+	showWaylineId.value = clickedItem.waylineId
+	CheckWayLine(window.cesiumViewer, clickedItem.waylineId, false);
 }
 
 const deleteWayLine = (item: any) => {
@@ -255,12 +256,11 @@ const loadWayLineAdd = () => {
 
 const closeWayline = () => {
 	RemoveEntitiesByBatch(window.cesiumViewer, 'checkWayLine')
-	CheckWayLine(window.cesiumViewer, showWaylineId.value, true)
+	// CheckWayLine(window.cesiumViewer, showWaylineId.value, true)
 };
 
 const getWayLineList = async (type = '') => {
 	getWaylineList(WaylineList_pageNo.value, WaylineList_pageSize.value).then(res => {
-    console.log("res", res);
 		WaylineList_totalPage.value = res.data.pagination.total;
 		if(type === 'init') {
 			WaylineListItems.value = res.data.list
@@ -268,7 +268,6 @@ const getWayLineList = async (type = '') => {
 			WaylineListItems.value.push(...res.data.list)
 		}
     WaylineListItems.value = res.data.list;
-    console.log("listItems123345", WaylineListItems.value);
     WaylineListItems.value = WaylineListItems.value.map((item: any) => {
       // 增加 templateContent 不为空的判断
       if (item.templateContent) {
@@ -300,7 +299,6 @@ const getWayLineList = async (type = '') => {
         isSelected: false
       };
     });
-    console.log("listItems", WaylineListItems.value);
   });
 }
 

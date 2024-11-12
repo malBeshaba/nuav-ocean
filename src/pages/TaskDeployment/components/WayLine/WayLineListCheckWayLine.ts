@@ -3,11 +3,12 @@ import {getWaylineById, getWaylineGlobalParamsByWaylineId, Placemark, templateCo
 import { getWayLinePointByGlobalParamsId } from '@/api/wayLinePoint'
 import { WayLinePointUpload } from '@/store/types/wayline'
 import {
+  CesiumSetViewByRectangle,
   DrawPolyline,
   RemoveEntitiesByBatch,
 } from '@/components/mapTools/BaseMapTools'
 import { DrawWayLinePoint } from '@/components/mapTools/BaseMapToolsCreatePoint'
-import {NotFlyPolylineLabel} from '@/components/mapTools/mapMaterial/mapMaterialStyle'
+import {NotFlyPolylineLabel} from '@/components/mapTools/mapMaterial/mapMaterialStyle';
 
 
 let wayLinePointsGlobalParamsId = {isShow: false, id: 'null', points: [] as WayLinePointUpload[], pointV2: {} as templateContent}
@@ -35,16 +36,19 @@ function drawWayLIne (mapViewer:Cesium.Viewer) {
 function drawWayLineV2 (mapViewer:Cesium.Viewer) {
   let placemark = wayLinePointsGlobalParamsId.pointV2.Folder.placemark.sort((a: Placemark, b: Placemark) => a.index - b.index)
   let pointArr = [] as number[]
+  let line = [] as number[][]
   placemark.forEach((item: Placemark, index: number) => {
     const tmpPoint = item.Point.coordinates.split(',')
     pointArr.push(Number(tmpPoint[0]))
     pointArr.push(Number(tmpPoint[1]))
+    line.push([Number(tmpPoint[0]), Number(tmpPoint[1])])
     pointArr.push(Number(item.executeHeight))
     const point = [Number(tmpPoint[0]), Number(tmpPoint[1]), Number(item.executeHeight)]
     DrawWayLinePoint(mapViewer, 'checkWayLinePoint', index + 1, point)
   })
   DrawPolyline(mapViewer, 'checkWayLine', pointArr, NotFlyPolylineLabel)
   wayLinePointsGlobalParamsId.isShow = true
+  CesiumSetViewByRectangle(window.cesiumViewer, line, [200, 100, 200, 100])
 }
 
 /**
@@ -59,7 +63,7 @@ export function CheckWayLine(mapViewer:Cesium.Viewer, wayLineID: string, isCance
     getWaylineGlobalParamsByWaylineId(wayLineID).then((res) => {
       if(res.code === 0) {
         if(res.data === '') {
-          console.log('get', res.data, wayLineID)
+          // console.log('get', res.data, wayLineID)
           if (wayLinePointsGlobalParamsId.id === wayLineID) {
             if (wayLinePointsGlobalParamsId.isShow) {
               RemoveEntitiesByBatch(mapViewer, 'checkWayLine')

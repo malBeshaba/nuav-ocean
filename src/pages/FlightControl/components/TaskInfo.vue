@@ -80,7 +80,6 @@ const getTaskInfo = async () => {
     deviceSn: device_sn.value,
     planStatus: selectValue.value
   }).then(res => {
-    console.log('11111', res)
     if (res.code === 0) {
       total.value = res.data.pagination.total
       res.data.list.forEach((item: any) => {
