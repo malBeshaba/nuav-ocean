@@ -6,13 +6,13 @@
     </div>
     <div class="drone-control-box">
      <div class="box" style="display: flex;">
-       <div class="row">
+       <div class="rowl">
          <div class="drone-control">
            <el-button class="btn big-btn" style="width: 30px; height: 70px; writing-mode: vertical-rl;" size="small" @click="onClickFightControl">{{ flightController ? '退出控制' : '获取控制'}}</el-button>
          </div>
        </div>
        <div style="display: flex; flex-direction: column;">
-        <div class="row" style="display: flex; flex-wrap: wrap;">
+        <div class="rowl" style="display: flex; flex-wrap: wrap;">
           <el-button class="btn small-btn" size="small" type="ghost" @mousedown="onMouseDown(KeyCode.KEY_Q)" @mouseup="onMouseUp">
             <i class="el-icon-back"></i> Q
           </el-button>
@@ -26,7 +26,7 @@
             <i class="el-icon-arrow-up"></i> 上
           </el-button>
         </div>
-        <div class="row" style="display: flex; flex-wrap: wrap">
+        <div class="rowl" style="display: flex; flex-wrap: wrap">
           <el-button class="btn small-btn" size="small" type="ghost" @mousedown="onMouseDown(KeyCode.KEY_A)" @mouseup="onMouseUp">
             <i class="el-icon-caret-left"></i> A
           </el-button>
@@ -41,7 +41,7 @@
           </el-button>
         </div>
        </div>
-       <div class="row">
+       <div class="rowl">
          <div class="from">
            <el-form class="Table" :model="flyToForm" v-if="isShowFlyto">
              <el-form-item label="经度:">
@@ -315,7 +315,7 @@ const Cancel = async () => {
   box-sizing: border-box;
 }
 
-.row{
+.rowl{
   display: flex;
   justify-content: center;
   gap: 4px;
@@ -364,7 +364,7 @@ const Cancel = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 40px;
 }
 </style>
   
