@@ -246,10 +246,9 @@ const preparetaskInfo = ref({} as InsertTaskParams)
 
 function InsertTask() {
   isSave = false
-  taskInfo.value.rthAltitude = Number(taskInfo.value.rthAltitude)
+  taskInfo.value.rthAltitude = 80;
   taskInfo.value.deviceSn = route.query.device_sn as string
   taskInfo.value.executeTime = getTimeStamp()
-  console.log("taskInfo.value", taskInfo.value)
   preparetaskInfo.value.planName = taskInfo.value.planName
   preparetaskInfo.value.waylineId = taskInfo.value.waylineId
   preparetaskInfo.value.deviceSn = taskInfo.value.deviceSn

@@ -48,9 +48,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, reactive, onUnmounted } from 'vue';
 import ListHead from '@/components/Head/ListHead.vue';
-const route = useRoute();
 import {useRoute, useRouter} from 'vue-router'
 import {
 	deleteWaylineById,
@@ -58,9 +57,12 @@ import {
 	getWaylineGlobalParamsByWaylineId,
 	getWaylineList,
 	WaylineList
-} from '@/api/wayline'
+} from '@/api/wayline';
+const route = useRoute();
 import {useMyStore} from '@/store'
 import {CheckWayLine} from '@/pages/TaskDeployment/components/WayLine/WayLineListCheckWayLine'
+import {exectFlightTask, insertFlightTask, insertFlightTaskPrepare} from '@/api/droneFlightPlan'
+import {RemoveEntitiesByBatch} from '@/components/mapTools/BaseMapTools'
 const router = useRouter();
 const store = useMyStore();
 
@@ -68,20 +70,114 @@ const input_task_name = ref('');
 const device_sn = ref();
 
 //
+let isSave = true;
 const WaylineListItems = ref([] as WaylineList[]);
 const SelectedList=ref([] as any[]);
 const WaylineList_pageNo = ref(1);
 const WaylineList_pageSize = ref(10);
 const WaylineList_totalPage = ref(0);
 
+// create
+const taskInfo = ref({} as MyObject);
+
+// 表单
+interface MyObject {
+  planName: string;
+  waylineId: string;
+  deviceSn: string;
+  waylineType: number;
+  taskType: number;
+  rthAltitude: number;
+  outOfControl: number;
+  planTaskType: number;
+  executeTime: number;
+}
+
 onMounted(() => {
 	device_sn.value = route.query.device_sn;
 	getWayLineList('init');
+});
+
+onUnmounted(() => {
+	closeWayline();
+})
+
+// 执行任务
+const exectFlightTaskParams = reactive({
+  planId: '',
+  deviceType: 0,
+})
+
+// 获取设备信息
+const deviceInfo = reactive({
+  child_device_sn: undefined,
+  device_sn: undefined,
+  device_name: undefined,
+  deviceType: undefined,
 })
 
 const createTask = () => {
-	router.go(-1);
+	// router.go(-1);
+	isSave = false;
+	taskInfo.value.taskType = 4;
+  taskInfo.value.rthAltitude = Number(taskInfo.value.rthAltitude);
+	taskInfo.value.planName = input_task_name.value;
+  taskInfo.value.deviceSn = route.query.device_sn as string;
+	taskInfo.value.waylineId = String(store.state.selectWayline.waylineId);
+	taskInfo.value.outOfControl = 0;
+	taskInfo.value.planTaskType = 0;
+	console.log('taskInfo1111', store.state.selectWayline)
+  taskInfo.value.executeTime = getTimeStamp();
+  console.log("taskInfo.value", taskInfo.value);
+  store.commit('CHANGE_CACHE_STYLE', {isReady: true, isAllow:true});
+  if(Number(taskInfo.value.taskType) === 4){
+    ElMessage({
+      message: "创建预设任务成功",
+      type: 'success'
+    });
+    InsertTask()
+    router.go(-1);
+  }
+};
+
+interface InsertTaskParams {
+  planName: string;
+  waylineId: string;
+  deviceSn: string;
+  waylineType: number;
+  taskType: number;
+  rthAltitude: number;
+  outOfControl: number;
+  planTaskType: number;
+  planStatus: number;
+  executeTime: number;
 }
+const preparetaskInfo = ref({} as InsertTaskParams)
+function InsertTask() {
+  isSave = false
+  taskInfo.value.rthAltitude = Number(taskInfo.value.rthAltitude)
+  taskInfo.value.deviceSn = route.query.device_sn as string
+  taskInfo.value.executeTime = getTimeStamp()
+  console.log("taskInfo.value", taskInfo.value)
+  preparetaskInfo.value.planName = taskInfo.value.planName
+  preparetaskInfo.value.waylineId = taskInfo.value.waylineId
+  preparetaskInfo.value.deviceSn = taskInfo.value.deviceSn
+  //preparetaskInfo.value.waylineType = taskInfo.value.waylineType
+  preparetaskInfo.value.taskType = taskInfo.value.taskType
+  preparetaskInfo.value.rthAltitude = taskInfo.value.rthAltitude
+  preparetaskInfo.value.outOfControl = taskInfo.value.outOfControl
+  preparetaskInfo.value.planTaskType = taskInfo.value.planTaskType
+  preparetaskInfo.value.planStatus = 1
+  preparetaskInfo.value.executeTime = taskInfo.value.executeTime
+  console.log("preparetaskInfo.value", preparetaskInfo.value)
+  store.commit('CHANGE_CACHE_STYLE', {isReady: true, isAllow:true})
+  insertFlightTaskPrepare(preparetaskInfo.value)
+};
+
+// 生成时间戳
+const getTimeStamp = () => {
+  return Date.now()
+};
 
 const closeCreateTask = () => {
 	router.go(-1);
@@ -93,7 +189,7 @@ const handleClick = (event: any) => {
     const index = [...listItem.parentNode.children].indexOf(listItem)
     listItem.classList.toggle('isWayLineItem')
 	  // @ts-ignore
-    store.state.selectWayline = listItems.value[index]
+    store.state.selectWayline = WaylineListItems.value[index]
   }
 }
 
@@ -102,8 +198,8 @@ function ItemClick(clickedItem: { waylineName: any; waylineId: string }) {
   SelectedList.value.forEach((item: { isSelected: any; waylineName: any }) => {
     item.isSelected = (item.waylineName === clickedItem.waylineName);
   });
-	showWaylineId.value = clickedItem.waylineId
-	// CheckWayLine(window.cesiumViewer, clickedItem.waylineId, false)
+	showWaylineId.value = clickedItem.waylineId;
+	CheckWayLine(window.cesiumViewer, clickedItem.waylineId, false)
 }
 
 const deleteWayLine = (item: any) => {
@@ -156,6 +252,11 @@ const loadWayLineAdd = () => {
 	WaylineList_pageNo.value += 1;
 	getWayLineList();
 }
+
+const closeWayline = () => {
+	RemoveEntitiesByBatch(window.cesiumViewer, 'checkWayLine')
+	CheckWayLine(window.cesiumViewer, showWaylineId.value, true)
+};
 
 const getWayLineList = async (type = '') => {
 	getWaylineList(WaylineList_pageNo.value, WaylineList_pageSize.value).then(res => {
@@ -256,7 +357,6 @@ const getWayLineList = async (type = '') => {
 
 .task-wayline {
 	flex: 3;
-	border: 1px solid blue;
 }
 
 .WaylineList{
@@ -270,7 +370,7 @@ const getWayLineList = async (type = '') => {
   margin-left: 10px;
   align-items: center;
   width: 95%;
-  height: 125px;
+  height: 80px;
   border-radius: 4px;
 	cursor: pointer;
   background: rgba(39, 73, 85, 0.5);
@@ -328,7 +428,7 @@ const getWayLineList = async (type = '') => {
 .DeleteIcon_T{
   right: 10px;
   width: 25px;
-  height: 125px;
+  height: 100%;
   display: flex;
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */

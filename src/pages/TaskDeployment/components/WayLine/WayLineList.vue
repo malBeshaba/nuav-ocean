@@ -13,10 +13,10 @@
       <el-input placeholder="请输入搜索内容" :suffix-icon="Search" size="default"/>
     </div>
     <div class="WaylineList" @click="handleClick">
-      <div class="WayLineListItem" 
-        v-for="(item, index) in listItems" 
-        :key="index" 
-        :class="{ 'selected': SelectedList[index].isSelected }" 
+      <div class="WayLineListItem"
+        v-for="(item, index) in listItems"
+        :key="index"
+        :class="{ 'selected': SelectedList[index].isSelected }"
         @click="ItemClick(item)"
       >
         <div class="WaylineInfo">
@@ -222,16 +222,6 @@ const newWayline = () => {
 };
 
 // 返回
-const closeAddWayline = () => {
-	RemoveEntitiesByBatch(window.cesiumViewer, 'checkWayLine')
-	CheckWayLine(window.cesiumViewer, showWaylineId.value, true)
-  router.push({
-    path: '/default/task/create',
-    query: {
-      device_sn: device_sn.value
-    },
-  })
-};
 const loading = ref(false)
 function downloadFile (data: Blob, fileName: string) {
   const lable = document.createElement('a')
