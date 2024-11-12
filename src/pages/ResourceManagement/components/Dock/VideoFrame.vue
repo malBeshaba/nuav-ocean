@@ -400,75 +400,75 @@ watch(isShowVideo, (value) => {
 let videoPoints: any[] = [];
 const numberOfInterpolatedPoints = 48;
 let timer: any = null;
-watch(store.state.deviceState.deviceInfo, (value) => {
-  if(value) {
-    Object.keys(value).forEach((key: string) => {
-      if(key === Props.videoSource.sn) {
-        // console.log('视频融合', value[key])
-        droneList.push(value[key])
-        position = Cesium.Cartesian3.fromDegrees(value[key].longitude, value[key].latitude, Number(value[key].height))
+// watch(store.state.deviceState.deviceInfo, (value) => {
+//   if(value) {
+//     Object.keys(value).forEach((key: string) => {
+//       if(key === Props.videoSource.sn) {
+//         // console.log('视频融合', value[key])
+//         droneList.push(value[key])
+//         position = Cesium.Cartesian3.fromDegrees(value[key].longitude, value[key].latitude, Number(value[key].height))
 
-        //视频融合平滑
-        videoPoints.push(position)
-        if (videoPoints.length <= 1) {
-          // console.log("pass");
-          return
-        }
-        const interpolatedPoints:any[] = [];
-        const lastIndex = videoPoints.length - 1;
-        const prevPoint = videoPoints[lastIndex - 1];
-        const currPoint = videoPoints[lastIndex];
-        for (let i = 0; i < numberOfInterpolatedPoints; i++) {
-          const t = i / (numberOfInterpolatedPoints - 1);
-          const interpolatedPoint = Cesium.Cartesian3.lerp(prevPoint, currPoint, t, new Cesium.Cartesian3());
-          interpolatedPoints.push(interpolatedPoint);
-        }
-        //视频融合平滑
+//         //视频融合平滑
+//         videoPoints.push(position)
+//         if (videoPoints.length <= 1) {
+//           // console.log("pass");
+//           return
+//         }
+//         const interpolatedPoints:any[] = [];
+//         const lastIndex = videoPoints.length - 1;
+//         const prevPoint = videoPoints[lastIndex - 1];
+//         const currPoint = videoPoints[lastIndex];
+//         for (let i = 0; i < numberOfInterpolatedPoints; i++) {
+//           const t = i / (numberOfInterpolatedPoints - 1);
+//           const interpolatedPoint = Cesium.Cartesian3.lerp(prevPoint, currPoint, t, new Cesium.Cartesian3());
+//           interpolatedPoints.push(interpolatedPoint);
+//         }
+//         //视频融合平滑
 
 
-        videoHeading = (Number(value[key].attitude_head) + 360) % 360
-        videoPitch = (Number(value[key].payloads[0].gimbal_pitch) + 270) % 360
+//         videoHeading = (Number(value[key].attitude_head) + 360) % 360
+//         videoPitch = (Number(value[key].payloads[0].gimbal_pitch) + 270) % 360
 
-        let video = document.getElementById('videoFusion') as HTMLVideoElement
-        video.style.transform = `rotate(${videoHeading}deg)`
-        if(isShowVideo.value) {
-          if(timer!==null){
-            clearInterval(timer)
-          }
-          // console.log('开启视频融合', value[key])
-          // const position = Cesium.Cartesian3.fromDegrees(value[key].longitude, value[key].latitude, Number(value[key].height))
-          const perspectiveFrustumType = {
-            fov: 62,
-            near: 0.1,
-            far: Number(value[key].height),
-            aspectRatioWidth: (Number(value[key].height))*1.0483,
-            aspectRatioHeight:( Number(value[key].height))*1.3978,
-          }
+//         let video = document.getElementById('videoFusion') as HTMLVideoElement
+//         video.style.transform = `rotate(${videoHeading}deg)`
+//         if(isShowVideo.value) {
+//           if(timer!==null){
+//             clearInterval(timer)
+//           }
+//           // console.log('开启视频融合', value[key])
+//           // const position = Cesium.Cartesian3.fromDegrees(value[key].longitude, value[key].latitude, Number(value[key].height))
+//           const perspectiveFrustumType = {
+//             fov: 62,
+//             near: 0.1,
+//             far: Number(value[key].height),
+//             aspectRatioWidth: (Number(value[key].height))*1.0483,
+//             aspectRatioHeight:( Number(value[key].height))*1.3978,
+//           }
 
-          //视频融合平滑
-          let count = 0;
-          const intervalTime = 2000 / numberOfInterpolatedPoints; // 24 次每秒
-          timer = setInterval(() => {
-            if (count < numberOfInterpolatedPoints) {
-              // 在这里执行你的操作
-              // console.log(targetPoint);
-              let targetPoint = interpolatedPoints[count]
-              VideoFusionModel?.update(targetPoint, [videoHeading, videoPitch, 0], perspectiveFrustumType, true)
-              // console.log(`执行第 ${count + 1} 次操作`);
-              count++;
-            } else {
-              clearInterval(timer); // 当执行 24 次后清除计时器
-            }
-          }, intervalTime);
+//           //视频融合平滑
+//           let count = 0;
+//           const intervalTime = 2000 / numberOfInterpolatedPoints; // 24 次每秒
+//           timer = setInterval(() => {
+//             if (count < numberOfInterpolatedPoints) {
+//               // 在这里执行你的操作
+//               // console.log(targetPoint);
+//               let targetPoint = interpolatedPoints[count]
+//               VideoFusionModel?.update(targetPoint, [videoHeading, videoPitch, 0], perspectiveFrustumType, true)
+//               // console.log(`执行第 ${count + 1} 次操作`);
+//               count++;
+//             } else {
+//               clearInterval(timer); // 当执行 24 次后清除计时器
+//             }
+//           }, intervalTime);
 
-          videoPoints.shift();
-          //视频融合平滑
-          // VideoFusionModel?.update(position, [videoHeading, videoPitch, 0], perspectiveFrustumType, true)
-        }
-      }
-    })
-  }
-})
+//           videoPoints.shift();
+//           //视频融合平滑
+//           // VideoFusionModel?.update(position, [videoHeading, videoPitch, 0], perspectiveFrustumType, true)
+//         }
+//       }
+//     })
+//   }
+// })
 
 const initVideoFusionModel = (videoElement: HTMLElement | null, ModelID: string) => {
   return new VideoFusion({

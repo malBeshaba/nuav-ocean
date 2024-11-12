@@ -70,7 +70,7 @@
     </div>
 
     <div class="drone_control">
-      <drone-control payloads="" :sn="control_sn" :device-info="deviceInfo"></drone-control>
+      <drone-control :sn="control_sn" :device-info="deviceInfo"></drone-control>
       <pay-load-control :sn="control_sn" :device-info="deviceInfo"></pay-load-control>
     </div>
 
@@ -79,25 +79,18 @@
 
 <script setup lang="ts">
 import { ref, reactive, watch, computed, onMounted, onBeforeUnmount,defineEmits,defineExpose } from 'vue'
-import VideoFrame from '@/pages/MainPageFrame/components/VideoFrame.vue'
 import DroneControl from "@/pages/FlightControl/components/DroneInfo/DroneControl.vue";
 import PayLoadControl from "@/pages/FlightControl/components/DroneInfo/PayloadControl.vue";
-import { DeviceOsd, DeviceInfo } from "@/store/types/device";
+import { DeviceInfo } from "@/store/types/device";
 import { getBindingDeviceBySn,updateDroneInfo } from '@/api/device'
-import {Close, MessageBox} from '@element-plus/icons-vue'
 import { stopLivestream, getLiveAddress, startLivestream, getAILive, getLivestatus } from "@/api/live"
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useMyStore } from "@/store"
-import {
-    Check,
-} from '@element-plus/icons-vue'
-import { Edit, View as IconView } from '@element-plus/icons-vue'
 import DronePng from '@/assets/images/drone.png';
 
 const emit = defineEmits(['show-info-changed']);
 
 const store = useMyStore()
-const route = useRoute();
 const router = useRouter();
 
 // 设备信息
@@ -140,7 +133,6 @@ const deviceInfo = reactive({
   createTime: 'createTime'
   });
 
-const dronePicture = ref('https://img1.imgtp.com/2023/03/20/cvEc1DpG.png')
 const control_sn = ref()
 const device_sn = ref("");
 

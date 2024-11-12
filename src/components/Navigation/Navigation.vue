@@ -139,7 +139,7 @@ const handleSelect = (item) => {
       location.href = import.meta.env.VITE_OCEAN_URL + '#/algorithm-house'
       break
     case '智慧岸线':
-      location.href = import.meta.env.VITE_AEF_URL+"#/ZHAX"
+      location.href = import.meta.env.VITE_AEF_URL.toString().replace('aef/', '') + "#/ZHAX"
   }
 }
 

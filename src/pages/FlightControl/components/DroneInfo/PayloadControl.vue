@@ -30,172 +30,35 @@
 </template>
 
 <script setup lang="ts">
-import {ref, reactive, computed, onMounted, onUnmounted, watch} from "vue";
+import {ref, reactive, computed, watch} from "vue";
 import {useMyStore} from "@/store";
 import {postDrcEnter, postDrcExit, postDrc} from "@/api/drc";
 import {DeviceInfoType, PayloadInfo, ControlSource, DeviceOsdCamera, DrcStateEnum} from "@/store/types/device";
 import {DeviceTopicInfo} from "@/pages/ResourceManagement/components/Drone/use-mqtt";
 import {useDroneControlWsEvent} from "@/pages/ResourceManagement/components/Drone/use-drone-control-ws-event";
 import {
-  LostControlActionInCommandFLight,
   postFlightAuth,
-  WaylineLostControlActionInCommandFlight
 } from "@/api/drone-control/drone";
 import {KeyCode, useManualControl} from "@/pages/ResourceManagement/components/Drone/use-manual-control";
 import {useMqtt} from "@/pages/ResourceManagement/components/Drone/use-mqtt";
 import {
-  UranusMqtt,
-} from '@/utils/mqtt'
-import {postTakeoffToPoint, deleteFlyToPoint, postFlyToPoint, retuenHome} from "@/api/drone-control/drone";
-import {
-  GimbalResetMode, GimbalResetModeOptions,
-  LostControlActionInCommandFLightOptions,
-  WaylineLostControlActionInCommandFlightOptions
+  GimbalResetMode,
 } from "@/pages/ResourceManagement/components/Drone/types/drone-control";
 import {usePayloadControl} from "@/api/UsePayloadControl";
-import {CameraMode, CameraType, CameraTypeOptions, ZoomCameraTypeOptions, CameraListItem} from "@/api/live-stream";
-import { noDebugCmdList as baseCmdList, DeviceCmdItem, DeviceCmd } from '@/store/types/device-cmd'
-import { useDockControl } from '@/api/Payload-use-dock-control'
-import { useDroneControl } from '@/api/Payload-use-drone-control'
-import {postPayloadCommands} from "@/api/drone-control/payload";
+import {CameraMode, CameraType} from "@/api/live-stream";
 
 
 const payloadController = ref(false)
-const isShowFlyto = ref(false)
 const props = defineProps<{
   sn: string,
-  deviceInfo: DeviceInfoType,
-  payloads: null | PayloadInfo[]
+  deviceInfo: any,
+  payloads?: null | PayloadInfo[]
 }>()
 
 const store = useMyStore()
 const clientId = computed(() => {
   return store.state.clientId
 })
-
-const initCmdList = baseCmdList.find(item => item.cmdKey === DeviceCmd.ReturnHome)
-const cmdItem = ref(initCmdList)
-
-const {
-  sendDockControlCmd
-} = useDockControl()
-const osdVisible = computed(() => {
-  return store.state.osdVisible
-})
-async function sendControlCmd (cmdItem: DeviceCmdItem, index: number) {
-  cmdItem.loading = true
-  const result = await sendDockControlCmd({
-    sn: props.sn,
-    cmd: cmdItem.cmdKey,
-    action: cmdItem.action
-  }, false)
-  if (result && flightController.value) {
-    exitFlightCOntrol()
-  }
-  cmdItem.loading = false
-}
-
-const {
-  flyToPoint,
-  stopFlyToPoint,
-  takeoffToPoint
-} = useDroneControl()
-const MAX_SPEED = 14
-
-const flyToPointPopoverData = reactive({
-  visible: false,
-  loading: false,
-  latitude: null as null | number,
-  longitude: null as null | number,
-  height: null as null | number,
-  maxSpeed: MAX_SPEED,
-})
-
-function onShowFlyToPopover () {
-  flyToPointPopoverData.visible = !flyToPointPopoverData.visible
-  flyToPointPopoverData.loading = false
-  flyToPointPopoverData.latitude = null
-  flyToPointPopoverData.longitude = null
-  flyToPointPopoverData.height = null
-}
-
-async function onFlyToConfirm (confirm: boolean) {
-  if (confirm) {
-    if (!flyToPointPopoverData.height || !flyToPointPopoverData.latitude || !flyToPointPopoverData.longitude) {
-      ElMessage.error('Input error')
-      return
-    }
-    try {
-      await flyToPoint(props.sn, {
-        max_speed: flyToPointPopoverData.maxSpeed,
-        points: [
-          {
-            latitude: flyToPointPopoverData.latitude,
-            longitude: flyToPointPopoverData.longitude,
-            height: flyToPointPopoverData.height
-          }
-        ]
-      })
-    } catch (error) {
-    }
-  }
-  flyToPointPopoverData.visible = false
-}
-
-async function onStopFlyToPoint () {
-  await stopFlyToPoint(props.sn)
-}
-
-const takeoffToPointPopoverData = reactive({
-  visible: false,
-  loading: false,
-  latitude: null as null | number,
-  longitude: null as null | number,
-  height: null as null | number,
-  securityTakeoffHeight: null as null | number,
-  maxSpeed: MAX_SPEED,
-  rthAltitude: null as null | number,
-  rcLostAction: LostControlActionInCommandFLight.RETURN_HOME,
-  exitWaylineWhenRcLost: WaylineLostControlActionInCommandFlight.RETURN_HOME
-})
-
-function onShowTakeoffToPointPopover () {
-  takeoffToPointPopoverData.visible = !takeoffToPointPopoverData.visible
-  takeoffToPointPopoverData.loading = false
-  takeoffToPointPopoverData.latitude = null
-  takeoffToPointPopoverData.longitude = null
-  takeoffToPointPopoverData.securityTakeoffHeight = null
-  takeoffToPointPopoverData.rthAltitude = null
-  takeoffToPointPopoverData.rcLostAction = LostControlActionInCommandFLight.RETURN_HOME
-  takeoffToPointPopoverData.exitWaylineWhenRcLost = WaylineLostControlActionInCommandFlight.RETURN_HOME
-}
-
-async function onTakeoffToPointConfirm (confirm: boolean) {
-  if (confirm) {
-    if (!takeoffToPointPopoverData.height ||
-        !takeoffToPointPopoverData.latitude ||
-        !takeoffToPointPopoverData.longitude ||
-        !takeoffToPointPopoverData.securityTakeoffHeight ||
-        !takeoffToPointPopoverData.rthAltitude) {
-      ElMessage.error('Input error')
-      return
-    }
-    try {
-      await takeoffToPoint(props.sn, {
-        target_latitude: takeoffToPointPopoverData.latitude,
-        target_longitude: takeoffToPointPopoverData.longitude,
-        target_height: takeoffToPointPopoverData.height,
-        security_takeoff_height: takeoffToPointPopoverData.securityTakeoffHeight,
-        rth_altitude: takeoffToPointPopoverData.rthAltitude,
-        max_speed: takeoffToPointPopoverData.maxSpeed,
-        rc_lost_action: takeoffToPointPopoverData.rcLostAction,
-        exit_wayline_when_rc_lost: takeoffToPointPopoverData.exitWaylineWhenRcLost
-      })
-    } catch (error) {
-    }
-  }
-  takeoffToPointPopoverData.visible = false
-}
 
 const deviceTopicInfo: DeviceTopicInfo = reactive({
   sn: props.sn,
@@ -337,7 +200,7 @@ watch(() => props.payloads, (payloads) => {
 })
 watch(() => props.deviceInfo.device, (droneOsd) => {
   if (droneOsd && droneOsd.cameras) {
-    payloadSelectInfo.camera = droneOsd.cameras.find(item => item.payload_index === payloadSelectInfo.payloadIndex)
+    payloadSelectInfo.camera = droneOsd.cameras.find((item: any) => item.payload_index === payloadSelectInfo.payloadIndex)
   } else {
     payloadSelectInfo.camera = undefined
   }

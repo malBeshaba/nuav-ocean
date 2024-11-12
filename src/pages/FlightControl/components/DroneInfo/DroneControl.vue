@@ -62,48 +62,6 @@
          <el-button class="btn big-btn" size="small" style="width: 30px; height: 70px; writing-mode: vertical-rl;" @click="onShowFlyToPopover">顶点飞行</el-button>
          <el-button class="btn big-btn" size="small" style="width: 30px; height: 70px; writing-mode: vertical-rl;" @click="onStopFlyToPoint">停止飞行</el-button>
        </div>
-       <!-- <div class="row">
-         <div class="from">
-           <el-form class="Table" :model="takeOffForm" v-if="takeOffFormShow">
-             <el-form-item label="经度:">
-               <el-input-number v-model="takeOffForm.latitude"></el-input-number>
-             </el-form-item>
-             <el-form-item label="纬度:">
-               <el-input-number v-model="takeOffForm.longitude"></el-input-number>
-             </el-form-item>
-             <el-form-item label="高度(m):">
-               <el-input-number v-model="takeOffForm.height"></el-input-number>
-             </el-form-item>
-             <el-form-item label="安全起飞高度(m):">
-               <el-input-number v-model="takeOffForm.securityTakeoffHeight"></el-input-number>
-             </el-form-item>
-             <el-form-item label="返航高度(m):">
-               <el-input-number v-model="takeOffForm.rthAltitude"></el-input-number>
-             </el-form-item>
-             <el-form-item label="失联动作(m):">
-               <el-select v-model="takeOffForm.rcLostAction">
-                 <div v-for="option in LostControlActionInCommandFLightOptions" :key="option">
-                   <el-option :label="option.label" :value="option.value"></el-option>
-                 </div>
-               </el-select>
-             </el-form-item>
-             <el-form-item label="航线失联动作(m):">
-               <el-select v-model="takeOffForm.exitWaylineWhenRcLost">
-                 <div v-for="option in WaylineLostControlActionInCommandFlightOptions" :key="option">
-                   <el-option :label="option.label" :value="option.value"></el-option>
-                 </div>
-               </el-select>
-             </el-form-item>
-             <el-form-item>
-               <el-button type="primary" @click="onSubmitTakeOff">Create</el-button>
-               <el-button>Cancel</el-button>
-             </el-form-item>
-           </el-form>
-         </div>
-         <el-button class="btn big-btn" size="small" @click="onShowTakeoffToPointPopover">一键起飞</el-button>
-         <el-button class="btn big-btn" size="small" @click="returnHome">返航</el-button>
-       </div> -->
-
      </div>
    </div>
  </div>
@@ -113,7 +71,7 @@
 import {ref, reactive, computed, onMounted, onUnmounted} from "vue";
 import {useMyStore} from "@/store";
 import {postDrcEnter, postDrcExit, postDrc} from "@/api/drc";
-import {DeviceInfoType, PayloadInfo, ControlSource, DeviceOsdCamera} from "@/store/types/device";
+import {PayloadInfo, ControlSource, DeviceOsdCamera} from "@/store/types/device";
 import {DeviceTopicInfo} from "@/pages/ResourceManagement/components/Drone/use-mqtt";
 import {useDroneControlWsEvent} from "@/pages/ResourceManagement/components/Drone/use-drone-control-ws-event";
 import {
@@ -123,26 +81,25 @@ import {
 } from "@/api/drone-control/drone";
 import {KeyCode, useManualControl} from "@/pages/ResourceManagement/components/Drone/use-manual-control";
 import {useMqtt} from "@/pages/ResourceManagement/components/Drone/use-mqtt";
-import {
-  UranusMqtt,
-} from '@/utils/mqtt'
+import {UranusMqtt} from '@/utils/mqtt'
 import {postTakeoffToPoint, deleteFlyToPoint, postFlyToPoint, retuenHome} from "@/api/drone-control/drone";
-import {LostControlActionInCommandFLightOptions, WaylineLostControlActionInCommandFlightOptions} from "@/pages/ResourceManagement/components/Drone/types/drone-control";
 
-const store = useMyStore()
-const flightController = ref(false)
-const payloadController = ref(false)
-const isShowFlyto = ref(false)
+const store = useMyStore();
+const flightController = ref(false);
+const isShowFlyto = ref(false);
+
 const props = defineProps<{
   sn: string,
-  deviceInfo: DeviceInfoType,
-  payloads: null | PayloadInfo[]
-}>()
+  deviceInfo: any,
+  payloads?: null | PayloadInfo[]
+}>();
+
 const flyToForm = reactive({
   latitude: 0.0,
   longitude: 0.0,
   height: 0
-})
+});
+
 const takeOffForm = reactive({
   latitude: 23.1479628584375,
   longitude: 113.02278860922384,
@@ -151,7 +108,8 @@ const takeOffForm = reactive({
   rthAltitude: 100,
   rcLostAction: LostControlActionInCommandFLight.RETURN_HOME,
   exitWaylineWhenRcLost: WaylineLostControlActionInCommandFlight.CONTINUE
-})
+});
+
 const onSubmitFlyTo = async () => {
   console.log(flyToForm)
   await postFlyToPoint(props.sn, {

@@ -78,19 +78,15 @@
 import VideoFrame from '@/pages/ResourceManagement/components/Dock/VideoFrame.vue'
 import { onMounted, ref, reactive, watch, computed, onBeforeUnmount, defineEmits, toRaw } from 'vue'
 import { getBindingDeviceBySn } from "@/api/device";
-import { stopLivestream, getLiveAddress, startLivestream, getAILive, getLivestatus } from "@/api/live"
+import { stopLivestream, getLiveAddress, startLivestream, getLivestatus } from "@/api/live"
 import { DeviceInfo } from "@/store/types/device";
 import dockIMG from "@/assets/images/dock.png"
 import {
     exectFlightTask,
     getFlightPlanList,
     insertFlightTask,
-    insertFlightTaskPrepare
 } from "@/api/droneFlightPlan";
-import { DockOsd } from '@/store/types/device';
 import { useMyStore } from "@/store";
-import { useRoute, useRouter } from 'vue-router';
-import { useCookies } from "vue3-cookies";
 import {retuenHome} from "@/api/drone-control/drone";
 const Props = defineProps({
     deviceSn: {
@@ -98,13 +94,8 @@ const Props = defineProps({
         default: ''
     }
 })
-const isShowControl = ref(false)
-const control_sn = ref()
 
 const store = useMyStore();
-const { cookies } = useCookies();
-const route = useRoute();
-const router = useRouter();
 
 const str = '--'
 interface deviceInfoType {
