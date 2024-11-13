@@ -1,9 +1,9 @@
 <template>
     <div class="content">
-<!--      <DockInfo class="dock" />-->
+      <DockInfo class="dock" />
       <TaskInfo class="task" />
 	    <CenterView class="center" />
-<!--      <DroneInfo class="drone" />-->
+      <DroneInfo class="drone" />
 	    <router-view name="info_list" />
     </div>
 </template>
