@@ -383,7 +383,7 @@ const getDockLiveStream = async () => {
     let liveUrl = rtmpUrl.data + timestamp
     let videoID = timestamp + '/165-0-7/normal-0'
     let urlType = '1'
-    let videoQ = '2'
+    let videoQ = '1'
     getLivestatus(timestamp as string).then(res => {
         if (res.data.webRtcStream) {
             dockOutLiveStream.value = res.data.webRtcStream
@@ -410,7 +410,7 @@ const getDroneLiveStream = async (timestamp: string) => {
     let liveUrl = rtmpUrl.data + timestamp
     let videoID = timestamp + '/53-0-0/normal-0'
     let urlType = '1'
-    let videoQ = '2'
+    let videoQ = '1'
     getLivestatus(timestamp).then(res => {
         if (res.data.webRtcStream) {
             droneOutLiveStream.value = res.data.webRtcStream

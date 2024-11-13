@@ -80,9 +80,6 @@ const clickTab = (tab: string) => {
   }
 }
 
-const handleLayout = () => {
-  location.href = import.meta.env.VITE_OCEAN_URL;
-}
 watch(() => router.currentRoute.value.path, (newValue, oldValue) => {
   // console.log('path', newValue, oldValue)
   if (newValue.includes('/default/control')) {
