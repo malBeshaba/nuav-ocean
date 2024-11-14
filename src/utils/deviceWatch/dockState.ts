@@ -16,21 +16,18 @@ export function dockState() {
       const unwatch = watch(store.state.deviceState.dockInfo, (value) => {
         if (Object.keys(value).length === res.data.pagination.total) {
           // 完成dock位置信息获取后，停止监听
-          if (store.state.checkDockState.length === res.data.pagination.total) {
-            try {
-              store?.state?.checkDockState.forEach((item: any) => {
-                const dockPoint = window.cesiumViewer.entities.getById(String(item.sn) + 'dockCheck')
-                if(dockPoint) {
-                  window.cesiumViewer.entities.remove(dockPoint)
-                  DrawPointByBillboard(window.cesiumViewer, String(item.sn) + 'dockCheck', [item.position.longitude - 0.00001,item.position.latitude + 0.00007, item.position.height], 0, dockImage)
-                } else {
-                  DrawPointByBillboard(window.cesiumViewer, String(item.sn) + 'dockCheck', [item.position.longitude - 0.00001,item.position.latitude + 0.00007, item.position.height], 0, dockImage)
-                }
-              })
-            } catch (error) {
-                console.log(error)
-            }
-            unwatch();
+          try {
+            store?.state?.checkDockState.forEach((item: any) => {
+              const dockPoint = window.cesiumViewer.entities.getById(String(item.sn) + 'dockCheck')
+              if(dockPoint) {
+                window.cesiumViewer.entities.remove(dockPoint)
+                DrawPointByBillboard(window.cesiumViewer, String(item.sn) + 'dockCheck', [item.position.longitude - 0.00001,item.position.latitude + 0.00007, item.position.height], 0, dockImage)
+              } else {
+                DrawPointByBillboard(window.cesiumViewer, String(item.sn) + 'dockCheck', [item.position.longitude - 0.00001,item.position.latitude + 0.00007, item.position.height], 0, dockImage)
+              }
+            })
+          } catch (error) {
+              console.log(error)
           }
           Object.keys(value).forEach((key: string) => {
             if (value[key].basic_osd) {

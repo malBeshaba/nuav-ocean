@@ -1,7 +1,7 @@
 <template>
   <div class="dockInfo" style="display: flex; flex-direction: column;">
     <ListHead title="无人机机场"/>
-    <el-select v-model="dockValue" placeholder="Select" class="select">
+    <el-select v-model="dockValue" placeholder="Select" class="select" @change="handleOnDockChange">
       <el-option
         v-for="item in dockOptions"
         :key="item.value"
@@ -20,6 +20,10 @@ import { onMounted, ref } from 'vue';
 import ListHead from '@/components/Head/ListHead.vue';
 import DockDetail from '@/pages/FlightControl/components/DockInfo/DockDetail.vue';
 import { getBindingDevices } from '@/api/device'
+import { CesiumFlyTo } from '@/components/mapTools/BaseMapTools';
+import { useMyStore } from '@/store';
+
+const store = useMyStore();
 
 const dockValue = ref('');
 const dockOptions = ref([] as any[])
@@ -37,9 +41,19 @@ const getDockList = () => {
         return { value: item.device_sn, label: item.device_name }
       })
       dockValue.value = dockOptions.value[0].value
+      flyToDock(dockValue.value)
     }
   })
 };
+
+const handleOnDockChange = (val: string) => {
+  flyToDock(val)
+}
+
+const flyToDock = (sn: string) => {
+  const dock = store.state.checkDockState.find((item: any) => item.sn === sn)
+  CesiumFlyTo(window.cesiumViewer, {longitude: dock?.position?.longitude as number, latitude: dock?.position.latitude as number, height: 1500})
+}
 
 onMounted(() => {
   getDockList()

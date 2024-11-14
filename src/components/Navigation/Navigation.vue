@@ -140,6 +140,7 @@ const handleSelect = (item) => {
       break
     case '智慧岸线':
       location.href = import.meta.env.VITE_AEF_URL.toString().replace('aef/', '') + "#/ZHAX"
+      break
   }
 }
 

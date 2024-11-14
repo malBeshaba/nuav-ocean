@@ -3,7 +3,7 @@
     ref="jswebrtc"
     controls
     disablePictureInPicture
-    style="width: 100%;height: 100%;object-fit: fill;"
+    style="height: 100%;width: 100%; max-height: 750px;"
   >
   </video>
 </template>
@@ -37,7 +37,8 @@ onMounted(() => {
           event.preventDefault();
           // 自定义效果
           // 这里可以放置你想实现的任何代码
-          console.log('视频被点击了！但是不会触发播放/暂停。', Props.videoSrc, event);
+          
+          console.log('视频被点击了！但是不会触发播放/暂停。', video, rect);
           
         });
       })

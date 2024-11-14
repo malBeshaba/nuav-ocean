@@ -58,23 +58,31 @@
             <el-button type="primary" round @click="takeOff_click(deviceSn)">一键起飞</el-button>
             <el-button type="primary" round @click="takeOff">一键返航</el-button>
         </div>
-        <div class="dock-video">
-            <div class="video-item" v-if="dockOutLiveStream !== ''">
-                <VideoFrame @toFullScreen="toFull_sc"
-                    :videoSource="{ aisource: aiDockStream, norsource: dockOutLiveStream }"
-                     ref="dockvideo_frame"></VideoFrame>
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%;">
+            <ListHead title="小窗预览" />
+            <div class="dock-video">
+                <div class="video-item">
+                    <VideoFrame @toFullScreen="toFull_sc" v-if="dockOutLiveStream"
+                        :videoSource="{ aisource: aiDockStream, norsource: dockOutLiveStream }"
+                         ref="dockvideo_frame"></VideoFrame>
+                    <el-empty v-else description="机场视频未连接" class="empty-video" />
+                </div>
             </div>
-        </div>
-        <div class="drone-video" style="width: 100%;">
-            <VideoFrame @toFullScreen="toFull_sc" :videoSource="{aisource: '', norsource: droneOutLiveStream, sn: droneInfo.device_sn}"
-                      :class="isFull?'dronevideo_frame_':'dronevideo_frame'"
-                      ref="dronevideo_frame"></VideoFrame>
+            <div v-if="!droneOutLiveStream" style="height: 50px"></div>
+            <div class="drone-video" style="width: 100%;">
+                <VideoFrame v-if="droneOutLiveStream" @toFullScreen="toFull_sc" :videoSource="{aisource: '', norsource: droneOutLiveStream, sn: droneInfo.device_sn}"
+                          :class="isFull?'dronevideo_frame_':'dronevideo_frame'"
+                          ref="dronevideo_frame"></VideoFrame>
+                <el-empty v-else description="无人机视频未连接" class="empty-video" />
+
+            </div>
         </div>
     </div>
 
 </template>
 
 <script setup lang="ts">
+import ListHead from '@/components/Head/ListHead.vue';
 import VideoFrame from '@/pages/ResourceManagement/components/Dock/VideoFrame.vue'
 import { onMounted, ref, reactive, watch, computed, onBeforeUnmount, defineEmits, toRaw } from 'vue'
 import { getBindingDeviceBySn } from "@/api/device";
@@ -208,7 +216,7 @@ const EDockModeCode = computed(() => {
 
 // 一键返航
 const takeOff = () => {
-    retuenHome(droneInfo.device_sn);
+    retuenHome(dockInfo.device_sn);
 }
 
 const initialize = () => {
@@ -377,6 +385,7 @@ const closeLiveStream = () => {
     }
 }
 const getDockLiveStream = async () => {
+    dockOutLiveStream.value = ''
     let rtmpUrl = await getLiveAddress()
     const timestamp = deviceSn.value
 
@@ -396,16 +405,27 @@ const getDockLiveStream = async () => {
                 url_type: urlType,
                 video_quality: videoQ
             }).then(res => {
-                if (res.data.url) {
+                if (res?.data?.url) {
                     dockOutLiveStream.value = res.data.url
                     store.commit('SET_LIVE_STREAM', { sn: timestamp, vid: videoID })
                     // dockLoaded.value = true
+                } else {
+                    dockOutLiveStream.value = ''
                 }
+            }).catch(err => {
+                console.log(err)
+                dockOutLiveStream.value = ''
+                ElMessage.error({
+                    message: '获取视频流失败',
+                    offset: window.screen.height / 2,
+                })
+            
             })
         }
     })
 };
 const getDroneLiveStream = async (timestamp: string) => {
+    droneOutLiveStream.value = ''
     let rtmpUrl = await getLiveAddress()
     let liveUrl = rtmpUrl.data + timestamp
     let videoID = timestamp + '/53-0-0/normal-0'
@@ -425,6 +445,8 @@ const getDroneLiveStream = async (timestamp: string) => {
                 if (res.data.url) {
                     droneOutLiveStream.value = res.data.webRtcStream
                     store.commit('SET_LIVE_STREAM', { sn: timestamp, vid: videoID })
+                } else {
+                    droneOutLiveStream.value = ''
                 }
             })
         }
@@ -568,11 +590,24 @@ div {
 
 /* 设备视频 */
 .dock-video {
+    margin-top: 10px;
     width: 100%;
     height: 220px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+}
+
+.empty-video {
+    margin-bottom: 30px;
+    width: 100%;
+    height: 250px;
+    border: 2px solid $SecondTouchColor;
+    border-radius: 3px;
+}
+
+.dronevideo_frame {
+    max-height: 250px;
 }
 
 .option {

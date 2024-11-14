@@ -1,40 +1,35 @@
 <template>
   <div class="center">
-
     <div class="video" v-if="isShowVideo">
-        <ListHead title="无人机视频" />
-        <VideoFrame
-            class="video_frame"
-            :isFull="isFull"
-            @toFullScreen="toFull_sc"
-            :videoSource="{aisource: '', norsource: droneOutLiveStream, sn: droneDeviceSn}"
-            ref="dronevideo_full"
-        />
-        <el-icon class="btn-backward" @click="handleOnClose"><Close /></el-icon>
+      <ListHead title="无人机视频" />
+      <VideoFrame
+        class="video_frame"
+        :isFull="isFull"
+        @toFullScreen="toFull_sc"
+        :videoSource="{aisource: '', norsource: droneOutLiveStream, sn: droneDeviceSn}"
+        ref="dronevideo_full"
+      />
+      <el-icon class="btn-backward" @click="handleOnClose"><Close /></el-icon>
     </div>
-	  <div class="video" v-if="isShowMap">
-		  <cesium-map style="width: 100%; height: 100%" />
-	  </div>
+	<div class="map" v-else>
+	  <cesium-map style="width: 100%; height: 100%; border-radius: 8px;" />
+	</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import ListHead from "@/components/Head/ListHead.vue";
 import VideoFrame from '@/pages/ResourceManagement/components/Dock/VideoFrame.vue';
 import CesiumMap from '@/pages/Map/index.vue'
 import { useMyStore } from "@/store";
 import { Close } from '@element-plus/icons-vue'
-import { stopLivestream, getLiveAddress, startLivestream, getLivestatus } from "@/api/live"
+import { getLiveAddress, startLivestream, getLivestatus } from "@/api/live"
 
 const store = useMyStore()
 
 const isShowVideo = computed(() => {
     return store.state.showVideoOrMap === 'Video';
-})
-
-const isShowMap = computed(() => {
-    return store.state.showVideoOrMap === 'Map';
 })
 
 const droneDeviceSn = computed(() => {
@@ -101,10 +96,20 @@ watch(() => droneDeviceSn.value, (newData) => {
     width: 100%;
     height: 100%;
 }
-
+.map {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: 2px solid $SecondTouchColor;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
 .btn-backward {
     position: absolute;
     top: 10px;
     right: 10px;
+}
+.video_frame {
+    margin-top: 10px;
 }
 </style>

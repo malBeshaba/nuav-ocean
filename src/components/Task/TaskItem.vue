@@ -30,7 +30,7 @@
           <span class="item-main__content">{{ wayline.waylineName }}</span>
         </div>
         <div>
-          <el-button v-if="Props.planInfo.planStatus == 1" @click.stop="takeOff_click(Props.planInfo.deviceSn)">一键起飞</el-button>
+          <el-button v-if="Props.planInfo.planStatus == 1" @click.stop="takeOff_click(Props.planInfo.deviceSn)">执行任务</el-button>
         </div>
         <div class="DeleteIcon" @click.stop="deleteTask(Props.planInfo)">
           <div class="TheDeleteIcon"></div>

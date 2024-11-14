@@ -15,8 +15,8 @@ import { deviceState } from '@/utils/deviceWatch/deviceState'
 const store = useMyStore()
 
 useConnectWebSocket(messageHandler);
-// dockState()
-// deviceState()
+dockState()
+deviceState()
 
 function getTokenFromUrl() {
   const params = new URLSearchParams(window.location.search);

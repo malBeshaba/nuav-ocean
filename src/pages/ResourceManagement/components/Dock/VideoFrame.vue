@@ -1,7 +1,7 @@
 <template>
   <div class="dronevideo_frame" v-show="dronevideo_frame" ref="dronevideo_frame">
     <div @click="handleOnPlayerClick">
-      <WebrtcPlayer v-show="!isYoloAction" :videoSrc="isAI? aisource: videoSource.norsource"></WebrtcPlayer>
+      <WebrtcPlayer v-show="!isYoloAction" :videoSrc="isAI? aisource: Props.videoSource.norsource"></WebrtcPlayer>
       <WebrtcPlayer v-show="isYoloAction" :videoSrc="yoloVideoSource"></WebrtcPlayer>
     </div>
     <div style="display: flex; align-items: center; justify-content: center;">
@@ -511,6 +511,8 @@ const handleOnPlayerClick = () => {
 /*@import "//at.alicdn.com/t/c/font_3880304_e4fxdavqiq7.css";*/
 .dronevideo_frame {
   position: relative;
+  width: 100%;
+  height: 100%;
 }
 .dronevideo_frame .full_sc {
   position: absolute;

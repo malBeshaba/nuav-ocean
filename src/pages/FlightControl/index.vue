@@ -32,7 +32,7 @@ html {
   overflow: hidden;
   position: fixed;
   top: 0;
-  height: calc(100% - $NavigationHeight - 40px);
+  height: calc(100% - $NavigationHeight - 20px);
   left: 20px;
   width: $LeftWidth;
   display: flex;
@@ -43,7 +43,7 @@ html {
   overflow: hidden;
   position: fixed;
   top: 0;
-  height: calc(100% - $NavigationHeight - 40px);
+  height: calc(100% - $NavigationHeight - 20px);
   left: calc($LeftWidth + 25px);
   width: calc(100% - $LeftWidth * 2 - 50px);
   display: flex;
@@ -55,7 +55,7 @@ html {
   overflow: hidden;
   position: fixed;
   top: 0;
-  height: calc((100% - $NavigationHeight - 10px) / 3 - 10px);
+  height: calc((100% - $NavigationHeight) / 3);
   right: 20px;
   width: $LeftWidth;
   display: flex;
@@ -66,8 +66,8 @@ html {
   box-sizing: border-box;
   overflow: hidden;
   position: fixed;
-  top: calc((100% - $NavigationHeight - 40px) / 3 + 10px);
-  height: calc((100% - $NavigationHeight - 40px) * 2 / 3 - 10px);
+  top: calc((100% - $NavigationHeight - 20px) / 3 + 10px);
+  height: calc((100% - $NavigationHeight - 20px) * 2 / 3 - 10px);
   right: 20px;
   width: $LeftWidth;
   display: flex;
