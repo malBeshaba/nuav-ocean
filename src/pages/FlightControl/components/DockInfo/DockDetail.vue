@@ -8,7 +8,7 @@
                     :src="dockIMG" />
             </div>
             <div class="info-center">
-                <div class="info-center__title"> {{ dockInfo.device_name }} </div>
+                <div class="info-center__title"> {{ dockInfo.nickname }} </div>
                 <div> {{ dockInfo.device_sn }} </div>
             </div>
             <div class="info-right">
@@ -413,13 +413,7 @@ const getDockLiveStream = async () => {
                     dockOutLiveStream.value = ''
                 }
             }).catch(err => {
-                console.log(err)
                 dockOutLiveStream.value = ''
-                ElMessage.error({
-                    message: '获取视频流失败',
-                    offset: window.screen.height / 2,
-                })
-            
             })
         }
     })

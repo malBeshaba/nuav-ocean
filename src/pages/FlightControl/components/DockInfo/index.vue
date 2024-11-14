@@ -38,7 +38,7 @@ const getDockList = () => {
   }).then(res => {
     if (res.code === 0) {
       dockOptions.value = res.data.list.map((item: any) => {
-        return { value: item.device_sn, label: item.device_name }
+        return { value: item.device_sn, label: item.nickname }
       })
       dockValue.value = dockOptions.value[0].value
       flyToDock(dockValue.value)
