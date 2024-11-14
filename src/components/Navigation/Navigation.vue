@@ -104,7 +104,7 @@ const navbarData = ref([
 const navbarData2 = ref([
   { id: 4, name: '核查预警', type: 'patrol', sort: 4 },
   { id: 5, name: '算法仓', type: 'monitoring', sort: 5 },
-  { id: 6, name: '智慧岸线', type: 'AIanxian', sort: 6 }
+  { id: 6, name: '阳江试点', type: 'AIanxian', sort: 6 }
 ])
 
 const userName = ref("admin")
@@ -138,8 +138,8 @@ const handleSelect = (item) => {
     case '算法仓':
       location.href = import.meta.env.VITE_OCEAN_URL + '#/algorithm-house'
       break
-    case '智慧岸线':
-      location.href = import.meta.env.VITE_AEF_URL.toString().replace('aef/', '') + "#/ZHAX"
+    case '阳江试点':
+      window.open(import.meta.env.VITE_AEF_URL + "#/ZHAX")
       break
   }
 }

@@ -43,7 +43,7 @@ if (login_info[0]) {
     // router.push(login_info[2] as string);
     router.push("/mainPageFrame")
   }else{
-    router.push('/default/task');
+    router.push('/default/info');
   }
 } else {
   localStorage.setItem("token", import.meta.env.VITE_TOKEN as string);
