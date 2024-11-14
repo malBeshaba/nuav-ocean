@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, reactive} from 'vue';
+import {ref, onMounted, reactive, computed, watch} from 'vue';
 import ListHead from '@/components/Head/ListHead.vue';
 import {Plus, Search} from '@element-plus/icons-vue';
 import {getFlightPlan} from '@/api/droneFlightPlan';
@@ -49,9 +49,11 @@ const router = useRouter();
 const title = ref('预设计划');
 
 const search_by_task_name = ref('');
-
+const Props = defineProps(
+	{docksn: {type: String, default: '7CTDM7T00B00N8'}},
+)
 // 航线任务
-const device_sn = ref('7CTDM7T00B00N8');
+const device_sn = computed(() => Props.docksn);
 const selectValue = ref('1,2,5');
 const planInfo = reactive([] as any[]);
 const currentPage = ref(1)
@@ -88,6 +90,10 @@ const getTaskInfo = async () => {
     }
   })
 };
+
+watch(() => device_sn.value, () => {
+	getTaskInfo();
+})
 
 </script>
 

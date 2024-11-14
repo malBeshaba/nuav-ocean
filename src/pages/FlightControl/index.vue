@@ -1,7 +1,7 @@
 <template>
     <div class="content">
-      <DockInfo class="dock" />
-      <TaskInfo class="task" />
+      <DockInfo class="dock" @transferSn="getSnFromDockInfo" />
+      <TaskInfo class="task" :docksn="dockSn" />
 	    <CenterView class="center" />
       <DroneInfo class="drone" />
 	    <router-view name="info_list" />
@@ -9,13 +9,19 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import DockInfo from '@/pages/FlightControl/components/DockInfo/index.vue';
 import TaskInfo from '@/pages/FlightControl/components/TaskInfo.vue';
 import DroneInfo from '@/pages/FlightControl/components/DroneInfo/index.vue';
 import CenterView from '@/pages/FlightControl/components/CenterView.vue';
 const router = useRouter();
+
+const dockSn = ref();
+
+const getSnFromDockInfo = (sn: string) => {
+  dockSn.value = sn;
+}
 
 </script>
 

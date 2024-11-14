@@ -27,6 +27,7 @@ const store = useMyStore();
 
 const dockValue = ref('');
 const dockOptions = ref([] as any[])
+const emit = defineEmits(['transferSn'])
 
 const getDockList = () => {
 //   dockInfo.value = []
@@ -47,6 +48,7 @@ const getDockList = () => {
 };
 
 const handleOnDockChange = (val: string) => {
+  emit('transferSn', val)
   flyToDock(val)
 }
 

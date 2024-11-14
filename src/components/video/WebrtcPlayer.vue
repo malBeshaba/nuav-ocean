@@ -35,11 +35,6 @@ onMounted(() => {
         video.addEventListener('click', function(event) {
           // 阻止默认行为，即阻止播放/暂停
           event.preventDefault();
-          // 自定义效果
-          // 这里可以放置你想实现的任何代码
-          
-          console.log('视频被点击了！但是不会触发播放/暂停。', video, rect);
-          
         });
       })
     }
@@ -80,8 +75,8 @@ const initVideo = (url: string) => {
     player.destroy()
     player = null
   }
-  // let videoDom = document.getElementById('jswebrtc')		// 初始化播放器
   let videoDom = jswebrtc.value as any
+  // @ts-ignore
   player = new JSWebrtc.Player(url, {
     video: videoDom,
     autoplay: true,

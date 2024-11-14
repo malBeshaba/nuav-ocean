@@ -11,7 +11,7 @@
       />
       <el-icon class="btn-backward" @click="handleOnClose"><Close /></el-icon>
     </div>
-	<div class="map" v-else>
+	<div class="map" id="centerMap">
 	  <cesium-map style="width: 100%; height: 100%; border-radius: 8px;" />
 	</div>
   </div>
@@ -43,6 +43,12 @@ const toFull_sc = (isF: boolean) => {
 
 const handleOnClose = () => {
     store.commit('SET_SHOW_VIDEO_OR_MAP', 'Map')
+    const map = document.getElementById('centerMap') as HTMLElement;
+    map.style.position = 'relative'
+    map.style.top = '0px'
+    map.style.left = '0px'
+    map.style.width = '100%'
+    map.style.height = '100%'
 }
 
 const droneOutLiveStream = ref('')

@@ -2,7 +2,7 @@
 <template>
     <div class="dock-detail">
         <!-- 设备 -->
-        <div class="dock-info">
+        <div class="dock-info" @click="handleOnNameClick">
             <div class="info-left">
                 <el-avatar shape="square" style="width: 34px; height: 29px; background-color: transparent;"
                     :src="dockIMG" />
@@ -61,18 +61,23 @@
         <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%;">
             <ListHead title="小窗预览" />
             <div class="dock-video">
-                <div class="video-item">
-                    <VideoFrame @toFullScreen="toFull_sc" v-if="dockOutLiveStream"
-                        :videoSource="{ aisource: aiDockStream, norsource: dockOutLiveStream }"
-                         ref="dockvideo_frame"></VideoFrame>
-                    <el-empty v-else description="机场视频未连接" class="empty-video" />
-                </div>
+                <VideoFrame 
+                    @toFullScreen="toFull_sc" 
+                    v-if="dockOutLiveStream"
+                    :videoSource="{ aisource: aiDockStream, norsource: dockOutLiveStream }"
+                    ref="dockvideo_frame"
+                ></VideoFrame>
+                <el-empty v-else description="机场视频未连接" class="empty-video" />
             </div>
             <div v-if="!droneOutLiveStream" style="height: 50px"></div>
-            <div class="drone-video" style="width: 100%;">
-                <VideoFrame v-if="droneOutLiveStream" @toFullScreen="toFull_sc" :videoSource="{aisource: '', norsource: droneOutLiveStream, sn: droneInfo.device_sn}"
-                          :class="isFull?'dronevideo_frame_':'dronevideo_frame'"
-                          ref="dronevideo_frame"></VideoFrame>
+            <div class="drone-video" style="width: 100%;"  @click="handleOnPlayerClick" >
+                <VideoFrame 
+                    v-if="droneOutLiveStream" 
+                    @toFullScreen="toFull_sc" 
+                    :videoSource="{aisource: '', norsource: droneOutLiveStream, sn: droneInfo.device_sn}"
+                    :class="isFull?'dronevideo_frame_':'dronevideo_frame'"
+                    ref="dronevideo_frame"
+                ></VideoFrame>
                 <el-empty v-else description="无人机视频未连接" class="empty-video" />
 
             </div>
@@ -96,6 +101,8 @@ import {
 } from "@/api/droneFlightPlan";
 import { useMyStore } from "@/store";
 import {retuenHome} from "@/api/drone-control/drone";
+import { CesiumFlyTo } from '@/components/mapTools/BaseMapTools';
+
 const Props = defineProps({
     deviceSn: {
         type: String,
@@ -418,6 +425,7 @@ const getDockLiveStream = async () => {
         }
     })
 };
+const tryTime = ref(0);
 const getDroneLiveStream = async (timestamp: string) => {
     droneOutLiveStream.value = ''
     let rtmpUrl = await getLiveAddress()
@@ -439,6 +447,13 @@ const getDroneLiveStream = async (timestamp: string) => {
                 if (res.data.url) {
                     droneOutLiveStream.value = res.data.webRtcStream
                     store.commit('SET_LIVE_STREAM', { sn: timestamp, vid: videoID })
+                } else {
+                    droneOutLiveStream.value = ''
+                }
+            }).catch(err => {
+                if (tryTime.value < 3) {
+                    tryTime.value++
+                    getDroneLiveStream(timestamp)
                 } else {
                     droneOutLiveStream.value = ''
                 }
@@ -470,6 +485,29 @@ watch(() => store.state.deviceState, (newData, oldData) => {
 watch(() => Props.deviceSn, () => {
     initialize()
 })
+
+const handleOnNameClick = () => {
+    const dock = store.state.checkDockState.find((item: any) => item.sn === Props.deviceSn)
+    CesiumFlyTo(window.cesiumViewer, {longitude: dock?.position?.longitude as number, latitude: dock?.position.latitude as number, height: 1500})
+}
+
+const handleOnPlayerClick = (event: MouseEvent) => {
+    if (!droneOutLiveStream.value) {
+        return;
+    }
+    const targetRect = (event.target as HTMLElement).getBoundingClientRect();
+    const centerMap = document.getElementById('centerMap');
+    if (centerMap) {
+        centerMap.style.position = 'fixed';
+        centerMap.style.top = `${targetRect.top}px`;
+        centerMap.style.left = `${targetRect.left}px`;
+        centerMap.style.width = `${targetRect.width}px`;
+        centerMap.style.height = `${targetRect.height}px`;
+        store.commit('SET_SHOW_VIDEO_OR_MAP', 'Video');
+    }
+    
+}
+
 </script>
 
 <style scoped lang="scss">
@@ -509,6 +547,7 @@ div {
     background: $TouchColor2;
     border-top-right-radius: 6px;
     border-top-left-radius: 6px;
+    cursor: pointer;
 }
 
 .info-left {

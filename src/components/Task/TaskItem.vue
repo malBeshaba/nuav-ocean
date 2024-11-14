@@ -1,7 +1,7 @@
 <template>
 
   <div class="task-list-item" :class="activeClass"
-       @mouseover="bgHightlight=true" @mouseleave="bgHightlight=false">
+       @mouseover="bgHightlight=true" @mouseleave="bgHightlight=false" @click="handleOnClick">
 
       <div class="item-header">
         <div class="orange-dot"></div>
@@ -61,6 +61,11 @@ const Props = defineProps({
     type: Object,
   },
 })
+
+const handleOnClick = () => {
+  console.log()
+	CheckWayLine(window.cesiumViewer, Props.planInfo?.waylineId, false);
+}
 
 onMounted(() => {
   getWaylineInfo()

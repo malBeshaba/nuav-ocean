@@ -1,6 +1,6 @@
 <template>
   <div class="dronevideo_frame" v-show="dronevideo_frame" ref="dronevideo_frame">
-    <div @click="handleOnPlayerClick">
+    <div>
       <WebrtcPlayer v-show="!isYoloAction" :videoSrc="isAI? aisource: Props.videoSource.norsource"></WebrtcPlayer>
       <WebrtcPlayer v-show="isYoloAction" :videoSrc="yoloVideoSource"></WebrtcPlayer>
     </div>
@@ -498,12 +498,6 @@ onBeforeUnmount(() => {
     // console.log('stoplive',res)
   })
 })
-
-const handleOnPlayerClick = () => {
-  if (Props.videoSource.sn) {
-    store.commit('SET_SHOW_VIDEO_OR_MAP', 'Video');
-  }
-}
 
 </script>
 
