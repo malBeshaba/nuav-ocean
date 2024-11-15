@@ -4,7 +4,7 @@
       <WebrtcPlayer v-show="!isYoloAction" :videoSrc="isAI? aisource: Props.videoSource.norsource"></WebrtcPlayer>
       <WebrtcPlayer v-show="isYoloAction" :videoSrc="yoloVideoSource"></WebrtcPlayer>
     </div>
-    <div style="display: flex; align-items: center; justify-content: center;">
+    <div style="display: flex; align-items: center; justify-content: center;" @click.stop>
       <el-select v-if="videoSource.sn" v-model="vtCode" placeholder="video" :class="isFullScreen? 'Bbutton_': 'Bbutton'" style="width: 120px">
         <el-option
             v-for="item in video_types"
@@ -126,7 +126,7 @@ const aiCode = ref('');
 const aiList = reactive([{value: '', label: '原视频'}]);
 const source = ref("http://218.192.100.219:8080/live/livestream3.flv");
 const aisource = ref('');
-const video_types = ref([{value: 'wide', label: '默认'}, {value: 'ir', label: '红外'}]);
+const video_types = ref([{value: 'wide', label: '可见光'}, {value: 'ir', label: '红外'}]);
 const vtCode = ref('wide');
 const vtColor = ref('0')
 const isYoloAction = ref(false)

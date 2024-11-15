@@ -490,11 +490,13 @@ const handleOnNameClick = () => {
 }
 
 const bigSceen = ref(false)
-
+const isShowVideo = computed(() => {
+    return store.state.showVideoOrMap === 'Video';
+})
 const handleOnPlayerClick = (event: MouseEvent) => {
-    // if (!droneOutLiveStream.value) {
-    //     return;
-    // }
+    if (!droneOutLiveStream.value || isShowVideo.value) {
+        return;
+    }
     const target = document.getElementById('drone-v') as HTMLElement
     const targetRect = target.getBoundingClientRect();
     const centerMap = document.getElementById('centerMap');
