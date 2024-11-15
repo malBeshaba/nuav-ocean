@@ -21,10 +21,10 @@ export function actionEntity(mapViewer: Cesium.Viewer) {
 				}
 				store.commit('SET_WAY_LINE_POINT_DRAWING_ACTIVE', value)
 			}	
-			if (pick.id._id.includes('dockCheck')) {
-				router.push('/default/task/task-list?device_sn='+pick.id._id.replace('dockCheck', ''));
-				store.commit('SET_IFRAME_DOCK_SN', pick.id._id.replace('dockCheck', ''));
-			}
+			// if (pick.id._id.includes('dockCheck')) {
+			// 	router.push('/default/task/task-list?device_sn='+pick.id._id.replace('dockCheck', ''));
+			// 	store.commit('SET_IFRAME_DOCK_SN', pick.id._id.replace('dockCheck', ''));
+			// }
 		}
 	}, Cesium.ScreenSpaceEventType.LEFT_CLICK)
 }

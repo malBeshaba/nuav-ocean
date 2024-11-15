@@ -1,14 +1,14 @@
 <template>
-  <div class="center">
+  <div class="center" id="center-view">
     <div class="video" v-if="isShowVideo">
       <ListHead title="无人机视频" />
-      <VideoFrame
+      <!-- <VideoFrame
         class="video_frame"
         :isFull="isFull"
         @toFullScreen="toFull_sc"
         :videoSource="{aisource: '', norsource: droneOutLiveStream, sn: droneDeviceSn}"
         ref="dronevideo_full"
-      />
+      /> -->
       <el-icon class="btn-backward" @click="handleOnClose"><Close /></el-icon>
     </div>
 	<div class="map" id="centerMap">
@@ -44,11 +44,17 @@ const toFull_sc = (isF: boolean) => {
 const handleOnClose = () => {
     store.commit('SET_SHOW_VIDEO_OR_MAP', 'Map')
     const map = document.getElementById('centerMap') as HTMLElement;
+    const mapRect = map.getBoundingClientRect();
+    const video = document.getElementById('drone-v') as HTMLElement;
     map.style.position = 'relative'
     map.style.top = '0px'
     map.style.left = '0px'
     map.style.width = '100%'
     map.style.height = '100%'
+    video.style.top = `${mapRect.top}px`;
+    video.style.left = `${mapRect.left}px`;
+    video.style.width = `${mapRect.width}px`;
+    video.style.height = `${250}px`;
 }
 
 const droneOutLiveStream = ref('')

@@ -60,7 +60,7 @@
         </div>
         <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%;">
             <ListHead title="小窗预览" />
-            <div class="dock-video">
+            <div class="dock-video" >
                 <VideoFrame 
                     @toFullScreen="toFull_sc" 
                     v-if="dockOutLiveStream"
@@ -69,8 +69,8 @@
                 ></VideoFrame>
                 <el-empty v-else description="机场视频未连接" class="empty-video" />
             </div>
-            <div v-if="!droneOutLiveStream" style="height: 50px"></div>
-            <div class="drone-video" style="width: 100%;"  @click="handleOnPlayerClick" >
+            <div v-if="!droneOutLiveStream || !dockOutLiveStream" style="height: 50px"></div>
+            <div class="drone-video" style="width: 100%;" id="drone-v"  @click="handleOnPlayerClick" >
                 <VideoFrame 
                     v-if="droneOutLiveStream" 
                     @toFullScreen="toFull_sc" 
@@ -79,14 +79,19 @@
                     ref="dronevideo_frame"
                 ></VideoFrame>
                 <el-empty v-else description="无人机视频未连接" class="empty-video" />
-
             </div>
+            
         </div>
+        
     </div>
+    
+    <CenterView class="center" />
 
 </template>
 
 <script setup lang="ts">
+import CenterView from '@/pages/FlightControl/components/CenterView.vue';
+
 import ListHead from '@/components/Head/ListHead.vue';
 import VideoFrame from '@/pages/ResourceManagement/components/Dock/VideoFrame.vue'
 import { onMounted, ref, reactive, watch, computed, onBeforeUnmount, defineEmits, toRaw } from 'vue'
@@ -416,11 +421,7 @@ const getDockLiveStream = async () => {
                     dockOutLiveStream.value = res.data.url
                     store.commit('SET_LIVE_STREAM', { sn: timestamp, vid: videoID })
                     // dockLoaded.value = true
-                } else {
-                    dockOutLiveStream.value = ''
-                }
-            }).catch(err => {
-                dockOutLiveStream.value = ''
+                } 
             })
         }
     })
@@ -430,7 +431,7 @@ const getDroneLiveStream = async (timestamp: string) => {
     droneOutLiveStream.value = ''
     let rtmpUrl = await getLiveAddress()
     let liveUrl = rtmpUrl.data + timestamp
-    let videoID = timestamp + '/53-0-0/normal-0'
+    let videoID = timestamp + '/81-0-0/normal-0'
     let urlType = '1'
     let videoQ = '1'
     getLivestatus(timestamp).then(res => {
@@ -447,17 +448,14 @@ const getDroneLiveStream = async (timestamp: string) => {
                 if (res.data.url) {
                     droneOutLiveStream.value = res.data.webRtcStream
                     store.commit('SET_LIVE_STREAM', { sn: timestamp, vid: videoID })
-                } else {
-                    droneOutLiveStream.value = ''
-                }
-            }).catch(err => {
-                if (tryTime.value < 3) {
-                    tryTime.value++
-                    getDroneLiveStream(timestamp)
-                } else {
-                    droneOutLiveStream.value = ''
                 }
             })
+            // .catch(err => {
+            //     if (tryTime.value < 3) {
+            //         tryTime.value++
+            //         getDroneLiveStream(timestamp)
+            //     }
+            // })
         }
     })
 }
@@ -491,19 +489,32 @@ const handleOnNameClick = () => {
     CesiumFlyTo(window.cesiumViewer, {longitude: dock?.position?.longitude as number, latitude: dock?.position.latitude as number, height: 1500})
 }
 
+const bigSceen = ref(false)
+
 const handleOnPlayerClick = (event: MouseEvent) => {
-    if (!droneOutLiveStream.value) {
-        return;
-    }
-    const targetRect = (event.target as HTMLElement).getBoundingClientRect();
+    // if (!droneOutLiveStream.value) {
+    //     return;
+    // }
+    const target = document.getElementById('drone-v') as HTMLElement
+    const targetRect = target.getBoundingClientRect();
     const centerMap = document.getElementById('centerMap');
+    const centerMapRect = centerMap?.getBoundingClientRect();
     if (centerMap) {
         centerMap.style.position = 'fixed';
         centerMap.style.top = `${targetRect.top}px`;
         centerMap.style.left = `${targetRect.left}px`;
         centerMap.style.width = `${targetRect.width}px`;
-        centerMap.style.height = `${targetRect.height}px`;
+        centerMap.style.height = `${250}px`;
+        // centerMap.style.zIndex = '100';
+        target.style.position = 'fixed';
+        target.style.top = `${centerMapRect?.top as number + 42}px`;
+        target.style.left = `${centerMapRect?.left}px`;
+        target.style.width = `${centerMapRect?.width}px`;
+        target.style.height = `${centerMapRect?.height}px`;
+        target.style.zIndex = '2';
+        // target.style.zIndex = '99';
         store.commit('SET_SHOW_VIDEO_OR_MAP', 'Video');
+        bigSceen.value = true
     }
     
 }
@@ -520,6 +531,16 @@ div {
 *::after {
     box-sizing: inherit;
 }
+.center {
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    height: calc(100% - $NavigationHeight - 20px);
+    left: calc($LeftWidth + 25px);
+    width: calc(100% - $LeftWidth * 2 - 50px);
+    display: flex;
+    margin-top: $NavigationHeight;
+  }
 
 /* 整体 */
 .dock-detail {
@@ -623,6 +644,7 @@ div {
 
 /* 设备视频 */
 .dock-video {
+    position: relative;
     margin-top: 10px;
     width: 100%;
     height: 220px;
