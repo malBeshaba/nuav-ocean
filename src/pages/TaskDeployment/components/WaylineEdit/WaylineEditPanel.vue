@@ -4,7 +4,7 @@
     <Topsection :waylineId="waylineId" :waylineFileId="waylineFileId"></Topsection>
     <LeftWaylineSetting ></LeftWaylineSetting>
     <toolbox></toolbox>
-    <aerial-view-map class="aerial_view_map"></aerial-view-map>
+    
   </div>
 </template>
 
