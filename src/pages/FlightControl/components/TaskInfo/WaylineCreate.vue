@@ -13,23 +13,6 @@
               :value="item.value">
           </el-option>
         </el-select>
-        <el-divider></el-divider>
-        <div class="dronename">航线类型</div>
-    <!--    //有些样式需要单独调整这里不使用v-for-->
-        <div class="WaylineType">
-          <div class="Wayline" @click="ExchangeWaylineType('1')" :class="SelectType === '1' ? 'active':''">
-              <img src="@/assets/TaskDeployment/initwayling/waylinecheck.png" alt="" class="WaylineImg">
-          </div>
-          <div class="Wayline" @click="ExchangeWaylineType('2')" :class="SelectType === '2' ? 'active':''">
-              <img src="@/assets/TaskDeployment/initwayling/polywaylinecheck.png" alt="" class="WaylineImg">
-          </div>
-          <div class="Wayline" @click="ExchangeWaylineType('3')" :class="SelectType === '3' ? 'active':''">
-                    <img src="@/assets/TaskDeployment/initwayling/pointwaylinecheck.png" alt="" class="WaylineImg">
-          </div>
-          <div class="Wayline" @click="ExchangeWaylineType('4')" :class="SelectType === '4' ? 'active':''">
-                    <img src="@/assets/TaskDeployment/initwayling/minewaylinecheck.png" alt="" class="WaylineImg">
-          </div>
-        </div>
         <div class="buttonarea">
           <el-button type="primary" style="width: 80px" @click="create">确定</el-button>
           <el-button type="info" style="width: 80px" @click="cancel">取消</el-button>
@@ -139,7 +122,7 @@ const cancel = () => {
 
 .WayLineInitializePanel{
   width:480px ;
-  height:480px ;
+  height:280px ;
   background: $ComponentBackground;
   position: fixed;
   top: 30%;
