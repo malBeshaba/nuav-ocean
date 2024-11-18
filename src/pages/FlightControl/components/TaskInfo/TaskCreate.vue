@@ -39,9 +39,9 @@
         </el-form>
 			</div>
 			<div class="list-footer">
+        <el-button type="primary" size="small" @click="newWayline()" style="position: absolute;right: -20px; "><el-icon><Plus /></el-icon>新建航线</el-button>
 		    <el-button type="primary" size="small" color="#BF6C00" @click="createTask()" plain>确定</el-button>
-		    <el-button type="primary" size="small" @click="closeCreateTask()" plain>取消</el-button>
-        <el-button type="primary" size="small" @click="newWayline()" style="color: white; margin-left: 147px; margin-top: -3px;"><el-icon><Plus /></el-icon>新建航线</el-button>
+		    <el-button type="primary" size="small" @click="closeCreateTask()" plain>取消</el-button> 
 		  </div>
 		</div>
 		<div class="task-wayline" @click="handleClick">
@@ -384,6 +384,7 @@ const newWayline = () => {
 }
 
 .list-footer {
+  position: relative;
   width: 85%;
   height: 56px;
   display: flex;
