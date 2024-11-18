@@ -257,6 +257,13 @@ const router = createRouter({
                             components: {
                                 info_list: () => import('@/pages/FlightControl/components/TaskInfo/TaskCreate.vue')
                             }
+                        }, 
+                        {
+                            path: 'wayline',
+                            name: '航线创建',
+                            components: {
+                                info_list: () => import('@/pages/FlightControl/components/TaskInfo/WaylineCreate.vue')
+                            }
                         }
                     ]
                 }

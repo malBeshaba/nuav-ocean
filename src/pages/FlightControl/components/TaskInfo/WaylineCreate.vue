@@ -1,40 +1,40 @@
 <template>
-<div class="WayLineInitializePanel">
-  <div class="head">创建新航线</div>
-  <div class="middlearea">
-    <div class="hangxian">航线名称</div>
-    <el-input class="waylinename" v-model="input" placeholder="请输入内容"></el-input>
-    <div class="dronename">选择飞行器与负载</div>
-    <el-select v-model="dronetype" placeholder="请选择" class="choosepanel">
-      <el-option
-          v-for="item in Droneoptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-      </el-option>
-    </el-select>
-    <el-divider></el-divider>
-    <div class="dronename">航线类型</div>
-<!--    //有些样式需要单独调整这里不使用v-for-->
-    <div class="WaylineType">
-      <div class="Wayline" @click="ExchangeWaylineType('1')" :class="SelectType === '1' ? 'active':''">
-	      <img src="@/assets/TaskDeployment/initwayling/waylinecheck.png" alt="" class="WaylineImg">
-      </div>
-      <div class="Wayline" @click="ExchangeWaylineType('2')" :class="SelectType === '2' ? 'active':''">
-	      <img src="@/assets/TaskDeployment/initwayling/polywaylinecheck.png" alt="" class="WaylineImg">
-      </div>
-      <div class="Wayline" @click="ExchangeWaylineType('3')" :class="SelectType === '3' ? 'active':''">
-				<img src="@/assets/TaskDeployment/initwayling/pointwaylinecheck.png" alt="" class="WaylineImg">
-      </div>
-      <div class="Wayline" @click="ExchangeWaylineType('4')" :class="SelectType === '4' ? 'active':''">
-				<img src="@/assets/TaskDeployment/initwayling/minewaylinecheck.png" alt="" class="WaylineImg">
-      </div>
+    <div class="WayLineInitializePanel">
+      <div class="head">创建新航线</div>
+      <div class="middlearea">
+        <div class="hangxian">航线名称</div>
+        <el-input class="waylinename" v-model="input" placeholder="请输入内容"></el-input>
+        <div class="dronename">选择飞行器与负载</div>
+        <el-select v-model="dronetype" placeholder="请选择" class="choosepanel">
+          <el-option
+              v-for="item in Droneoptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+        <el-divider></el-divider>
+        <div class="dronename">航线类型</div>
+    <!--    //有些样式需要单独调整这里不使用v-for-->
+        <div class="WaylineType">
+          <div class="Wayline" @click="ExchangeWaylineType('1')" :class="SelectType === '1' ? 'active':''">
+              <img src="@/assets/TaskDeployment/initwayling/waylinecheck.png" alt="" class="WaylineImg">
+          </div>
+          <div class="Wayline" @click="ExchangeWaylineType('2')" :class="SelectType === '2' ? 'active':''">
+              <img src="@/assets/TaskDeployment/initwayling/polywaylinecheck.png" alt="" class="WaylineImg">
+          </div>
+          <div class="Wayline" @click="ExchangeWaylineType('3')" :class="SelectType === '3' ? 'active':''">
+                    <img src="@/assets/TaskDeployment/initwayling/pointwaylinecheck.png" alt="" class="WaylineImg">
+          </div>
+          <div class="Wayline" @click="ExchangeWaylineType('4')" :class="SelectType === '4' ? 'active':''">
+                    <img src="@/assets/TaskDeployment/initwayling/minewaylinecheck.png" alt="" class="WaylineImg">
+          </div>
+        </div>
+        <div class="buttonarea">
+          <el-button type="primary" style="width: 80px" @click="create">确定</el-button>
+          <el-button type="info" style="width: 80px" @click="cancel">取消</el-button>
+        </div>
     </div>
-    <div class="buttonarea">
-      <el-button type="primary" style="width: 80px" @click="create">确定</el-button>
-      <el-button type="info" style="width: 80px" @click="cancel">取消</el-button>
-    </div>
-</div>
 </div>
 </template>
 
@@ -82,7 +82,7 @@ const create = () => {
         query: {
           name: input.value,
           drone_type: dronetype.value,
-	        device_sn: route.query.device_sn,
+            device_sn: route.query.device_sn,
         }
       })
       break
@@ -95,7 +95,7 @@ const create = () => {
       //   query: {
       //     name: input.value,
       //     drone_type: dronetype.value,
-	    //     device_sn: route.query.device_sn,
+        //     device_sn: route.query.device_sn,
       //   }
       // })
       break
@@ -108,7 +108,7 @@ const create = () => {
       //   query: {
       //     name: input.value,
       //     drone_type: dronetype.value,
-	    //     device_sn: route.query.device_sn,
+        //     device_sn: route.query.device_sn,
       //   }
       // })
       break
@@ -121,7 +121,7 @@ const create = () => {
       //   query: {
       //     name: input.value,
       //     dronetype: dronetype.value,
-	    //     device_sn: route.query.device_sn,
+        //     device_sn: route.query.device_sn,
       //   }
       // })
       break
@@ -147,7 +147,7 @@ const cancel = () => {
   display: flex;
   flex-direction: column;
   border-radius: 4px;
-  z-index: 99px;
+  z-index: 2;
 }
 .head{
   height: 38px;
@@ -190,7 +190,7 @@ const cancel = () => {
   background-position: center;
  }
 .WaylineImg {
-	height: 85px;
+    height: 85px;
   width: 85px;
 }
 .buttonarea{
@@ -201,3 +201,4 @@ const cancel = () => {
   border: 1px solid $TouchColor;
 }
 </style>
+    

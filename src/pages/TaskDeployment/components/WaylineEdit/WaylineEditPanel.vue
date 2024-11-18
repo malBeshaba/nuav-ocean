@@ -1,5 +1,6 @@
 <template>
   <div class="way_line_edit_panel">
+    <cesium-map style="width: 100%; height: 100%; position:fixed" />
     <Topsection :waylineId="waylineId" :waylineFileId="waylineFileId"></Topsection>
     <LeftWaylineSetting ></LeftWaylineSetting>
     <toolbox></toolbox>
@@ -8,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-
+import CesiumMap from '@/pages/Map/index.vue'
 import Topsection from "./TopSection.vue";
 import LeftWaylineSetting from "./LeftWaylineSetting.vue";
 import Toolbox from "@/pages/TaskDeployment/components/WaylineEdit/Toolbox.vue";
@@ -67,7 +68,7 @@ onMounted(() => {
     if (route.query.waylineId) {
       // 如果有航线id，说明是编辑航线
       //   console.log("-------------------------","编辑航线")
-      getWaylinePointByWaylineId(route.query.waylineId).then((res) => {
+      getWaylinePointByWaylineId(route.query.waylineId as string).then((res) => {
         // console.log("获取到航线高度",res.data.templateContent.Folder.globalHeight)
         // console.log("获取到航线内容",res)
         temglobalpara.globalHeight=res.data.templateContent.Folder.globalHeight

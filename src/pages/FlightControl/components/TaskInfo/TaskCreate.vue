@@ -4,16 +4,44 @@
 	<div class="task">
 		<div class="task-info">
 			<div class="task-info-data">
-				<span>
-					任务名称：
-				</span>
-				<span>
-					<el-input v-model="input_task_name" placeholder="请输入任务名称"></el-input>
-				</span>
+				<el-form :model="taskInfo" label-position="top" style="width: 100%">
+          <el-form-item label="任务名称">
+            <el-input v-model="taskInfo.planName" placeholder="请输入任务名称"/>
+          </el-form-item>
+          <el-form-item label="相对机场返航高度">
+            <el-col :span="22">
+              <el-input v-model="taskInfo.rthAltitude" placeholder="请输入"/>
+            </el-col>
+            <el-col :span="1" :offset="1" class="text-center">
+              <span class="text-gray-500">米</span>
+            </el-col>
+          </el-form-item>
+          <!-- <el-form-item label="Activity time">
+            <el-col :span="11">
+              <el-date-picker
+                v-model="form.date1"
+                type="date"
+                placeholder="Pick a date"
+                style="width: 100%"
+              />
+            </el-col>
+            <el-col :span="2" class="text-center">
+              <span class="text-gray-500">-</span>
+            </el-col>
+            <el-col :span="11">
+              <el-time-picker
+                v-model="form.date2"
+                placeholder="Pick a time"
+                style="width: 100%"
+              />
+            </el-col>
+          </el-form-item> -->
+        </el-form>
 			</div>
 			<div class="list-footer">
 		    <el-button type="primary" size="small" color="#BF6C00" @click="createTask()" plain>确定</el-button>
 		    <el-button type="primary" size="small" @click="closeCreateTask()" plain>取消</el-button>
+        <el-button type="primary" size="small" @click="newWayline()" style="color: white; margin-left: 147px; margin-top: -3px;"><el-icon><Plus /></el-icon>新建航线</el-button>
 		  </div>
 		</div>
 		<div class="task-wayline" @click="handleClick">
@@ -63,12 +91,15 @@ import {useMyStore} from '@/store'
 import {CheckWayLine} from '@/pages/TaskDeployment/components/WayLine/WayLineListCheckWayLine'
 import {exectFlightTask, insertFlightTask, insertFlightTaskPrepare} from '@/api/droneFlightPlan'
 import {RemoveEntitiesByBatch} from '@/components/mapTools/BaseMapTools'
+import { Plus } from '@element-plus/icons-vue'
+import WayLineInitialize from '@/pages/TaskDeployment/components/WaylineEdit/WayLineInitialize.vue';
+
 const router = useRouter();
 const store = useMyStore();
 
 const input_task_name = ref('');
 const device_sn = ref();
-
+const isShowWayline = ref(false);
 //
 let isSave = true;
 const WaylineListItems = ref([] as WaylineList[]);
@@ -302,6 +333,15 @@ const getWayLineList = async (type = '') => {
   });
 }
 
+const newWayline = () => {
+	router.push({
+    path: '/default/info/wayline',
+		query: {
+			device_sn: device_sn.value,
+		}
+  })
+
+};
 </script>
 
 <style scoped lang="scss">
@@ -338,7 +378,7 @@ const getWayLineList = async (type = '') => {
 	flex: 4;
 	display: flex;
 	flex-direction: row;
-	width: 85%;
+	width: 95%;
 	justify-content: center;
   align-items: center;
 }
