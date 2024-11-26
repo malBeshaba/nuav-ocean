@@ -152,14 +152,18 @@ const createTask = () => {
 	isSave = false;
 	taskInfo.value.taskType = 4;
   taskInfo.value.rthAltitude = Number(taskInfo.value.rthAltitude);
-	taskInfo.value.planName = input_task_name.value;
   taskInfo.value.deviceSn = route.query.device_sn as string;
+  if (!store.state.selectWayline.waylineId) {
+    ElMessage({
+      message: "请选择航线",
+      type: 'warning'
+    });
+    return;
+  }
 	taskInfo.value.waylineId = String(store.state.selectWayline.waylineId);
 	taskInfo.value.outOfControl = 0;
 	taskInfo.value.planTaskType = 0;
-	console.log('taskInfo1111', store.state.selectWayline)
   taskInfo.value.executeTime = getTimeStamp();
-  console.log("taskInfo.value", taskInfo.value);
   store.commit('CHANGE_CACHE_STYLE', {isReady: true, isAllow:true});
   if(Number(taskInfo.value.taskType) === 4){
     ElMessage({
@@ -189,7 +193,6 @@ function InsertTask() {
   taskInfo.value.rthAltitude = Number(taskInfo.value.rthAltitude)
   taskInfo.value.deviceSn = route.query.device_sn as string
   taskInfo.value.executeTime = getTimeStamp()
-  console.log("taskInfo.value", taskInfo.value)
   preparetaskInfo.value.planName = taskInfo.value.planName
   preparetaskInfo.value.waylineId = taskInfo.value.waylineId
   preparetaskInfo.value.deviceSn = taskInfo.value.deviceSn
@@ -200,9 +203,10 @@ function InsertTask() {
   preparetaskInfo.value.planTaskType = taskInfo.value.planTaskType
   preparetaskInfo.value.planStatus = 1
   preparetaskInfo.value.executeTime = taskInfo.value.executeTime
-  console.log("preparetaskInfo.value", preparetaskInfo.value)
   store.commit('CHANGE_CACHE_STYLE', {isReady: true, isAllow:true})
-  insertFlightTaskPrepare(preparetaskInfo.value)
+  insertFlightTaskPrepare(preparetaskInfo.value).then(() => {
+    store.state.updateTaskInfo += 1;
+  })
 };
 
 // 生成时间戳

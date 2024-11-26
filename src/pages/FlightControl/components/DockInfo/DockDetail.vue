@@ -50,8 +50,13 @@
             </el-row>
         </div>
         <div class="option" style="display: flex;justify-content: space-around;align-items: center; gap: 5px">
-            <el-select v-model="flightValue" placeholder="选择航线" style="width: 140px;"
-                @change="handleTaskChange">
+            <el-select 
+                v-model="flightValue" 
+                placeholder="选择航线" 
+                style="width: 140px;"
+                @change="handleTaskChange"
+                @visible-change="handleOnOptionVisibleChange"
+            >
                 <el-option v-for="item in flightOptions" :key="item.flightPlanId" :label="item.planName"
                     :value="item.flightPlanId" />
             </el-select>
@@ -265,9 +270,20 @@ interface MyObject {
 }
 
 const flightPlan = ref({} as any);
-const handleOnTaskChange = (val: any) => {
-    flightPlan.value = val;
-    console.log('val', flightPlan.value, val, val.value)
+const handleOnOptionVisibleChange = (visible: boolean) => {
+    if (visible) {
+        getFlightPlanList(JSON.parse(localStorage.getItem('userInfo') as string).workspace_id, {
+            deviceSn: deviceSn.value,
+            taskType: "4"
+        }).then(res => {
+            if (res.code === 0) {
+                flightOptions.value = []
+                res.data.forEach((item: any) => {
+                    flightOptions.value.push(item)
+                })
+            }
+        })
+    }
 }
 
 const CancelWayLineShow = () => {

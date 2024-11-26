@@ -43,7 +43,9 @@ import {Plus, Search} from '@element-plus/icons-vue';
 import {getFlightPlan} from '@/api/droneFlightPlan';
 import TaskItem from '@/components/Task/TaskItem.vue';
 import {useRouter} from 'vue-router'
+import { useMyStore } from '@/store';
 
+const store = useMyStore();
 const router = useRouter();
 
 const title = ref('预设计划');
@@ -92,6 +94,10 @@ const getTaskInfo = async () => {
 };
 
 watch(() => device_sn.value, () => {
+	getTaskInfo();
+})
+
+watch(() => store.state.updateTaskInfo, () => {
 	getTaskInfo();
 })
 
