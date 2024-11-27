@@ -187,16 +187,16 @@ onMounted(() => {
       for (var i = 0; i < res.data.list.length; i++) {
         aiList.push({value: res.data.list[i].id, label: res.data.list[i].algorithmName})
       }
-      getLivestatus("1631525384183484418"+ Props.videoSource.sn).then(res => {
-        if (res.data.webRtcStream) {
-          yoloVideoSource.value = res.data.webRtcStream
+      // getLivestatus("1631525384183484418"+ Props.videoSource.sn).then(res => {
+      //   if (res.data.webRtcStream) {
+      //     yoloVideoSource.value = res.data.webRtcStream
 
-        } else {
-          getAILive("1631525384183484418", Props.videoSource.sn).then(res => {
-            yoloVideoSource.value = res.data.webRtcStream
-          })
-        }
-      })
+      //   } else {
+      //     getAILive("1631525384183484418", Props.videoSource.sn).then(res => {
+      //       yoloVideoSource.value = res.data.webRtcStream
+      //     })
+      //   }
+      // })
     }
   })
 });
