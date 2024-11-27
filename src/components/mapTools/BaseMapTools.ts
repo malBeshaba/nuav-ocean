@@ -26,6 +26,12 @@ export function CesiumFlyTo(mapViewer:Cesium.Viewer, point: { longitude: number;
     })
 }
 
+export function makeBufferByPoint(point: number[], distance: number, units: string = 'kilometers') {
+  // @ts-ignore
+  let buffered = turf.buffer(turf.point(point), distance, { units: units });
+  return buffered.geometry.coordinates[0];
+}
+
 /**
  * 使用SetView加载到指定位置
  * @constructor

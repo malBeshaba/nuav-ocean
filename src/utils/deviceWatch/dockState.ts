@@ -1,8 +1,16 @@
-import store from '@/store'
-import { watch } from 'vue'
-import {DrawPointByBillboard, RemoveEntitiesById} from '@/components/mapTools/BaseMapTools'
-import dockImage from '@/assets/map/dock2.png'
-import { getBindingDevices } from '@/api/device'
+import store from '@/store';
+import { watch } from 'vue';
+import {DrawPointByBillboard, makeBufferByPoint, RemoveEntitiesById} from '@/components/mapTools/BaseMapTools'
+import dockImage from '@/assets/map/dock2.png';
+import { getBindingDevices } from '@/api/device';
+import * as Cesium from 'cesium';
+
+let dockBuffer = {} as {
+  [key: string]: {
+    points_list: number[][],
+    buffer_entity: bufferClass | null
+  }
+}
 
 export function dockState() {
   // 使用设备列表获取设备数量
@@ -24,6 +32,22 @@ export function dockState() {
                 DrawPointByBillboard(window.cesiumViewer, String(item.sn) + 'dockCheck', [item.position.longitude - 0.00001,item.position.latitude + 0.00007, item.position.height], 0, dockImage)
               } else {
                 DrawPointByBillboard(window.cesiumViewer, String(item.sn) + 'dockCheck', [item.position.longitude - 0.00001,item.position.latitude + 0.00007, item.position.height], 0, dockImage)
+              }
+              if(!dockBuffer[item.sn]) {
+                dockBuffer[item.sn] = {buffer_entity: null, points_list: []}
+                const bufferPoints: number[][] = makeBufferByPoint([item.position.longitude - 0.00001,item.position.latitude + 0.00007], 5)
+                dockBuffer[item.sn].points_list = bufferPoints
+                let list_point: number[] = []
+                bufferPoints.forEach((item: number[]) => {
+                  list_point.push(item[0])
+                  list_point.push(item[1])
+                  list_point.push(0)
+                })
+                dockBuffer[item.sn].buffer_entity = new bufferClass({
+                  mapViewer: window.cesiumViewer,
+                  position: list_point
+                })
+
               }
             })
           } catch (error) {
@@ -51,6 +75,54 @@ export function dockState() {
       }, {deep: true});
     }
   })
+
+}
+
+class bufferClass {
+  _mapViewer: Cesium.Viewer
+  _position: number[]
+  _withAlpha: number
+  _buffer: any | null
+  constructor(options: any) {
+    this._mapViewer = options.mapViewer
+    this._position = options.position
+    this._withAlpha = 0.5
+    this.init()
+  }
+
+  // Cesium.Color.fromCssColorString('#b1845b').withAlpha(0.5)
+  init() {
+    this.destroy()
+    this._withAlpha = 0.5
+    let isShow = false
+    this._buffer = this._mapViewer.entities.add({
+      polygon: {
+        hierarchy: Cesium.Cartesian3.fromDegreesArrayHeights(this._position),
+        material: new Cesium.ColorMaterialProperty(new Cesium.CallbackProperty(() => {
+          if(this._withAlpha > 0.5) {
+            isShow = true
+          }
+          if(this._withAlpha < 0) {
+            isShow = false
+          }
+          if(isShow) {
+            this._withAlpha -= 0.01
+          } else {
+            this._withAlpha += 0.01
+          }
+          return Cesium.Color.fromCssColorString('#b1845b').withAlpha(this._withAlpha)
+        }, false)),
+        heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+      },
+    })
+  }
+
+  destroy() {
+    if(this._buffer) {
+      this._mapViewer.entities.remove(this._buffer)
+      this._buffer = null
+    }
+  }
 
 }
 
