@@ -73,7 +73,6 @@ import { ref, onMounted } from 'vue';
 import ListHead from '@/components/Head/ListHead.vue';
 import {useRoute, useRouter} from 'vue-router';
 import {getVideoListBySN, droneVideoInfoType} from '@/api/dronesVideo';
-import axios from 'axios';
 import {getFlightPlanById} from '@/api/droneFlightPlan'
 
 const route = useRoute();
@@ -99,7 +98,6 @@ const refreshVideoList = () => {
 						video_list.value[item.planId] = res.data.planName;
 					})
 				}
-				console.log('video_list', video_list.value);
 			})
 		}
 	});
