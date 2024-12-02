@@ -110,7 +110,7 @@ class bufferClass {
           } else {
             this._withAlpha += 0.01
           }
-          return Cesium.Color.fromCssColorString('#b1845b').withAlpha(this._withAlpha)
+          return Cesium.Color.fromCssColorString('#b1845b').withAlpha(0.4)
         }, false)),
         heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
       },
