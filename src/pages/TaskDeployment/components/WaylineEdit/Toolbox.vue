@@ -52,15 +52,15 @@
     </div>
     <div class="ToolItem">
       <div class="NewWayPoint">
-        <p>新增航点</p>
-        <div class="imgBackground" @click="AddAWayPoint"><img src="../../../../assets/TaskDeployment/Drone1.png"></div>
+<!--        <p>新增航点</p>-->
+<!--        <div class="imgBackground" @click="AddAWayPoint"><img src="../../../../assets/TaskDeployment/Drone1.png"></div>-->
       </div>
       <div class="DirectionalPhotography">
-        <p>定向拍照</p>
-        <div class="imgBackground" @click="Clicktestinsert"><img src="../../../../assets/TaskDeployment/TakePhoto.png"></div>
+<!--        <p>定向拍照</p>-->
+<!--        <div class="imgBackground" @click="Clicktestinsert"><img src="../../../../assets/TaskDeployment/TakePhoto.png"></div>-->
       </div>
       <div class="MoreAction">
-        <p>更多动作</p>
+        <p>添加动作</p>
         <div class="imgBackground" @click="ClickShowaACtionList"><img src="../../../../assets/TaskDeployment/More.png"></div>
       </div>
     </div>

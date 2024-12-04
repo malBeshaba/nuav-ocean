@@ -4,15 +4,15 @@
       <div class="middlearea">
         <div class="hangxian">航线名称</div>
         <el-input class="waylinename" v-model="input" placeholder="请输入内容"></el-input>
-        <div class="dronename">选择飞行器与负载</div>
-        <el-select v-model="dronetype" placeholder="请选择" class="choosepanel">
-          <el-option
-              v-for="item in Droneoptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-          </el-option>
-        </el-select>
+<!--        <div class="dronename">选择飞行器与负载</div>-->
+<!--        <el-select v-model="dronetype" placeholder="请选择" class="choosepanel">-->
+<!--          <el-option-->
+<!--              v-for="item in Droneoptions"-->
+<!--              :key="item.value"-->
+<!--              :label="item.label"-->
+<!--              :value="item.value">-->
+<!--          </el-option>-->
+<!--        </el-select>-->
         <div class="buttonarea">
           <el-button type="primary" style="width: 80px" @click="create">确定</el-button>
           <el-button type="info" style="width: 80px" @click="cancel">取消</el-button>
@@ -41,7 +41,7 @@ const Droneoptions=[{
 }]
 
 
-const dronetype=ref("")
+const dronetype=ref("Mavic 3 行业系列")
 const input = ref('')
 //1是代表航点航线，懒得起英文名了
 //2是代表面状航线
@@ -122,7 +122,7 @@ const cancel = () => {
 
 .WayLineInitializePanel{
   width:480px ;
-  height:280px ;
+  height:200px ;
   background: $ComponentBackground;
   position: fixed;
   top: 30%;
@@ -184,4 +184,3 @@ const cancel = () => {
   border: 1px solid $TouchColor;
 }
 </style>
-    

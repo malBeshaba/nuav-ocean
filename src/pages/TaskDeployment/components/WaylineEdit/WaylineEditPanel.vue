@@ -4,7 +4,7 @@
     <Topsection :waylineId="waylineId" :waylineFileId="waylineFileId"></Topsection>
     <LeftWaylineSetting ></LeftWaylineSetting>
     <toolbox></toolbox>
-    
+
   </div>
 </template>
 
@@ -24,12 +24,15 @@ import { useRoute, useRouter } from 'vue-router';
 import bus from '@/utils/bus'
 import {getWaylinePointByWaylineId} from "@/api/wayLinePoint"
 import {InitializationWaypointByWaylineInfo} from '@/store/types/WayPoint.ts'
+import {CesiumFlyTo} from '@/components/mapTools/BaseMapTools'
 const route = useRoute();
 const router = useRouter();
 const store = useMyStore()
 onMounted(() => {
   const name = route.query.name
   const dronetype = route.query.drone_type
+	const dock = store.state.checkDockState.find((item: any) => item.sn === route.query.device_sn)
+  CesiumFlyTo(window.cesiumViewer, {longitude: dock?.position?.longitude as number, latitude: dock?.position.latitude as number, height: 1500})
   // centerDialogVisible.value=true
   store.state.EditingWayLine={} as WayLineV2
   // 在初始化航线的时候先初始化一个全局航线参数

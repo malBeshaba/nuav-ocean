@@ -7,11 +7,11 @@
       <img src="../../../../assets/TaskDeployment/Save.png" @click="SaveToDataBase">
     </div>
     <div class="WayLineName">
-      <div class="waylinename">{{name}}</div>
-      <img src="../../../../assets/TaskDeployment/Drone1.png">
-      <div class="drone">{{drone}}</div>
-      <img src="../../../../assets/TaskDeployment/TakePhoto2.png">
-      <div class="device">{{device}}</div>
+      <div style="text-align: center; width: 100%">{{name}}</div>
+<!--      <img src="../../../../assets/TaskDeployment/Drone1.png">-->
+<!--      <div class="drone">{{drone}}</div>-->
+<!--      <img src="../../../../assets/TaskDeployment/TakePhoto2.png">-->
+<!--      <div class="device">{{device}}</div>-->
     </div>
     <div class="HelpIcon">
       <img src="../../../../assets/TaskDeployment/Help.png" title="帮助"  @click="PrintSheet">
@@ -430,7 +430,7 @@ const ShowConfirmPanel=()=>{
   position: absolute;
   left: 800px;
   top:5px;
-  width: 340px;
+  width: 300px;
   height: 35px;
   color: white;
   background: $ComponentBackground;
