@@ -42,6 +42,7 @@ const getDockList = () => {
         return { value: item.device_sn, label: item.nickname }
       })
       dockValue.value = dockOptions.value[0].value
+			handleOnDockChange(dockValue.value);
       flyToDock(dockValue.value)
     }
   })
@@ -58,7 +59,7 @@ const flyToDock = (sn: string) => {
 }
 
 onMounted(() => {
-  getDockList()
+  getDockList();
 })
 </script>
 
@@ -77,4 +78,3 @@ onMounted(() => {
     width: 120px;
 }
 </style>
-  

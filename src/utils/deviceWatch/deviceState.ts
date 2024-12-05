@@ -399,7 +399,7 @@ class flyModel {
   hpr: [number, number, number]
   private orientation: any | Cesium.Quaternion
   show: boolean
-  flyModel: any
+  flyModel: any | null
 
   constructor(option:any) {
     this.id = option.id
@@ -415,16 +415,20 @@ class flyModel {
 
   update(position: Cesium.Cartesian3, hpr: [number, number, number], show: boolean) {
     this.position = position
-    this.flyModel.position = new Cesium.CallbackProperty(() => {
-      return position
-    }, false)
-    this.hpr = hpr
-    this.initOrientation()
-    let tmpOrientation = this.orientation
-    this.flyModel.orientation = new Cesium.CallbackProperty(() => {
-      return tmpOrientation
-    }, false)
-    this.flyModel.show = show
+    if(!this.flyModel) {
+      this.addFlyModel();
+    } else {
+      this.flyModel.position = new Cesium.CallbackProperty(() => {
+        return position
+      }, false)
+      this.hpr = hpr
+      this.initOrientation()
+      let tmpOrientation = this.orientation
+      this.flyModel.orientation = new Cesium.CallbackProperty(() => {
+        return tmpOrientation
+      }, false)
+      this.flyModel.show = show
+    }
   }
 
   initOrientation () {
@@ -463,7 +467,7 @@ class groundModel {
   position: Cesium.Cartesian3
   show: boolean
   mapViewer: Cesium.Viewer | undefined
-  private groundModel: any
+  groundModel: any
 
   constructor(option: any) {
     this.id = option.id
@@ -478,10 +482,14 @@ class groundModel {
 
   update(position: Cesium.Cartesian3, show: boolean) {
     this.position = position
-    this.groundModel.position = new Cesium.CallbackProperty(() => {
-      return position
-    }, false)
-    this.groundModel.show = show
+    if(!this.groundModel) {
+      this.addGroundModel();
+    } else {
+      this.groundModel.position = new Cesium.CallbackProperty(() => {
+        return position
+      }, false)
+      this.groundModel.show = show
+    }
   }
 
   clear() {
@@ -531,11 +539,15 @@ class flyPathModel {
 
     // this.clear()
     // this.addFlyPolyline()
-    let tmp = Cesium.Cartesian3.fromDegreesArrayHeights(this.positions)
-    this.flyPath.polyline.positions = new Cesium.CallbackProperty(() => {
-      return tmp
-    }, false)
-    this.flyPath.show = show
+    if(!this.flyPath) {
+      this.addFlyPolyline()
+    } else {
+      let tmp = Cesium.Cartesian3.fromDegreesArrayHeights(this.positions)
+      this.flyPath.polyline.positions = new Cesium.CallbackProperty(() => {
+        return tmp
+      }, false)
+      this.flyPath.show = show
+    }
     // this.flyPath.show = show
   }
 

@@ -15,7 +15,7 @@ import TaskInfo from '@/pages/FlightControl/components/TaskInfo.vue';
 import DroneInfo from '@/pages/FlightControl/components/DroneInfo/index.vue';
 const router = useRouter();
 
-const dockSn = ref();
+const dockSn = ref<string>();
 
 const getSnFromDockInfo = (sn: string) => {
   dockSn.value = sn;

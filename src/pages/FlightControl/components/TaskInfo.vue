@@ -64,7 +64,10 @@ const total = ref(20)
 
 
 onMounted(() => {
-	getTaskInfo();
+	setTimeout(() => {
+		getTaskInfo();
+	}, 500)
+
 });
 
 const createTask = () => {
