@@ -10,11 +10,15 @@ import {FlyingGlowPolylineLabel} from '@/components/mapTools/mapMaterial/mapMate
 
 interface UAVShow {
   sn: string,
-  flyModel: flyModel,
-  groundModel: groundModel,
-  flyPathModel: flyPathModel,
+  flyModel: flyModel | undefined,
+  groundModel: groundModel | undefined,
+  flyPathModel: flyPathModel | undefined,
   flyPath: number[],
   isFly: boolean,
+}
+
+let deviceEntity = {} as {
+  [key: string]: UAVShow,
 }
 
 export function deviceState () {
@@ -23,10 +27,23 @@ export function deviceState () {
   watch(store.state.deviceState.deviceInfo, (value) => {
     if (value) {
       Object.keys(value).forEach((key: string) => {
+        console.log('设备更新1',key,value[key], deviceEntity[key])
         let modelHeading = 360 - (( Number(value[key].attitude_head) + 360 ) % 360)
-        let isExist = false
-        if (flyList.length === 0) {
-          let addFlyModel = new flyModel({
+        if(!deviceEntity[key]) {
+          deviceEntity[key] = {
+            flyModel: undefined,
+            flyPath: [],
+            flyPathModel: undefined,
+            groundModel: undefined,
+            isFly: false,
+            sn: ''
+          };
+
+          let addFlyPath: number[] = []
+          addFlyPath.push(value[key].longitude)
+          addFlyPath.push(value[key].latitude)
+          addFlyPath.push(Number(value[key].height))
+          let createFlyModel = new flyModel({
             id: key,
             droneModelUri: droneModel,
             position: Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)),
@@ -34,7 +51,7 @@ export function deviceState () {
             show: false,
             mapViewer: window.cesiumViewer,
           })
-          let addGroundModel = new groundModel({
+          let createGroundModel = new groundModel({
             id: key,
             droneImageURL: deviceNotFly,
             widthHeight: [30, 30],
@@ -42,91 +59,69 @@ export function deviceState () {
             show: false,
             mapViewer: window.cesiumViewer,
           })
-          let addFlyPath: number[] = []
-          addFlyPath.push(value[key].longitude)
-          addFlyPath.push(value[key].latitude)
-          addFlyPath.push(Number(value[key].height))
-          let addFlyPathModel = new flyPathModel({
+          let createFlyPathModel = new flyPathModel({
             id: key,
             positions: addFlyPath,
             width: 5,
             show: false,
             mapViewer: window.cesiumViewer,
           })
-          flyList.push({
+          deviceEntity[key] = {
             sn: key,
-            flyModel: addFlyModel,
-            groundModel: addGroundModel,
-            flyPathModel: addFlyPathModel,
+            flyModel: createFlyModel,
+            groundModel: createGroundModel,
+            flyPathModel: createFlyPathModel,
             flyPath: addFlyPath,
             isFly: false
-          })
-          isExist = true
-        } else {
-          flyList.forEach((item: UAVShow) => {
-            if (item.sn === key) {
-              isExist = true
-            }
-          })
-          if (!isExist) {
-            console.log('添加新增无人机')
-            // ElNotification({
-            //   title: '无人机上线',
-            //   message: `${key}上线`,
-            //   type: 'info',
-            // })
-            let addFlyModel = new flyModel({
-              id: key,
-              droneModelUri: droneModel,
-              position: Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)),
-              hpr: [modelHeading, 0, 0],
-              show: false,
-              mapViewer: window.cesiumViewer,
-            })
-            let addGroundModel = new groundModel({
-              id: key,
-              droneImageURL: deviceNotFly,
-              widthHeight: [30, 30],
-              position: Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)),
-              show: false,
-              mapViewer: window.cesiumViewer,
-            })
-            let addFlyPath: number[] = []
-            addFlyPath.push(value[key].longitude)
-            addFlyPath.push(value[key].latitude)
-            addFlyPath.push(Number(value[key].height))
-            let addFlyPathModel = new flyPathModel({
-              id: key,
-              positions: addFlyPath,
-              width: 5,
-              show: false,
-              mapViewer: window.cesiumViewer,
-            })
-            flyList.push({
-              sn: key,
-              flyModel: addFlyModel,
-              groundModel: addGroundModel,
-              flyPathModel: addFlyPathModel,
-              flyPath: addFlyPath,
-              isFly: false
-            })
           }
-          flyList.forEach((item: UAVShow) => {
-            if (item.sn === key) {
-              switch (value[key].mode_code) {
-                case 0:
-                  item.isFly = false
-                  item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), true)
-                  item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
-                  item.flyPath = []
-                  item.flyPath.push(value[key].longitude)
-                  item.flyPath.push(value[key].latitude)
-                  item.flyPath.push(Number(value[key].height))
-                  item.flyPathModel.update(item.flyPath, false)
-                    // console.log('飞行中0',key , item.sn, item.flyPath)
-                  break
-                case 1:
-                  //准备起飞那么就设置起飞时间
+        } else {
+          console.log('设备更新',key,value[key], deviceEntity[key])
+          switch (value[key].mode_code) {
+              case 0:
+                deviceEntity[key].isFly = false
+                deviceEntity[key].groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), true)
+                deviceEntity[key].flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
+                deviceEntity[key].flyPath = []
+                deviceEntity[key].flyPath.push(value[key].longitude)
+                deviceEntity[key].flyPath.push(value[key].latitude)
+                deviceEntity[key].flyPath.push(Number(value[key].height))
+                deviceEntity[key].flyPathModel.update(deviceEntity[key].flyPath, false)
+                  // console.log('飞行中0',key , item.sn, item.flyPath)
+                break
+              case 1:
+                //准备起飞那么就设置起飞时间
+                const currentDate = new Date(); // 获取当前时间
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth() + 1; // 月份是从 0 到 11，所以要加 1
+                const day = currentDate.getDate();
+                const hours = currentDate.getHours();
+                const minutes = currentDate.getMinutes();
+                const seconds = currentDate.getSeconds();
+                // debugger
+                store.state.deviceTakeOffTime[deviceEntity[key].sn] = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+                // console.log('qifeiqifei765412398456296582385623'+store.state.deviceTakeOffTime[item.sn])
+                messageFrequency++
+                if (messageFrequency === 5) {
+                  ElNotification({
+                    title: '无人机任务消息',
+                    message: `${key}无人机准备起飞`,
+                    type: 'info',
+                  })
+                  messageFrequency = 0
+                }
+                deviceEntity[key].isFly = false
+                deviceEntity[key].groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), true)
+                deviceEntity[key].flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
+                deviceEntity[key].flyPath = []
+                deviceEntity[key].flyPath.push(value[key].longitude)
+                deviceEntity[key].flyPath.push(value[key].latitude)
+                deviceEntity[key].flyPath.push(Number(value[key].height))
+                deviceEntity[key].flyPathModel.update(deviceEntity[key].flyPath, false)
+                checkView(key, value[key], <UAVShow>deviceEntity[key])
+                // console.log('飞行中1',key , item.sn, item.flyPath)
+                break
+              case 2:
+                if(store.state.deviceTakeOffTime[deviceEntity[key].sn]=='0'||store.state.deviceTakeOffTime[deviceEntity[key].sn]){
                   const currentDate = new Date(); // 获取当前时间
                   const year = currentDate.getFullYear();
                   const month = currentDate.getMonth() + 1; // 月份是从 0 到 11，所以要加 1
@@ -135,243 +130,442 @@ export function deviceState () {
                   const minutes = currentDate.getMinutes();
                   const seconds = currentDate.getSeconds();
                   // debugger
-                  store.state.deviceTakeOffTime[item.sn] = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
-                  // console.log('qifeiqifei765412398456296582385623'+store.state.deviceTakeOffTime[item.sn])
-                  messageFrequency++
-                  if (messageFrequency === 5) {
-                    ElNotification({
-                      title: '无人机任务消息',
-                      message: `${key}无人机准备起飞`,
-                      type: 'info',
-                    })
-                    messageFrequency = 0
-                  }
-                  item.isFly = false
-                  item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), true)
-                  item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
-                  item.flyPath = []
-                  item.flyPath.push(value[key].longitude)
-                  item.flyPath.push(value[key].latitude)
-                  item.flyPath.push(Number(value[key].height))
-                  item.flyPathModel.update(item.flyPath, false)
-                  checkView(key, value[key], item)
-                  // console.log('飞行中1',key , item.sn, item.flyPath)
-                  break
-                case 2:
-                  if(store.state.deviceTakeOffTime[item.sn]=='0'||store.state.deviceTakeOffTime[item.sn]){
-                    const currentDate = new Date(); // 获取当前时间
-                    const year = currentDate.getFullYear();
-                    const month = currentDate.getMonth() + 1; // 月份是从 0 到 11，所以要加 1
-                    const day = currentDate.getDate();
-                    const hours = currentDate.getHours();
-                    const minutes = currentDate.getMinutes();
-                    const seconds = currentDate.getSeconds();
-                    // debugger
-                    store.state.deviceTakeOffTime[item.sn] = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
-                  }
-                  messageFrequency++
-                  if (messageFrequency === 5) {
-                    ElNotification({
-                      title: '无人机任务消息',
-                      message: `${key}就绪`,
-                      type: 'info',
-                    })
-                    messageFrequency = 0
-                  }
-                  item.isFly = true
-                  item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
-                  item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
-                  // if (item.isFly) {
-                  //   item.flyPath.push(value[key].longitude)
-                  //   item.flyPath.push(value[key].latitude)
-                  //   item.flyPath.push(Number(value[key].height))
-                  // } else {
-                  //   item.isFly = true
-                  //   item.flyPath.push(value[key].longitude)
-                  //   item.flyPath.push(value[key].latitude)
-                  //   item.flyPath.push(Number(value[key].height))
-                  // }
-                  if(item.flyPath[item.flyPath.length - 3] !== value[key].longitude) {
-                    item.flyPath.push(value[key].longitude)
-                    item.flyPath.push(value[key].latitude)
-                    item.flyPath.push(Number(value[key].height))
-                  }
-                  checkView(key, value[key], item)
-                  item.flyPathModel.update(item.flyPath, true)
-                    // console.log('飞行中2',key , item.sn, item.flyPath)
-                  break
-                case 3:
-                  messageFrequency++
-                  if (messageFrequency === 5) {
-                    ElNotification({
-                      title: '无人机任务消息',
-                      message: `${key}手动飞行`,
-                      type: 'info',
-                    })
-                    messageFrequency = 0
-                  }
-                  item.isFly = true
-                  item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
-                  //@ts-ignore
-                  if (store.state.videoFusionState.sn === key) {
-                    item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
-                  } else {
-                    item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
-                  }
-                  // if (item.isFly) {
-                  //   item.flyPath.push(value[key].longitude)
-                  //   item.flyPath.push(value[key].latitude)
-                  //   item.flyPath.push(Number(value[key].height))
-                  // } else {
-                  //   item.isFly = true
-                  //   item.flyPath.push(value[key].longitude)
-                  //   item.flyPath.push(value[key].latitude)
-                  //   item.flyPath.push(Number(value[key].height))
-                  // }
-                  if(item.flyPath[item.flyPath.length - 3] !== value[key].longitude) {
-                    item.flyPath.push(value[key].longitude)
-                    item.flyPath.push(value[key].latitude)
-                    item.flyPath.push(Number(value[key].height))
-                  }
-                  checkView(key, value[key], item)
-                  item.flyPathModel.update(item.flyPath, true)
-                    // console.log('飞行中3', key, item.sn, item.flyPath)
-                  break
-                case 4:
-                  item.isFly = true
-                  item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
-                  //@ts-ignore
-                  if (store.state.videoFusionState.sn === key) {
-                    item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
-                  } else {
-                    item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
-                  }
-                  // if (item.isFly) {
-                  //   item.flyPath.push(value[key].longitude)
-                  //   item.flyPath.push(value[key].latitude)
-                  //   item.flyPath.push(Number(value[key].height))
-                  // } else {
-                  //   item.isFly = true
-                  //   item.flyPath.push(value[key].longitude)
-                  //   item.flyPath.push(value[key].latitude)
-                  //   item.flyPath.push(Number(value[key].height))
-                  // }
-                  if(item.flyPath[item.flyPath.length - 3] !== value[key].longitude) {
-                    item.flyPath.push(value[key].longitude)
-                    item.flyPath.push(value[key].latitude)
-                    item.flyPath.push(Number(value[key].height))
-                  }
-                  checkView(key, value[key], item)
-                  item.flyPathModel.update(item.flyPath, true)
-                    // console.log('飞行中4', key, item.sn, item.flyPath)
-                  break
-                case 5:
-                  item.isFly = true
-                  item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
-                  //@ts-ignore
-                  if (store.state.videoFusionState.sn === key) {
-                    item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
-                  } else {
-                    item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
-                  }
-                  // if (item.isFly) {
-                  //   item.flyPath.push(value[key].longitude)
-                  //   item.flyPath.push(value[key].latitude)
-                  //   item.flyPath.push(Number(value[key].height))
-                  // } else {
-                  //   item.isFly = true
-                  //   item.flyPath.push(value[key].longitude)
-                  //   item.flyPath.push(value[key].latitude)
-                  //   item.flyPath.push(Number(value[key].height))
-                  // }
-                  if(item.flyPath[item.flyPath.length - 3] !== value[key].longitude) {
-                    item.flyPath.push(value[key].longitude)
-                    item.flyPath.push(value[key].latitude)
-                    item.flyPath.push(Number(value[key].height))
-                  }
-                  checkView(key, value[key], item)
-                  item.flyPathModel.update(item.flyPath, true)
-                    // console.log('飞行中5', key, item.sn, item.flyPath)
-                  break
-                case 9:
-                  messageFrequency++
-                  if (messageFrequency === 5) {
-                    ElNotification({
-                      title: '无人机任务消息',
-                      message: `${key}返航`,
-                      type: 'info',
-                    })
-                    messageFrequency = 0
-                  }
-                  item.isFly = true
-                  item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
-                  //@ts-ignore
-                  if (store.state.videoFusionState.sn === key) {
-                    item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
-                  } else {
-                    item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
-                  }
-                  // if (item.isFly) {
-                  //   item.flyPath.push(value[key].longitude)
-                  //   item.flyPath.push(value[key].latitude)
-                  //   item.flyPath.push(Number(value[key].height))
-                  // } else {
-                  //   item.isFly = true
-                  //   item.flyPath.push(value[key].longitude)
-                  //   item.flyPath.push(value[key].latitude)
-                  //   item.flyPath.push(Number(value[key].height))
-                  // }
-                  if(item.flyPath[item.flyPath.length - 3] !== value[key].longitude) {
-                    item.flyPath.push(value[key].longitude)
-                    item.flyPath.push(value[key].latitude)
-                    item.flyPath.push(Number(value[key].height))
-                  }
-                  checkView(key, value[key], item)
-                  item.flyPathModel.update(item.flyPath, true)
-                    // console.log('飞行中9', key, item.sn, item.flyPath)
-                  break
-                case 10:
-                  if (messageFrequency === 5) {
-                    ElNotification({
-                      title: '无人机任务消息',
-                      message: `${key}降落`,
-                      type: 'info',
-                    })
-                    messageFrequency = 0
-                  }
-                  item.isFly = true
-                  item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
-                  //@ts-ignore
-                  if (store.state.videoFusionState.sn === key) {
-                    item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
-                  } else {
-                    item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
-                  }
-                  // if (item.isFly) {
-                  //   item.flyPath.push(value[key].longitude)
-                  //   item.flyPath.push(value[key].latitude)
-                  //   item.flyPath.push(Number(value[key].height))
-                  // } else {
-                  //   item.isFly = true
-                  //   item.flyPath.push(value[key].longitude)
-                  //   item.flyPath.push(value[key].latitude)
-                  //   item.flyPath.push(Number(value[key].height))
-                  // }
-                  if(item.flyPath[item.flyPath.length - 3] !== value[key].longitude) {
-                    item.flyPath.push(value[key].longitude)
-                    item.flyPath.push(value[key].latitude)
-                    item.flyPath.push(Number(value[key].height))
-                  }
-                  checkView(key, value[key], item)
-                  item.flyPathModel.update(item.flyPath, true)
-                    // console.log('飞行中10', key, item.sn, item.flyPath)
-                  break
+                  store.state.deviceTakeOffTime[deviceEntity[key].sn] = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+                }
+                messageFrequency++
+                if (messageFrequency === 5) {
+                  ElNotification({
+                    title: '无人机任务消息',
+                    message: `${key}就绪`,
+                    type: 'info',
+                  })
+                  messageFrequency = 0
+                }
+                deviceEntity[key].isFly = true
+                deviceEntity[key].groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
+                deviceEntity[key].flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
+                if(deviceEntity[key].flyPath[deviceEntity[key].flyPath.length - 3] !== value[key].longitude) {
+                  deviceEntity[key].flyPath.push(value[key].longitude)
+                  deviceEntity[key].flyPath.push(value[key].latitude)
+                  deviceEntity[key].flyPath.push(Number(value[key].height))
+                }
+                checkView(key, value[key], <UAVShow>deviceEntity[key])
+                deviceEntity[key].flyPathModel.update(deviceEntity[key].flyPath, true)
+                  // console.log('飞行中2',key , item.sn, item.flyPath)
+                break
+              case 3:
+                messageFrequency++
+                if (messageFrequency === 5) {
+                  ElNotification({
+                    title: '无人机任务消息',
+                    message: `${key}手动飞行`,
+                    type: 'info',
+                  })
+                  messageFrequency = 0
+                }
+                deviceEntity[key].isFly = true
+                deviceEntity[key].groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
+                deviceEntity[key].flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
+                if(deviceEntity[key].flyPath[deviceEntity[key].flyPath.length - 3] !== value[key].longitude) {
+                  deviceEntity[key].flyPath.push(value[key].longitude)
+                  deviceEntity[key].flyPath.push(value[key].latitude)
+                  deviceEntity[key].flyPath.push(Number(value[key].height))
+                }
+                checkView(key, value[key], <UAVShow>deviceEntity[key])
+                // deviceEntity[key].flyPathModel.update(deviceEntity[key].flyPath, true)
+                  // console.log('飞行中3', key, item.sn, item.flyPath)
+                break
+              case 4:
+                deviceEntity[key].isFly = true
+                deviceEntity[key].groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
+                deviceEntity[key].flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
+                if(deviceEntity[key].flyPath[deviceEntity[key].flyPath.length - 3] !== value[key].longitude) {
+                  deviceEntity[key].flyPath.push(value[key].longitude)
+                  deviceEntity[key].flyPath.push(value[key].latitude)
+                  deviceEntity[key].flyPath.push(Number(value[key].height))
+                }
+                checkView(key, value[key], <UAVShow>deviceEntity[key])
+                // deviceEntity[key].flyPathModel.update(deviceEntity[key].flyPath, true)
+                  // console.log('飞行中4', key, item.sn, item.flyPath)
+                break
+              case 5:
+                deviceEntity[key].isFly = true
+                deviceEntity[key].groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
+                deviceEntity[key].flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
+                if(deviceEntity[key].flyPath[deviceEntity[key].flyPath.length - 3] !== value[key].longitude) {
+                  deviceEntity[key].flyPath.push(value[key].longitude)
+                  deviceEntity[key].flyPath.push(value[key].latitude)
+                  deviceEntity[key].flyPath.push(Number(value[key].height))
+                }
+                checkView(key, value[key], <UAVShow>deviceEntity[key])
+                // deviceEntity[key].flyPathModel.update(deviceEntity[key].flyPath, true)
+                  // console.log('飞行中5', key, item.sn, item.flyPath)
+                break
+              case 9:
+                messageFrequency++
+                if (messageFrequency === 5) {
+                  ElNotification({
+                    title: '无人机任务消息',
+                    message: `${key}返航`,
+                    type: 'info',
+                  })
+                  messageFrequency = 0
+                }
+                deviceEntity[key].isFly = true
+                deviceEntity[key].groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
+                deviceEntity[key].flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
 
-              }
+                if(deviceEntity[key].flyPath[deviceEntity[key].flyPath.length - 3] !== value[key].longitude) {
+                  deviceEntity[key].flyPath.push(value[key].longitude)
+                  deviceEntity[key].flyPath.push(value[key].latitude)
+                  deviceEntity[key].flyPath.push(Number(value[key].height))
+                }
+                checkView(key, value[key], <UAVShow>deviceEntity[key])
+                // deviceEntity[key].flyPathModel.update(deviceEntity[key].flyPath, true)
+                  // console.log('飞行中9', key, item.sn, item.flyPath)
+                break
+              case 10:
+                if (messageFrequency === 5) {
+                  ElNotification({
+                    title: '无人机任务消息',
+                    message: `${key}降落`,
+                    type: 'info',
+                  })
+                  messageFrequency = 0
+                }
+                deviceEntity[key].isFly = true
+                deviceEntity[key].groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
+                //@ts-ignore
+                // if (store.state.videoFusionState.sn === key) {
+                //   deviceEntity[key].flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
+                // } else {
+                //   deviceEntity[key].flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
+                // }
+                deviceEntity[key].flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
+                if(deviceEntity[key].flyPath[deviceEntity[key].flyPath.length - 3] !== value[key].longitude) {
+                  deviceEntity[key].flyPath.push(value[key].longitude)
+                  deviceEntity[key].flyPath.push(value[key].latitude)
+                  deviceEntity[key].flyPath.push(Number(value[key].height))
+                }
+                checkView(key, value[key], <UAVShow>deviceEntity[key])
+                // deviceEntity[key].flyPathModel.update(deviceEntity[key].flyPath, true)
+                  // console.log('飞行中10', key, item.sn, item.flyPath)
+                break
+
             }
-          })
+
         }
       })
+      // Object.keys(value).forEach((key: string) => {
+      //   let modelHeading = 360 - (( Number(value[key].attitude_head) + 360 ) % 360)
+      //   let isExist = false
+      //   if (flyList.length === 0) {
+      //     let addFlyModel = new flyModel({
+      //       id: key,
+      //       droneModelUri: droneModel,
+      //       position: Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)),
+      //       hpr: [modelHeading, 0, 0],
+      //       show: false,
+      //       mapViewer: window.cesiumViewer,
+      //     })
+      //     let addGroundModel = new groundModel({
+      //       id: key,
+      //       droneImageURL: deviceNotFly,
+      //       widthHeight: [30, 30],
+      //       position: Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)),
+      //       show: false,
+      //       mapViewer: window.cesiumViewer,
+      //     })
+      //     let addFlyPath: number[] = []
+      //     addFlyPath.push(value[key].longitude)
+      //     addFlyPath.push(value[key].latitude)
+      //     addFlyPath.push(Number(value[key].height))
+      //     let addFlyPathModel = new flyPathModel({
+      //       id: key,
+      //       positions: addFlyPath,
+      //       width: 5,
+      //       show: false,
+      //       mapViewer: window.cesiumViewer,
+      //     })
+      //     flyList.push({
+      //       sn: key,
+      //       flyModel: addFlyModel,
+      //       groundModel: addGroundModel,
+      //       flyPathModel: addFlyPathModel,
+      //       flyPath: addFlyPath,
+      //       isFly: false
+      //     })
+      //     isExist = true
+      //   } else {
+      //     flyList.forEach((item: UAVShow) => {
+      //       if (item.sn === key) {
+      //         isExist = true
+      //       }
+      //     })
+      //     if (!isExist) {
+      //       console.log('添加新增无人机')
+      //       // ElNotification({
+      //       //   title: '无人机上线',
+      //       //   message: `${key}上线`,
+      //       //   type: 'info',
+      //       // })
+      //       let addFlyModel = new flyModel({
+      //         id: key,
+      //         droneModelUri: droneModel,
+      //         position: Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)),
+      //         hpr: [modelHeading, 0, 0],
+      //         show: false,
+      //         mapViewer: window.cesiumViewer,
+      //       })
+      //       let addGroundModel = new groundModel({
+      //         id: key,
+      //         droneImageURL: deviceNotFly,
+      //         widthHeight: [30, 30],
+      //         position: Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)),
+      //         show: false,
+      //         mapViewer: window.cesiumViewer,
+      //       })
+      //       let addFlyPath: number[] = []
+      //       addFlyPath.push(value[key].longitude)
+      //       addFlyPath.push(value[key].latitude)
+      //       addFlyPath.push(Number(value[key].height))
+      //       let addFlyPathModel = new flyPathModel({
+      //         id: key,
+      //         positions: addFlyPath,
+      //         width: 5,
+      //         show: false,
+      //         mapViewer: window.cesiumViewer,
+      //       })
+      //       flyList.push({
+      //         sn: key,
+      //         flyModel: addFlyModel,
+      //         groundModel: addGroundModel,
+      //         flyPathModel: addFlyPathModel,
+      //         flyPath: addFlyPath,
+      //         isFly: false
+      //       })
+      //     }
+      //     flyList.forEach((item: UAVShow) => {
+      //       if (item.sn === key) {
+      //         switch (value[key].mode_code) {
+      //           case 0:
+      //             item.isFly = false
+      //             item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), true)
+      //             item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
+      //             item.flyPath = []
+      //             item.flyPath.push(value[key].longitude)
+      //             item.flyPath.push(value[key].latitude)
+      //             item.flyPath.push(Number(value[key].height))
+      //             item.flyPathModel.update(item.flyPath, false)
+      //               // console.log('飞行中0',key , item.sn, item.flyPath)
+      //             break
+      //           case 1:
+      //             //准备起飞那么就设置起飞时间
+      //             const currentDate = new Date(); // 获取当前时间
+      //             const year = currentDate.getFullYear();
+      //             const month = currentDate.getMonth() + 1; // 月份是从 0 到 11，所以要加 1
+      //             const day = currentDate.getDate();
+      //             const hours = currentDate.getHours();
+      //             const minutes = currentDate.getMinutes();
+      //             const seconds = currentDate.getSeconds();
+      //             // debugger
+      //             store.state.deviceTakeOffTime[item.sn] = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+      //             // console.log('qifeiqifei765412398456296582385623'+store.state.deviceTakeOffTime[item.sn])
+      //             messageFrequency++
+      //             if (messageFrequency === 5) {
+      //               ElNotification({
+      //                 title: '无人机任务消息',
+      //                 message: `${key}无人机准备起飞`,
+      //                 type: 'info',
+      //               })
+      //               messageFrequency = 0
+      //             }
+      //             item.isFly = false
+      //             item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), true)
+      //             item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
+      //             item.flyPath = []
+      //             item.flyPath.push(value[key].longitude)
+      //             item.flyPath.push(value[key].latitude)
+      //             item.flyPath.push(Number(value[key].height))
+      //             item.flyPathModel.update(item.flyPath, false)
+      //             checkView(key, value[key], item)
+      //             // console.log('飞行中1',key , item.sn, item.flyPath)
+      //             break
+      //           case 2:
+      //             if(store.state.deviceTakeOffTime[item.sn]=='0'||store.state.deviceTakeOffTime[item.sn]){
+      //               const currentDate = new Date(); // 获取当前时间
+      //               const year = currentDate.getFullYear();
+      //               const month = currentDate.getMonth() + 1; // 月份是从 0 到 11，所以要加 1
+      //               const day = currentDate.getDate();
+      //               const hours = currentDate.getHours();
+      //               const minutes = currentDate.getMinutes();
+      //               const seconds = currentDate.getSeconds();
+      //               // debugger
+      //               store.state.deviceTakeOffTime[item.sn] = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+      //             }
+      //             messageFrequency++
+      //             if (messageFrequency === 5) {
+      //               ElNotification({
+      //                 title: '无人机任务消息',
+      //                 message: `${key}就绪`,
+      //                 type: 'info',
+      //               })
+      //               messageFrequency = 0
+      //             }
+      //             item.isFly = true
+      //             item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
+      //             item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
+      //             if(item.flyPath[item.flyPath.length - 3] !== value[key].longitude) {
+      //               item.flyPath.push(value[key].longitude)
+      //               item.flyPath.push(value[key].latitude)
+      //               item.flyPath.push(Number(value[key].height))
+      //             }
+      //             checkView(key, value[key], item)
+      //             item.flyPathModel.update(item.flyPath, true)
+      //               // console.log('飞行中2',key , item.sn, item.flyPath)
+      //             break
+      //           case 3:
+      //             messageFrequency++
+      //             if (messageFrequency === 5) {
+      //               ElNotification({
+      //                 title: '无人机任务消息',
+      //                 message: `${key}手动飞行`,
+      //                 type: 'info',
+      //               })
+      //               messageFrequency = 0
+      //             }
+      //             item.isFly = true
+      //             item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
+      //             //@ts-ignore
+      //             if (store.state.videoFusionState.sn === key) {
+      //               item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
+      //             } else {
+      //               item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
+      //             }
+      //             if(item.flyPath[item.flyPath.length - 3] !== value[key].longitude) {
+      //               item.flyPath.push(value[key].longitude)
+      //               item.flyPath.push(value[key].latitude)
+      //               item.flyPath.push(Number(value[key].height))
+      //             }
+      //             checkView(key, value[key], item)
+      //             item.flyPathModel.update(item.flyPath, true)
+      //               // console.log('飞行中3', key, item.sn, item.flyPath)
+      //             break
+      //           case 4:
+      //             item.isFly = true
+      //             item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
+      //             //@ts-ignore
+      //             if (store.state.videoFusionState.sn === key) {
+      //               item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
+      //             } else {
+      //               item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
+      //             }
+      //             if(item.flyPath[item.flyPath.length - 3] !== value[key].longitude) {
+      //               item.flyPath.push(value[key].longitude)
+      //               item.flyPath.push(value[key].latitude)
+      //               item.flyPath.push(Number(value[key].height))
+      //             }
+      //             checkView(key, value[key], item)
+      //             item.flyPathModel.update(item.flyPath, true)
+      //               // console.log('飞行中4', key, item.sn, item.flyPath)
+      //             break
+      //           case 5:
+      //             item.isFly = true
+      //             item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
+      //             //@ts-ignore
+      //             if (store.state.videoFusionState.sn === key) {
+      //               item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
+      //             } else {
+      //               item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
+      //             }
+      //             if(item.flyPath[item.flyPath.length - 3] !== value[key].longitude) {
+      //               item.flyPath.push(value[key].longitude)
+      //               item.flyPath.push(value[key].latitude)
+      //               item.flyPath.push(Number(value[key].height))
+      //             }
+      //             checkView(key, value[key], item)
+      //             item.flyPathModel.update(item.flyPath, true)
+      //               // console.log('飞行中5', key, item.sn, item.flyPath)
+      //             break
+      //           case 9:
+      //             messageFrequency++
+      //             if (messageFrequency === 5) {
+      //               ElNotification({
+      //                 title: '无人机任务消息',
+      //                 message: `${key}返航`,
+      //                 type: 'info',
+      //               })
+      //               messageFrequency = 0
+      //             }
+      //             item.isFly = true
+      //             item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
+      //             //@ts-ignore
+      //             if (store.state.videoFusionState.sn === key) {
+      //               item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
+      //             } else {
+      //               item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
+      //             }
+      //             // if (item.isFly) {
+      //             //   item.flyPath.push(value[key].longitude)
+      //             //   item.flyPath.push(value[key].latitude)
+      //             //   item.flyPath.push(Number(value[key].height))
+      //             // } else {
+      //             //   item.isFly = true
+      //             //   item.flyPath.push(value[key].longitude)
+      //             //   item.flyPath.push(value[key].latitude)
+      //             //   item.flyPath.push(Number(value[key].height))
+      //             // }
+      //             if(item.flyPath[item.flyPath.length - 3] !== value[key].longitude) {
+      //               item.flyPath.push(value[key].longitude)
+      //               item.flyPath.push(value[key].latitude)
+      //               item.flyPath.push(Number(value[key].height))
+      //             }
+      //             checkView(key, value[key], item)
+      //             item.flyPathModel.update(item.flyPath, true)
+      //               // console.log('飞行中9', key, item.sn, item.flyPath)
+      //             break
+      //           case 10:
+      //             if (messageFrequency === 5) {
+      //               ElNotification({
+      //                 title: '无人机任务消息',
+      //                 message: `${key}降落`,
+      //                 type: 'info',
+      //               })
+      //               messageFrequency = 0
+      //             }
+      //             item.isFly = true
+      //             item.groundModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), false)
+      //             //@ts-ignore
+      //             if (store.state.videoFusionState.sn === key) {
+      //               item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], false)
+      //             } else {
+      //               item.flyModel.update(Cesium.Cartesian3.fromDegrees(Number(value[key].longitude), Number(value[key].latitude), Number(value[key].height)), [modelHeading, 0, 0], true)
+      //             }
+      //             // if (item.isFly) {
+      //             //   item.flyPath.push(value[key].longitude)
+      //             //   item.flyPath.push(value[key].latitude)
+      //             //   item.flyPath.push(Number(value[key].height))
+      //             // } else {
+      //             //   item.isFly = true
+      //             //   item.flyPath.push(value[key].longitude)
+      //             //   item.flyPath.push(value[key].latitude)
+      //             //   item.flyPath.push(Number(value[key].height))
+      //             // }
+      //             if(item.flyPath[item.flyPath.length - 3] !== value[key].longitude) {
+      //               item.flyPath.push(value[key].longitude)
+      //               item.flyPath.push(value[key].latitude)
+      //               item.flyPath.push(Number(value[key].height))
+      //             }
+      //             checkView(key, value[key], item)
+      //             item.flyPathModel.update(item.flyPath, true)
+      //               // console.log('飞行中10', key, item.sn, item.flyPath)
+      //             break
+      //
+      //         }
+      //       }
+      //     })
+      //   }
+      // })
     }
   }, {deep: true, immediate: true});
 }
@@ -415,20 +609,25 @@ class flyModel {
 
   update(position: Cesium.Cartesian3, hpr: [number, number, number], show: boolean) {
     this.position = position
-    if(!this.flyModel) {
-      this.addFlyModel();
-    } else {
-      this.flyModel.position = new Cesium.CallbackProperty(() => {
-        return position
-      }, false)
-      this.hpr = hpr
-      this.initOrientation()
-      let tmpOrientation = this.orientation
-      this.flyModel.orientation = new Cesium.CallbackProperty(() => {
-        return tmpOrientation
-      }, false)
-      this.flyModel.show = show
-    }
+    this.show = show
+    this.hpr = hpr
+    this.initOrientation()
+
+    this.clear()
+    this.addFlyModel();
+    // if(!this.flyModel) {
+    //   this.addFlyModel();
+    // } else {
+    //   this.flyModel.position = new Cesium.CallbackProperty(() => {
+    //     return position
+    //   }, false)
+    //   this.hpr = hpr
+    //   this.initOrientation()
+    //   let tmpOrientation = this.orientation
+    //   this.flyModel.orientation = new Cesium.CallbackProperty(() => {
+    //     return tmpOrientation
+    //   }, false)
+    // }
   }
 
   initOrientation () {
